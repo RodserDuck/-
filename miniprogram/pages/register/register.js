@@ -1,66 +1,43 @@
-// pages/register/register.js
+// pages/register/register.ts
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    identity: 'student' as 'student' | 'teacher' | 'admin',
+    account: '',
+    password: '',
+    confirmPassword: '',
+    isLoading: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
+  onLoad() {},
 
+  onIdentitySelect(e) { this.setData({ identity: e.currentTarget.dataset.type }); },
+  onAccountInput(e) { this.setData({ account: e.detail.value }); },
+  onPasswordInput(e) { this.setData({ password: e.detail.value }); },
+  onConfirmPasswordInput(e) { this.setData({ confirmPassword: e.detail.value }); },
+
+  onRegister() {
+    const { identity: userIdentity, account, password, confirmPassword, isLoading } = this.data;
+    console.log('注册身份:', userIdentity);
+    if (isLoading) return;
+    if (!account.trim()) { wx.showToast({ title: '请输入账号', icon: 'none' }); return; }
+    if (account.length < 6) { wx.showToast({ title: '账号至少6位', icon: 'none' }); return; }
+    if (!password.trim()) { wx.showToast({ title: '请输入密码', icon: 'none' }); return; }
+    if (password.length < 6) { wx.showToast({ title: '密码至少6位', icon: 'none' }); return; }
+    if (password !== confirmPassword) { wx.showToast({ title: '两次密码不一致', icon: 'none' }); return; }
+
+    this.setData({ isLoading: true });
+    wx.showLoading({ title: '注册中...', mask: true });
+
+    setTimeout(() => {
+      wx.hideLoading();
+      if (account === 'test123') {
+        this.setData({ isLoading: false });
+        wx.showModal({ title: '注册失败', content: '该账号已存在，请更换账号', showCancel: false, confirmText: '确定' });
+      } else {
+        wx.showToast({ title: '注册成功', icon: 'success', duration: 1500, success: () => setTimeout(() => wx.switchTab({ url: '/pages/square/square' }), 1500) });
+      }
+    }, 1500);
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
-})
+  onGoLogin() { wx.navigateBack(); }
+});

@@ -1,66 +1,93 @@
-// pages/publish-post/publish-post.js
+// pages/publish-post/publish-post.ts
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    content: '',
+    images: [] as string[],
+    maxImages: 9,
+    isSubmitting: false,
+    isAnonymous: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onLoad() {
+    // 页面加载
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 内容输入
+  onContentInput(e) {
+    this.setData({ content: e.detail.value });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
+  // 选择图片
+  onChooseImage() {
+    const remainingCount = this.data.maxImages - this.data.images.length;
+    if (remainingCount <= 0) {
+      wx.showToast({ title: '最多选择9张图片', icon: 'none' });
+      return;
+    }
 
+    wx.chooseMedia({
+      count: remainingCount,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const newImages = res.tempFiles.map(file => file.tempFilePath);
+        this.setData({ images: [...this.data.images, ...newImages] });
+      }
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  // 删除图片
+  onDeleteImage(e) {
+    const index = e.currentTarget.dataset.index;
+    const images = this.data.images.filter((_, i) => i !== index);
+    this.setData({ images });
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  // 匿名切换
+  onAnonymousChange(e) {
+    this.setData({ isAnonymous: e.detail.value });
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
+  // 发布
+  onPublish() {
+    const { content, images, isSubmitting } = this.data;
+    
+    if (isSubmitting) return;
+    
+    if (!content.trim() && images.length === 0) {
+      wx.showToast({ title: '请输入内容或上传图片', icon: 'none' });
+      return;
+    }
 
+    this.setData({ isSubmitting: true });
+    wx.showLoading({ title: '发布中...', mask: true });
+
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.showToast({
+        title: '发布成功',
+        icon: 'success',
+        duration: 1500,
+        success: () => {
+          setTimeout(() => wx.navigateBack(), 1500);
+        }
+      });
+    }, 1500);
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  // 取消
+  onCancel() {
+    const { content, images } = this.data;
+    if (content.trim() || images.length > 0) {
+      wx.showModal({
+        title: '确认退出',
+        content: '退出后内容将不会保存',
+        success: (res) => {
+          if (res.confirm) wx.navigateBack();
+        }
+      });
+    } else {
+      wx.navigateBack();
+    }
   }
-})
+});

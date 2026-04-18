@@ -1,66 +1,136 @@
-// pages/publish-goods/publish-goods.js
+// pages/publish-goods/publish-goods.ts
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    title: '',
+    price: '',
+    originalPrice: '',
+    description: '',
+    images: [] as string[],
+    maxImages: 9,
+    category: '',
+    condition: '95新',
+    location: '',
+    categories: ['数码', '书籍', '服饰', '日用', '其他'],
+    conditions: ['全新', '99新', '95新', '9成新', '8成新'],
+    isSubmitting: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onLoad() {
+    // 页面加载
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 标题输入
+  onTitleInput(e) {
+    this.setData({ title: e.detail.value });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  // 价格输入
+  onPriceInput(e) {
+    this.setData({ price: e.detail.value });
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  // 原价输入
+  onOriginalPriceInput(e) {
+    this.setData({ originalPrice: e.detail.value });
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  // 描述输入
+  onDescriptionInput(e) {
+    this.setData({ description: e.detail.value });
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  // 位置输入
+  onLocationInput(e) {
+    this.setData({ location: e.detail.value });
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
+  // 选择分类
+  onCategoryTap() {
+    wx.showActionSheet({
+      itemList: this.data.categories,
+      success: (res) => {
+        this.setData({ category: this.data.categories[res.tapIndex] });
+      }
+    });
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
+  // 选择成色
+  onConditionTap() {
+    wx.showActionSheet({
+      itemList: this.data.conditions,
+      success: (res) => {
+        this.setData({ condition: this.data.conditions[res.tapIndex] });
+      }
+    });
+  },
 
+  // 选择图片
+  onChooseImage() {
+    const remainingCount = this.data.maxImages - this.data.images.length;
+    if (remainingCount <= 0) {
+      wx.showToast({ title: '最多选择9张图片', icon: 'none' });
+      return;
+    }
+
+    wx.chooseMedia({
+      count: remainingCount,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const newImages = res.tempFiles.map(file => file.tempFilePath);
+        this.setData({ images: [...this.data.images, ...newImages] });
+      }
+    });
+  },
+
+  // 删除图片
+  onDeleteImage(e) {
+    const index = e.currentTarget.dataset.index;
+    const images = this.data.images.filter((_, i) => i !== index);
+    this.setData({ images });
+  },
+
+  // 发布
+  onPublish() {
+    const { title, price, category, images, isSubmitting } = this.data;
+    
+    if (isSubmitting) return;
+    
+    if (!title.trim()) {
+      wx.showToast({ title: '请输入商品标题', icon: 'none' });
+      return;
+    }
+    if (!price.trim()) {
+      wx.showToast({ title: '请输入价格', icon: 'none' });
+      return;
+    }
+    if (!category) {
+      wx.showToast({ title: '请选择分类', icon: 'none' });
+      return;
+    }
+    if (images.length === 0) {
+      wx.showToast({ title: '请至少上传一张图片', icon: 'none' });
+      return;
+    }
+
+    this.setData({ isSubmitting: true });
+    wx.showLoading({ title: '发布中...', mask: true });
+
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.showToast({
+        title: '发布成功',
+        icon: 'success',
+        duration: 1500,
+        success: () => {
+          setTimeout(() => wx.navigateBack(), 1500);
+        }
+      });
+    }, 1500);
+  },
+
+  // 取消
+  onCancel() {
+    wx.navigateBack();
   }
-})
+});
