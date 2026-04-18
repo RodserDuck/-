@@ -1,0 +1,67 @@
+<!-- pages/publish-lostfound/publish-lostfound.wxml -->
+<view class="container">
+  <view class="nav-bar">
+    <text class="cancel-btn" bindtap="onCancel">取消</text>
+    <text class="nav-title">{{publishType === 'lost' ? '发布寻物信息' : '发布招领信息'}}</text>
+    <text class="publish-btn {{isSubmitting ? 'disabled' : ''}}" bindtap="onPublish">发布</text>
+  </view>
+
+  <view class="form-section">
+    <view class="form-item">
+      <text class="label">标题 <text class="required">*</text></text>
+      <input type="text" placeholder="{{publishType === 'lost' ? '如：丢失校园卡' : '如：捡到校园卡'}}" value="{{title}}" bindinput="onTitleInput" maxlength="50"/>
+    </view>
+
+    <view class="form-item">
+      <text class="label">物品名称 <text class="required">*</text></text>
+      <input type="text" placeholder="请输入物品名称" value="{{itemName}}" bindinput="onItemNameInput"/>
+    </view>
+
+    <view class="form-item">
+      <text class="label">{{publishType === 'lost' ? '丢失地点' : '拾获地点'}} <text class="required">*</text></text>
+      <input type="text" placeholder="{{publishType === 'lost' ? '如：图书馆' : '如：食堂'}}" value="{{location}}" bindinput="onLocationInput"/>
+    </view>
+
+    <view class="form-item">
+      <text class="label">{{publishType === 'lost' ? '丢失日期' : '拾获日期'}} <text class="required">*</text></text>
+      <picker mode="date" value="{{date}}" bindchange="onDateChange">
+        <view class="picker-value">
+          <text>{{date || '请选择日期'}}</text>
+          <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">联系方式 <text class="required">*</text></text>
+      <input type="text" placeholder="手机/微信" value="{{contact}}" bindinput="onContactInput"/>
+    </view>
+  </view>
+
+  <view class="description-section">
+    <text class="section-label">详细描述</text>
+    <textarea 
+      class="description-input"
+      placeholder="{{publishType === 'lost' ? '描述物品特征...' : '描述物品特征...'}}"
+      value="{{description}}"
+      bindinput="onDescriptionInput"
+      maxlength="500"
+    />
+  </view>
+
+  <view class="image-section">
+    <text class="section-label">上传图片</text>
+    <view class="image-grid">
+      <view class="image-item" wx:for="{{images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="uploaded-image"/>
+        <view class="delete-btn" bindtap="onDeleteImage" data-index="{{index}}">
+          <text>×</text>
+        </view>
+      </view>
+      <view class="add-btn" wx:if="{{images.length < maxImages}}" bindtap="onChooseImage">
+        <text class="add-icon">+</text>
+        <text class="add-text">{{images.length}}/{{maxImages}}</text>
+      </view>
+    </view>
+  </view>
+</view>

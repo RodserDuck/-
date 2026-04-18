@@ -1,0 +1,45 @@
+<!-- pages/register/register.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">注册账号</text>
+    <text class="subtitle">请选择身份并填写信息</text>
+  </view>
+
+  <view class="identity-section">
+    <text class="section-title">选择身份</text>
+    <view class="identity-options">
+      <view class="identity-item {{identity === 'student' ? 'active' : ''}}" bindtap="onIdentitySelect" data-type="student">
+        <text class="icon">🎓</text><text class="name">学生</text>
+      </view>
+      <view class="identity-item {{identity === 'teacher' ? 'active' : ''}}" bindtap="onIdentitySelect" data-type="teacher">
+        <text class="icon">👨‍🏫</text><text class="name">教师</text>
+      </view>
+      <view class="identity-item {{identity === 'admin' ? 'active' : ''}}" bindtap="onIdentitySelect" data-type="admin">
+        <text class="icon">👨‍💼</text><text class="name">管理员</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <view class="input-item">
+      <text class="label">账号</text>
+      <input type="text" placeholder="请输入账号（至少6位）" value="{{account}}" bindinput="onAccountInput" maxlength="20"/>
+    </view>
+    <view class="input-item">
+      <text class="label">密码</text>
+      <input type="password" placeholder="请输入密码（至少6位）" value="{{password}}" bindinput="onPasswordInput" maxlength="20"/>
+    </view>
+    <view class="input-item">
+      <text class="label">确认密码</text>
+      <input type="password" placeholder="请再次输入密码" value="{{confirmPassword}}" bindinput="onConfirmPasswordInput" maxlength="20"/>
+    </view>
+  </view>
+
+  <button class="register-btn {{isLoading ? 'loading' : ''}}" bindtap="onRegister">{{isLoading ? '注册中...' : '注 册'}}</button>
+
+  <view class="bottom-section">
+    <text class="login-tip">已有账号？</text><text class="login-link" bindtap="onGoLogin">去登录</text>
+  </view>
+
+  <view class="demo-tip"><text>提示：账号 test123 为已存在账号</text></view>
+</view>

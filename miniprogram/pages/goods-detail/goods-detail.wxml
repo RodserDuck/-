@@ -1,0 +1,54 @@
+<!-- pages/goods-detail/goods-detail.wxml -->
+<view class="container">
+  <!-- 图片轮播 -->
+  <view class="image-section">
+    <swiper class="image-swiper" indicator-dots autoplay circular interval="3000" bindchange="onSwiperChange">
+      <swiper-item wx:for="{{goods.images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="goods-image"/>
+      </swiper-item>
+    </swiper>
+    <view class="image-indicator">{{currentImageIndex + 1}}/{{goods.images.length}}</view>
+  </view>
+
+  <!-- 价格信息 -->
+  <view class="price-section">
+    <view class="price-row">
+      <text class="current-price">¥{{goods.price}}</text>
+      <text class="original-price">原价 ¥{{goods.originalPrice}}</text>
+      <text class="condition-tag">{{goods.condition}}</text>
+    </view>
+    <text class="goods-title">{{goods.title}}</text>
+    <view class="meta-row">
+      <text>📍 {{goods.location}}</text>
+      <text class="status {{goods.status === '在售' ? 'onsale' : 'sold'}}">{{goods.status}}</text>
+    </view>
+  </view>
+
+  <!-- 商品描述 -->
+  <view class="section">
+    <view class="section-title">商品描述</view>
+    <text class="description">{{goods.description}}</text>
+  </view>
+
+  <!-- 卖家信息 -->
+  <view class="section">
+    <view class="section-title">卖家信息</view>
+    <view class="seller-card">
+      <image class="seller-avatar" src="{{goods.seller.avatar}}" mode="aspectFill"/>
+      <text class="seller-nickname">{{goods.seller.nickname}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="action-btn {{goods.isLiked ? 'liked' : ''}}" bindtap="onLikeTap">
+      <text>❤️ 收藏</text>
+    </view>
+    <view class="action-btn" bindtap="onContactTap">
+      <text>💬 联系卖家</text>
+    </view>
+    <button class="buy-btn" bindtap="onBuyTap" disabled="{{goods.status !== '在售'}}">
+      {{goods.status === '在售' ? '立即交易' : '已售出'}}
+    </button>
+  </view>
+</view>

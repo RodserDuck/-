@@ -1,0 +1,54 @@
+<!-- pages/club-detail/club-detail.wxml -->
+<view class="container">
+  <view class="club-banner">
+    <image src="{{club.banner}}" mode="aspectFill" class="banner-image"/>
+    <view class="banner-overlay">
+      <view class="club-icon">{{club.icon}}</view>
+      <text class="club-name">{{club.name}}</text>
+      <text class="club-category">{{club.category}}</text>
+    </view>
+  </view>
+
+  <view class="info-section">
+    <view class="stat-row">
+      <view class="stat-item">
+        <text class="stat-value">{{club.members}}</text>
+        <text class="stat-label">成员</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{club.activities.length}}</text>
+        <text class="stat-label">活动</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">4.8</text>
+        <text class="stat-label">评分</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">社团简介</view>
+    <text class="description-text">{{club.description}}</text>
+  </view>
+
+  <view class="section">
+    <view class="section-title">近期活动</view>
+    <view class="activity-list">
+      <view class="activity-item" wx:for="{{club.activities}}" wx:key="index">
+        <view class="activity-info">
+          <text class="activity-title">{{item.title}}</text>
+          <text class="activity-time">{{item.time}}</text>
+        </view>
+        <text class="activity-status {{item.status === '进行中' ? 'ongoing' : 'ended'}}">{{item.status}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <view class="join-btn {{club.isJoined ? 'joined' : ''}} {{club.isApplying ? 'applying' : ''}}" bindtap="onJoinClub">
+      <text wx:if="{{club.isJoined}}">已加入</text>
+      <text wx:elif="{{club.isApplying}}">审核中</text>
+      <text wx:else>申请加入</text>
+    </view>
+  </view>
+</view>

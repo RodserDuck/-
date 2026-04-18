@@ -1,0 +1,169 @@
+<!-- pages/square/square.wxml -->
+<view class="square-page">
+  <!-- 顶部搜索栏 -->
+  <view class="top-search">
+    <view class="search-bar">
+      <view class="search-icon">🔍</view>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="搜索校园动态、公告..."
+        placeholder-class="search-placeholder"
+        bindinput="onSearchInput"
+      />
+      <view class="notice-bell" bindtap="onNoticeTap">
+        <text class="bell-icon">🔔</text>
+        <view class="bell-dot"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 轮播图区域 -->
+  <view class="banner-section">
+    <swiper
+      class="banner-swiper"
+      indicator-dots
+      autoplay
+      circular
+      interval="4000"
+      previous-margin="48rpx"
+      next-margin="48rpx"
+      indicator-active-color="#5b9cf6"
+      indicator-color="rgba(255,255,255,0.5)"
+    >
+      <swiper-item wx:for="{{banners}}" wx:key="id" bindtap="onBannerTap" data-index="{{index}}">
+        <view class="banner-item {{currentBanner === index ? 'active' : ''}}">
+          <image class="banner-img" src="{{item.image}}" mode="aspectFill"/>
+          <view class="banner-overlay"></view>
+          <view class="banner-content">
+            <view class="banner-tag">
+              <text class="banner-tag-text">{{item.tag}}</text>
+            </view>
+            <text class="banner-title">{{item.title}}</text>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-entry-section">
+    <view class="quick-grid">
+      <view class="quick-item" bindtap="onMoreNotice">
+        <view class="quick-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a)">
+          <text class="quick-icon-text">📢</text>
+        </view>
+        <text class="quick-name">通知公告</text>
+      </view>
+      <view class="quick-item" bindtap="onPublishTap">
+        <view class="quick-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe)">
+          <text class="quick-icon-text">✏️</text>
+        </view>
+        <text class="quick-name">发布帖子</text>
+      </view>
+      <view class="quick-item" bindtap="onCollegeTap">
+        <view class="quick-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0)">
+          <text class="quick-icon-text">🏛</text>
+        </view>
+        <text class="quick-name">学院公告</text>
+      </view>
+      <view class="quick-item" bindtap="onActivityTap">
+        <view class="quick-icon" style="background: linear-gradient(135deg, #fae8ff, #f5d0fe)">
+          <text class="quick-icon-text">🎉</text>
+        </view>
+        <text class="quick-name">社团活动</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 通知滚动栏 -->
+  <view class="notice-scroll-bar" bindtap="onNoticeTap">
+    <view class="notice-label">
+      <text class="notice-label-icon">🔔</text>
+      <text class="notice-label-text">校园通知</text>
+    </view>
+    <swiper class="notice-swiper" vertical autoplay circular interval="3000" display-multiple-items="1">
+      <swiper-item wx:for="{{notices}}" wx:key="id">
+        <view class="notice-swipe-item">{{item.title}}</view>
+      </swiper-item>
+    </swiper>
+    <text class="notice-more">更多 ></text>
+  </view>
+
+  <!-- 热门动态标题 -->
+  <view class="section-header">
+    <view class="section-title-wrap">
+      <view class="section-title-bar"></view>
+      <text class="section-title">热门动态</text>
+    </view>
+    <view class="section-right">
+      <text class="post-count">{{posts.length}} 条动态</text>
+    </view>
+  </view>
+
+  <!-- 动态列表 -->
+  <view class="post-list">
+    <view
+      class="post-card"
+      wx:for="{{posts}}"
+      wx:key="id"
+      bindtap="onPostTap"
+      data-id="{{item.id}}"
+    >
+      <!-- 卡片头部：用户信息 -->
+      <view class="post-header">
+        <view class="user-avatar-wrap">
+          <image class="user-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+          <view class="avatar-ring"></view>
+        </view>
+        <view class="user-info">
+          <text class="user-name">{{item.nickname}}</text>
+          <text class="user-time">{{item.time}}</text>
+        </view>
+        <view class="post-tag" wx:if="{{item.hot}}">
+          <text class="post-tag-text">🔥 热帖</text>
+        </view>
+      </view>
+
+      <!-- 卡片内容 -->
+      <view class="post-body">
+        <text class="post-content">{{item.content}}</text>
+        <!-- 图片网格 -->
+        <view class="post-images" wx:if="{{item.images.length > 0}}">
+          <view
+            class="post-img-wrap {{item.images.length === 1 ? 'single' : ''}} {{item.images.length === 2 ? 'double' : ''}}"
+          >
+            <image
+              wx:for="{{item.images}}"
+              wx:for-item="img"
+              wx:key="*this"
+              class="post-img"
+              src="{{img}}"
+              mode="aspectFill"
+              lazy-load
+            />
+          </view>
+        </view>
+      </view>
+
+      <!-- 卡片底部：互动栏 -->
+      <view class="post-footer">
+        <view class="action-item" bindtap="onLikeTap" data-id="{{item.id}}">
+          <text class="action-icon {{item.liked ? 'liked' : ''}}">{{item.liked ? '❤️' : '🤍'}}</text>
+          <text class="action-count">{{item.likes}}</text>
+        </view>
+        <view class="action-item" bindtap="onCommentTap" data-id="{{item.id}}">
+          <text class="action-icon">💬</text>
+          <text class="action-count">{{item.comments}}</text>
+        </view>
+        <view class="action-item" bindtap="onShareTap" data-id="{{item.id}}">
+          <text class="action-icon">↗️</text>
+          <text class="action-count">分享</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部占位 -->
+  <view class="bottom-space"></view>
+</view>

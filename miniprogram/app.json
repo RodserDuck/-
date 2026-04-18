@@ -1,0 +1,70 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/register/register",
+    "pages/square/square",
+    "pages/college/college",
+    "pages/club/club",
+    "pages/market/market",
+    "pages/lostfound/lostfound",
+    "pages/profile/profile",
+    "pages/post-detail/post-detail",
+    "pages/publish-post/publish-post",
+    "pages/goods-detail/goods-detail",
+    "pages/publish-goods/publish-goods",
+    "pages/chat/chat",
+    "pages/publish-lostfound/publish-lostfound",
+    "pages/club-detail/club-detail",
+    "pages/activity-detail/activity-detail",
+    "pages/college-activity-detail/college-activity-detail",
+    "pages/lostfound-detail/lostfound-detail"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "校园生活服务平台",
+    "navigationBarBackgroundColor": "#5b9cf6",
+    "backgroundColor": "#f0f6ff",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#9ca3af",
+    "selectedColor": "#5b9cf6",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/square/square",
+        "text": "校园广场",
+        "iconPath": "images/tab_square.png",
+        "selectedIconPath": "images/tab_square_sel.png"
+      },
+      {
+        "pagePath": "pages/club/club",
+        "text": "社团活动",
+        "iconPath": "images/tab_club.png",
+        "selectedIconPath": "images/tab_club_sel.png"
+      },
+      {
+        "pagePath": "pages/market/market",
+        "text": "二手市场",
+        "iconPath": "images/tab_market.png",
+        "selectedIconPath": "images/tab_market_sel.png"
+      },
+      {
+        "pagePath": "pages/lostfound/lostfound",
+        "text": "失物招领",
+        "iconPath": "images/tab_lost.png",
+        "selectedIconPath": "images/tab_lost_sel.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab_profile.png",
+        "selectedIconPath": "images/tab_profile_sel.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents"
+}

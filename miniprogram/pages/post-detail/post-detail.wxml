@@ -1,0 +1,54 @@
+<!-- pages/post-detail/post-detail.wxml -->
+<view class="container">
+  <!-- 帖子内容 -->
+  <view class="post-card">
+    <view class="post-header">
+      <image class="avatar" src="{{post.avatar}}" mode="aspectFill"/>
+      <view class="user-info">
+        <text class="nickname">{{post.nickname}}</text>
+        <text class="time">{{post.time}}</text>
+      </view>
+    </view>
+    <text class="content">{{post.content}}</text>
+    <view class="image-grid" wx:if="{{post.images.length > 0}}">
+      <image wx:for="{{post.images}}" wx:key="*this" src="{{item}}" mode="aspectFill" class="post-image"/>
+    </view>
+    <view class="post-actions">
+      <view class="action-btn {{post.isLiked ? 'liked' : ''}}" bindtap="onLikeTap">
+        <text>❤️ {{post.likes}}</text>
+      </view>
+      <view class="action-btn">
+        <text>💬 {{post.comments}}</text>
+      </view>
+      <view class="action-btn" bindtap="onShareTap">
+        <text>↗️ 分享</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="comment-section">
+    <view class="section-title">评论 ({{post.comments}})</view>
+    <view class="comment-list">
+      <view class="comment-item" wx:for="{{commentList}}" wx:key="id">
+        <image class="comment-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+        <view class="comment-content">
+          <view class="comment-header">
+            <text class="comment-nickname">{{item.nickname}}</text>
+            <text class="comment-time">{{item.time}}</text>
+          </view>
+          <text class="comment-text">{{item.content}}</text>
+          <view class="comment-footer">
+            <text bindtap="onLikeComment" data-index="{{index}}">👍 {{item.likes}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部评论栏 -->
+  <view class="comment-bar">
+    <input type="text" placeholder="写评论..." value="{{inputValue}}" bindinput="onInput"/>
+    <button bindtap="onSendComment">发送</button>
+  </view>
+</view>

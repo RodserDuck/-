@@ -1,0 +1,175 @@
+<!-- pages/market/market.wxml -->
+<view class="market-page">
+  <!-- 顶部搜索栏 -->
+  <view class="top-search">
+    <view class="search-bar">
+      <view class="search-icon">🔍</view>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="搜索闲置好物..."
+        placeholder-class="search-placeholder"
+        bindinput="onSearchInput"
+      />
+      <view class="publish-btn" bindtap="onPublishTap">
+        <text class="publish-text">+ 发布</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Tab标签 -->
+  <view class="tab-bar">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-index="0">
+      <text class="tab-text">逛市场</text>
+    </view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="1">
+      <text class="tab-text">我的发布</text>
+    </view>
+  </view>
+
+  <!-- ==================== 逛市场 ==================== -->
+  <view class="tab-content" wx:if="{{currentTab === 0}}">
+    <!-- 分类筛选 -->
+    <scroll-view class="category-scroll" scroll-x enhanced show-scrollbar="false">
+      <view class="category-list">
+        <view
+          class="category-chip {{currentCategory === item.id ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="id"
+          bindtap="onCategoryTap"
+          data-id="{{item.id}}"
+        >
+          <text class="chip-icon">{{item.icon}}</text>
+          <text class="chip-text">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 商品瀑布流 -->
+    <view class="goods-waterfall">
+      <!-- 左列 -->
+      <view class="waterfall-col">
+        <view
+          class="goods-card {{index % 2 === 1 ? 'right-card' : ''}}"
+          wx:for="{{leftGoods}}"
+          wx:key="id"
+          bindtap="onGoodsTap"
+          data-id="{{item.id}}"
+        >
+          <view class="goods-img-wrap">
+            <image class="goods-img" src="{{item.image}}" mode="aspectFill"/>
+            <view class="goods-status-tag" wx:if="{{item.status === '已售'}}">
+              <text class="status-text">已售</text>
+            </view>
+          </view>
+          <view class="goods-info">
+            <text class="goods-title">{{item.title}}</text>
+            <view class="goods-price-row">
+              <text class="goods-price">¥{{item.price}}</text>
+              <text class="goods-original">¥{{item.originalPrice}}</text>
+            </view>
+            <view class="goods-seller">
+              <image class="seller-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+              <text class="seller-name">{{item.seller}}</text>
+            </view>
+            <view class="goods-meta-row">
+              <text class="goods-location">📍 {{item.location}}</text>
+              <view class="goods-like" bindtap="onLikeTap" data-id="{{item.id}}">
+                <text class="like-icon">{{item.liked ? '❤️' : '🤍'}}</text>
+                <text class="like-num">{{item.likes}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 右列 -->
+      <view class="waterfall-col">
+        <view
+          class="goods-card"
+          wx:for="{{rightGoods}}"
+          wx:key="id"
+          bindtap="onGoodsTap"
+          data-id="{{item.id}}"
+        >
+          <view class="goods-img-wrap">
+            <image class="goods-img" src="{{item.image}}" mode="aspectFill"/>
+            <view class="goods-status-tag" wx:if="{{item.status === '已售'}}">
+              <text class="status-text">已售</text>
+            </view>
+          </view>
+          <view class="goods-info">
+            <text class="goods-title">{{item.title}}</text>
+            <view class="goods-price-row">
+              <text class="goods-price">¥{{item.price}}</text>
+              <text class="goods-original">¥{{item.originalPrice}}</text>
+            </view>
+            <view class="goods-seller">
+              <image class="seller-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+              <text class="seller-name">{{item.seller}}</text>
+            </view>
+            <view class="goods-meta-row">
+              <text class="goods-location">📍 {{item.location}}</text>
+              <view class="goods-like" bindtap="onLikeTap" data-id="{{item.id}}">
+                <text class="like-icon">{{item.liked ? '❤️' : '🤍'}}</text>
+                <text class="like-num">{{item.likes}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== 我的发布 ==================== -->
+  <view class="tab-content" wx:if="{{currentTab === 1}}">
+    <view class="my-goods-list">
+      <view class="my-goods-card" wx:for="{{myGoods}}" wx:key="id">
+        <view class="my-goods-top">
+          <view class="my-goods-img-wrap">
+            <image class="my-goods-img" src="{{item.image}}" mode="aspectFill"/>
+          </view>
+          <view class="my-goods-main">
+            <text class="my-goods-title">{{item.title}}</text>
+            <view class="my-goods-price-row">
+              <text class="my-goods-price">¥{{item.price}}</text>
+              <view class="my-goods-status {{item.status === '在售' ? 'onsale' : 'sold'}}">
+                <text class="my-status-text">{{item.status}}</text>
+              </view>
+            </view>
+            <view class="my-goods-meta">
+              <text class="my-meta-item">👁 {{item.views}} 浏览</text>
+              <text class="my-meta-item">❤️ {{item.likes}} 收藏</text>
+            </view>
+          </view>
+        </view>
+        <view class="my-goods-actions">
+          <view class="action-chip" bindtap="onEditGoods" data-id="{{item.id}}">
+            <text class="chip-icon-text">✏️</text>
+            <text class="chip-btn-text">编辑</text>
+          </view>
+          <view class="action-chip danger" bindtap="onOffShelf" data-id="{{item.id}}">
+            <text class="chip-icon-text">⬇️</text>
+            <text class="chip-btn-text">{{item.status === '在售' ? '下架' : '上架'}}</text>
+          </view>
+          <view class="action-chip danger" bindtap="onDeleteGoods" data-id="{{item.id}}">
+            <text class="chip-icon-text">🗑</text>
+            <text class="chip-btn-text">删除</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{myGoods.length === 0}}">
+      <text class="empty-emoji">🛍️</text>
+      <text class="empty-title">还没有发布商品</text>
+      <text class="empty-sub">把闲置好物分享给同学们吧</text>
+      <view class="empty-btn" bindtap="onPublishTap">
+        <text class="empty-btn-text">立即发布</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部占位 -->
+  <view class="bottom-space"></view>
+</view>

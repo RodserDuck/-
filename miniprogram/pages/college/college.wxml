@@ -1,0 +1,70 @@
+<!-- pages/college/college.wxml -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <text class="icon-search">🔍</text>
+      <text class="placeholder">搜索学院、通知...</text>
+    </view>
+  </view>
+
+  <!-- 标签切换 -->
+  <view class="tab-bar">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-index="0">学院列表</view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="1">学院通知</view>
+    <view class="tab-item {{currentTab === 2 ? 'active' : ''}}" bindtap="onTabChange" data-index="2">学院活动</view>
+  </view>
+
+  <!-- 学院列表 -->
+  <view class="tab-content" wx:if="{{currentTab === 0}}">
+    <view class="college-grid">
+      <view class="college-card" wx:for="{{colleges}}" wx:key="id" bindtap="onCollegeTap" data-id="{{item.id}}">
+        <view class="college-icon" style="background: {{item.color}}20; color: {{item.color}}">
+          {{item.icon}}
+        </view>
+        <text class="college-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 学院通知 -->
+  <view class="tab-content" wx:if="{{currentTab === 1}}">
+    <view class="notice-list">
+      <view class="notice-card" wx:for="{{notices}}" wx:key="id" bindtap="onViewDetail" data-type="通知">
+        <view class="notice-header">
+          <text class="notice-tag">通知</text>
+          <text class="notice-college">{{item.college}}</text>
+        </view>
+        <text class="notice-title">{{item.title}}</text>
+        <text class="notice-time">{{item.time}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 学院活动 -->
+  <view class="tab-content" wx:if="{{currentTab === 2}}">
+    <view class="activity-list">
+      <view class="activity-card" wx:for="{{activities}}" wx:key="id" bindtap="onViewDetail" data-id="{{item.id}}">
+        <view class="activity-header">
+          <text class="activity-title">{{item.title}}</text>
+          <text class="activity-college">{{item.college}}</text>
+        </view>
+        <view class="activity-info">
+          <view class="info-item">
+            <text class="icon">📅</text>
+            <text>{{item.time}}</text>
+          </view>
+          <view class="info-item">
+            <text class="icon">📍</text>
+            <text>{{item.location}}</text>
+          </view>
+          <view class="info-item">
+            <text class="icon">👥</text>
+            <text>{{item.participants}}人已报名</text>
+          </view>
+        </view>
+        <button class="join-btn">立即报名</button>
+      </view>
+    </view>
+  </view>
+</view>

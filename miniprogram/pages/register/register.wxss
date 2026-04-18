@@ -1,0 +1,26 @@
+/* pages/register/register.wxss */
+page { background: #f5f5f5; }
+.container { padding: 80rpx 64rpx; min-height: 100vh; box-sizing: border-box; }
+.header { margin-bottom: 80rpx; }
+.title { font-size: 52rpx; font-weight: 600; color: #333; display: block; margin-bottom: 20rpx; }
+.subtitle { font-size: 30rpx; color: #999; }
+.identity-section { margin-bottom: 48rpx; }
+.section-title { font-size: 32rpx; color: #333; font-weight: 500; margin-bottom: 28rpx; display: block; }
+.identity-options { display: flex; gap: 24rpx; }
+.identity-item { flex: 1; background: #fff; border-radius: 20rpx; padding: 36rpx 24rpx; display: flex; flex-direction: column; align-items: center; border: 2rpx solid transparent; }
+.identity-item.active { border-color: #3b82f6; background: #eff6ff; }
+.identity-item .icon { font-size: 52rpx; margin-bottom: 16rpx; }
+.identity-item .name { font-size: 28rpx; color: #333; }
+.identity-item.active .name { color: #3b82f6; font-weight: bold; }
+.form-section { background: #fff; border-radius: 20rpx; padding: 36rpx; margin-bottom: 48rpx; }
+.input-item { padding: 24rpx 0; border-bottom: 1rpx solid #f5f5f5; }
+.input-item:last-child { border-bottom: none; }
+.label { font-size: 30rpx; color: #333; margin-bottom: 20rpx; display: block; }
+input { font-size: 34rpx; color: #333; }
+.register-btn { background: linear-gradient(135deg, #10b981, #34d399); color: #fff; font-size: 36rpx; font-weight: 600; padding: 32rpx 0; border-radius: 50rpx; border: none; margin-bottom: 48rpx; }
+.register-btn.loading { opacity: 0.7; }
+.bottom-section { text-align: center; }
+.login-tip { font-size: 30rpx; color: #666; }
+.login-link { font-size: 32rpx; color: #3b82f6; font-weight: 600; margin-left: 16rpx; }
+.demo-tip { text-align: center; margin-top: 48rpx; padding: 24rpx; }
+.demo-tip text { font-size: 26rpx; color: #999; }

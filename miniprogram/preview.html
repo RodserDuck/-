@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>校园生活服务平台 · 预览</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== 全局变量 ===== */
+    :root {
+      --primary-lightest: #eef6ff;
+      --primary-lighter: #dbeafe;
+      --primary-light: #93c5fd;
+      --primary: #5b9cf6;
+      --primary-dark: #4891e8;
+      --primary-darker: #3b7dd8;
+      --sky-lightest: #f0f9ff;
+      --sky-light: #e0f2fe;
+      --ocean: #38bdf8;
+      --ocean-dark: #0ea5e9;
+      --accent-warm: #fb923c;
+      --accent-rose: #f87171;
+      --accent-green: #34d399;
+      --accent-purple: #a78bfa;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --text-primary: #1e3a5f;
+      --text-secondary: #4a6fa5;
+      --text-light: #7a99c7;
+      --text-placeholder: #a0b4d0;
+      --bg-page: #f0f6ff;
+      --bg-card: #ffffff;
+      --bg-hover: #eef6ff;
+      --shadow-xs: 0 1px 3px rgba(91, 156, 246, 0.06);
+      --shadow-sm: 0 2px 8px rgba(91, 156, 246, 0.08);
+      --shadow-md: 0 4px 16px rgba(91, 156, 246, 0.12);
+      --shadow-lg: 0 8px 32px rgba(91, 156, 246, 0.16);
+      --shadow-xl: 0 16px 48px rgba(91, 156, 246, 0.20);
+      --radius-xs: 8px;
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --radius-full: 9999px;
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 20px;
+      --spacing-xl: 24px;
+      --spacing-2xl: 32px;
+      --spacing-3xl: 48px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: #e8f0fc;
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ===== 背景装饰 ===== */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -30%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(91, 156, 246, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== 页面标题 ===== */
+    .page-header {
+      background: linear-gradient(135deg, #5b9cf6 0%, #38bdf8 100%);
+      padding: 32px 24px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: #e8f0fc;
+      border-radius: 50% 50% 0 0;
+    }
+    .header-cloud {
+      position: absolute;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50px;
+      top: 20px;
+    }
+    .cloud-a { width: 160px; height: 50px; left: -30px; animation: cloudFloat 12s ease-in-out infinite; }
+    .cloud-b { width: 220px; height: 70px; right: -50px; top: 10px; animation: cloudFloat 15s ease-in-out infinite 3s; }
+    .cloud-c { width: 120px; height: 40px; left: 40%; top: 60px; animation: cloudFloat 10s ease-in-out infinite 6s; }
+    @keyframes cloudFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .header-content { position: relative; z-index: 2; text-align: center; }
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50px;
+      padding: 6px 18px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+    .header-badge-dot {
+      width: 8px; height: 8px;
+      background: #34d399;
+      border-radius: 50%;
+      margin-right: 8px;
+      box-shadow: 0 0 8px #34d399;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .header-badge-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+    }
+    .header-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+    }
+    .header-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 1px;
+    }
+    .header-info {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 20px;
+    }
+    .header-stat {
+      text-align: center;
+    }
+    .header-stat-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .header-stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 2px;
+    }
+
+    /* ===== 预览内容区 ===== */
+    .preview-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== 页面切换导航 ===== */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #fff;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 50px;
+      font-size: 13px;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    .nav-tab:hover {
+      border-color: var(--primary-light);
+      color: var(--primary);
+      background: var(--primary-lightest);
+    }
+    .nav-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(91,156,246,0.3);
+    }
+    .nav-tab svg { width: 14px; height: 14px; }
+
+    /* ===== 手机预览框架 ===== */
+    .phone-frame {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .phone-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .phone-device {
+      width: 375px;
+      height: 812px;
+      background: #1a1a2e;
+      border-radius: 52px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 20px 60px rgba(0,0,0,0.25),
+        0 0 80px rgba(91,156,246,0.1);
+      position: relative;
+    }
+    .phone-device::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 28px;
+      background: #1a1a2e;
+      border-radius: 0 0 16px 16px;
+      z-index: 10;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 6px;
+      background: #111;
+      border-radius: 0 0 6px 6px;
+      z-index: 11;
+    }
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 42px;
+      overflow: hidden;
+      background: var(--bg-page);
+      position: relative;
+    }
+    .screen-content {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    /* ===== 预览页面面板 ===== */
+    .preview-page { display: none; }
+    .preview-page.active { display: block; }
+
+    /* ===== 通用小程序样式 ===== */
+    .mp-navbar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--ocean) 100%);
+      padding: 48px 16px 24px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .mp-navbar-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    .mp-search-bar {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.95);
+      border-radius: 50px;
+      padding: 10px 16px;
+      margin-top: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .mp-search-icon { color: var(--text-placeholder); margin-right: 8px; font-size: 14px; }
+    .mp-search-input {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-primary);
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+    .mp-bell {
+      position: relative;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .mp-bell svg { width: 18px; height: 18px; color: var(--text-secondary); }
+    .mp-bell-dot {
+      position: absolute;
+      top: -2px; right: -2px;
+      width: 7px; height: 7px;
+      background: #f87171;
+      border-radius: 50%;
+      border: 1.5px solid #fff;
+    }
+    .mp-content { padding-bottom: 80px; }
+
+    /* ===== 轮播图 ===== */
+    .mp-banner {
+      padding: 12px 16px 0;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--ocean) 100%);
+    }
+    .mp-swiper {
+      height: 130px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    .mp-swiper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .mp-swiper-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60%;
+      background: linear-gradient(to top, rgba(10,20,40,0.6), transparent);
+      border-radius: 0 0 14px 14px;
+    }
+    .mp-swiper-tag {
+      position: absolute;
+      bottom: 12px; left: 12px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50px;
+      padding: 4px 12px;
+      font-size: 10px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .mp-swiper-title {
+      position: absolute;
+      bottom: 12px; right: 12px;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .mp-dots {
+      position: absolute;
+      bottom: 8px; right: 12px;
+      display: flex;
+      gap: 4px;
+    }
+    .mp-dot {
+      width: 5px; height: 5px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+    }
+    .mp-dot.active { background: #fff; width: 14px; border-radius: 3px; }
+
+    /* ===== 快捷入口 ===== */
+    .mp-quick {
+      margin: -14px 16px 0;
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 8px 12px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .mp-quick-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 6px 0;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .mp-quick-item:hover { background: var(--primary-lightest); }
+    .mp-quick-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .mp-quick-name {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ===== 通知滚动栏 ===== */
+    .mp-notice-bar {
+      margin: 16px 16px 0;
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-xs);
+    }
+    .mp-notice-label {
+      background: var(--primary-lightest);
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .mp-notice-label svg { width: 14px; height: 14px; color: var(--primary); }
+    .mp-notice-label-text { font-size: 10px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+    .mp-notice-text {
+      flex: 1;
+      font-size: 12px;
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .mp-notice-more {
+      font-size: 11px;
+      color: var(--gray-400);
+      flex-shrink: 0;
+    }
+
+    /* ===== 区域标题 ===== */
+    .mp-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 16px 12px;
+    }
+    .mp-section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mp-section-bar {
+      width: 4px; height: 18px;
+      background: linear-gradient(180deg, var(--primary), var(--ocean));
+      border-radius: 2px;
+    }
+    .mp-section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .mp-section-count {
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    /* ===== 帖子卡片 ===== */
+    .mp-post-list { padding: 0 16px; display: flex; flex-direction: column; gap: 14px; }
+    .mp-post-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .mp-post-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .mp-post-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 14px 0;
+      gap: 10px;
+    }
+    .mp-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-lighter);
+      flex-shrink: 0;
+    }
+    .mp-user-info { flex: 1; }
+    .mp-user-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .mp-user-time { font-size: 10px; color: var(--gray-400); }
+    .mp-post-hot {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 50px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: #ea580c;
+      font-weight: 600;
+    }
+    .mp-post-body { padding: 12px 14px; }
+    .mp-post-content { font-size: 13px; color: #374151; line-height: 1.7; margin-bottom: 10px; }
+    .mp-post-imgs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .mp-post-img { width: 78px; height: 78px; border-radius: 8px; object-fit: cover; }
+    .mp-post-footer {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px 12px;
+      border-top: 1px solid var(--gray-100);
+      gap: 6px;
+    }
+    .mp-action-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: var(--gray-50);
+      border-radius: 50px;
+      padding: 6px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mp-action-btn:hover { background: var(--primary-lightest); }
+    .mp-action-btn svg { width: 13px; height: 13px; }
+    .mp-action-text { font-size: 11px; color: var(--gray-500); }
+
+    /* ===== Tab 栏 ===== */
+    .mp-tab-bar {
+      background: #fff;
+      padding: 0 16px;
+      display: flex;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .mp-tab-item {
+      flex: 1;
+      text-align: center;
+      height: 44px;
+      line-height: 44px;
+      font-size: 13px;
+      color: var(--text-light);
+      font-weight: 500;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mp-tab-item.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .mp-tab-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 22px; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--ocean));
+      border-radius: 2px;
+    }
+
+    /* ===== 社团列表 ===== */
+    .mp-club-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+    .mp-club-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      padding: 14px;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mp-club-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .mp-club-cover {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .mp-club-info { flex: 1; }
+    .mp-club-name { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .mp-club-desc { font-size: 11px; color: var(--gray-400); }
+    .mp-club-meta { display: flex; gap: 10px; margin-top: 4px; }
+    .mp-club-meta-item {
+      font-size: 10px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .mp-club-meta-item svg { width: 10px; height: 10px; }
+    .mp-club-follow {
+      background: linear-gradient(135deg, var(--primary), var(--ocean));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(91,156,246,0.3);
+      transition: all 0.2s;
+    }
+    .mp-club-follow:hover { transform: scale(1.05); }
+
+    /* ===== 二手市场 ===== */
+    .mp-category-scroll {
+      padding: 12px 16px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .mp-category-scroll::-webkit-scrollbar { display: none; }
+    .mp-category-list { display: flex; gap: 8px; }
+    .mp-category-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #fff;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--gray-500);
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mp-category-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(91,156,246,0.3);
+    }
+    .mp-waterfall {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 12px 16px;
+    }
+    .mp-goods-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mp-goods-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .mp-goods-img { width: 100%; height: 120px; object-fit: cover; }
+    .mp-goods-info { padding: 10px; }
+    .mp-goods-title { font-size: 12px; color: var(--text-primary); font-weight: 500; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+    .mp-goods-price { font-size: 14px; color: var(--accent-rose); font-weight: 700; margin-bottom: 6px; }
+    .mp-goods-price .ori { font-size: 10px; color: var(--gray-400); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+    .mp-goods-seller { display: flex; align-items: center; gap: 5px; }
+    .mp-seller-avatar { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; }
+    .mp-seller-name { font-size: 10px; color: var(--gray-400); flex: 1; }
+    .mp-goods-like { font-size: 10px; color: var(--gray-400); }
+
+    /* ===== 失物招领 ===== */
+    .mp-lf-tabs { display: flex; gap: 10px; padding: 14px 16px 0; }
+    .mp-lf-tab {
+      flex: 1;
+      text-align: center;
+      background: #fff;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 50px;
+      padding: 8px 0;
+      font-size: 13px;
+      color: var(--gray-500);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mp-lf-tab.active {
+      background: linear-gradient(135deg, var(--primary), var(--ocean));
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(91,156,246,0.25);
+    }
+    .mp-lf-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .mp-lf-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mp-lf-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .mp-lf-icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .mp-lf-info { flex: 1; }
+    .mp-lf-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .mp-lf-desc { font-size: 11px; color: var(--gray-400); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .mp-lf-meta { display: flex; gap: 10px; }
+    .mp-lf-meta-item { font-size: 10px; color: var(--text-light); display: flex; align-items: center; gap: 3px; }
+    .mp-lf-tag {
+      background: var(--accent-warm);
+      color: #fff;
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 10px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .mp-lf-tag.green { background: var(--accent-green); }
+
+    /* ===== 我的页面 ===== */
+    .mp-profile-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--ocean) 100%);
+      padding: 50px 16px 28px;
+      position: relative;
+    }
+    .mp-profile-info { display: flex; align-items: center; gap: 14px; }
+    .mp-profile-avatar {
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.3);
+      object-fit: cover;
+    }
+    .mp-profile-name { font-size: 18px; font-weight: 700; color: #fff; }
+    .mp-profile-desc { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+    .mp-profile-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 14px 20px;
+      backdrop-filter: blur(10px);
+    }
+    .mp-stat-item { text-align: center; }
+    .mp-stat-num { font-size: 18px; font-weight: 700; color: #fff; }
+    .mp-stat-label { font-size: 10px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+    .mp-profile-menu {
+      margin: -14px 16px 0;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+    .mp-menu-group { padding: 8px 0; }
+    .mp-menu-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .mp-menu-item:hover { background: var(--primary-lightest); }
+    .mp-menu-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .mp-menu-label { flex: 1; font-size: 14px; color: var(--text-primary); font-weight: 500; }
+    .mp-menu-arrow { color: var(--gray-300); }
+    .mp-menu-divider { height: 1px; background: var(--gray-100); margin: 0 16px; }
+
+    /* ===== TabBar ===== */
+    .mp-tabbar {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      border-top: 1px solid var(--gray-100);
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+      z-index: 50;
+    }
+    .mp-tabbar-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      padding: 6px 0;
+    }
+    .mp-tabbar-item svg { width: 20px; height: 20px; color: var(--gray-400); }
+    .mp-tabbar-item.active svg { color: var(--primary); }
+    .mp-tabbar-text { font-size: 10px; color: var(--gray-400); }
+    .mp-tabbar-item.active .mp-tabbar-text { color: var(--primary); font-weight: 600; }
+
+    /* ===== 登录页 ===== */
+    .mp-login-top {
+      background: linear-gradient(160deg, var(--primary) 0%, var(--ocean) 55%, #bae6fd 100%);
+      padding: 48px 20px 0;
+      position: relative;
+      min-height: 260px;
+    }
+    .mp-login-cloud {
+      position: absolute;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50px;
+      top: 30px;
+    }
+    .mp-login-cloud-1 { width: 120px; height: 40px; left: -20px; animation: cloudFloat 10s ease-in-out infinite; }
+    .mp-login-cloud-2 { width: 160px; height: 55px; right: -30px; top: 15px; animation: cloudFloat 14s ease-in-out infinite 2s; }
+    .mp-login-logo-zone { display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
+    .mp-login-logo {
+      width: 70px; height: 70px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.3);
+      margin-bottom: 14px;
+    }
+    .mp-login-logo-icon { font-size: 36px; }
+    .mp-login-appname { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 2px; margin-bottom: 4px; }
+    .mp-login-sub { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 1px; }
+    .mp-login-wave {
+      position: relative;
+      height: 30px;
+      margin-top: 28px;
+      overflow: hidden;
+    }
+    .mp-login-wave::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 40px;
+      background: var(--bg-page);
+      border-radius: 50% 50% 0 0;
+    }
+    .mp-login-form {
+      background: var(--bg-page);
+      padding: 28px 20px 20px;
+      min-height: calc(100% - 290px);
+    }
+    .mp-login-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 20px;
+      box-shadow: var(--shadow-md);
+    }
+    .mp-login-welcome { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .mp-login-subtitle { font-size: 12px; color: var(--text-light); margin-bottom: 24px; }
+    .mp-input-group {
+      background: var(--primary-lightest);
+      border-radius: 12px;
+      border: 1px solid var(--primary-lighter);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .mp-input-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      gap: 10px;
+    }
+    .mp-input-item + .mp-input-item { border-top: 1px solid var(--primary-lighter); }
+    .mp-input-icon { font-size: 16px; color: var(--primary); }
+    .mp-input-field { flex: 1; }
+    .mp-input-label { font-size: 10px; color: var(--primary); font-weight: 600; }
+    .mp-input-control {
+      font-size: 13px;
+      color: var(--text-primary);
+      background: transparent;
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 2px 0;
+    }
+    .mp-login-btn {
+      width: 100%;
+      height: 46px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      box-shadow: 0 4px 16px rgba(91,156,246,0.35);
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+    }
+    .mp-login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(91,156,246,0.4); }
+    .mp-login-btn:active { transform: translateY(1px); }
+    .mp-login-register {
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+    .mp-login-register a { color: var(--primary); font-weight: 600; text-decoration: none; }
+
+    /* ===== 功能模块介绍 ===== */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .feature-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+    .feature-desc { font-size: 10px; color: var(--gray-400); margin-top: 4px; }
+
+    /* ===== 底部信息 ===== */
+    .footer-info {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--gray-400);
+      font-size: 12px;
+    }
+    .footer-info a { color: var(--primary); text-decoration: none; }
+
+    /* ===== 动效 ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .phone-device:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.1s both; }
+    .phone-device:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.3s both; }
+    .phone-device:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.5s both; }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 768px) {
+      .phone-frame { gap: 20px; }
+      .phone-device { width: 320px; height: 694px; }
+    }
+    @media (max-width: 480px) {
+      .phone-frame { flex-direction: column; align-items: center; }
+      .phone-device { width: 100%; max-width: 375px; height: auto; aspect-ratio: 375/812; }
+    }
+
+    /* ===== 标签页切换面板 ===== */
+    .page-panel { display: none; }
+    .page-panel.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ===== 页面标题区 ===== -->
+<div class="page-header">
+  <div class="header-cloud cloud-a"></div>
+  <div class="header-cloud cloud-b"></div>
+  <div class="header-cloud cloud-c"></div>
+  <div class="header-content">
+    <div class="header-badge">
+      <div class="header-badge-dot"></div>
+      <span class="header-badge-text">Campus Life Service Platform</span>
+    </div>
+    <div class="header-title">校园生活服务平台</div>
+    <div class="header-sub">基于微信小程序的智慧校园一站式解决方案</div>
+    <div class="header-info">
+      <div class="header-stat">
+        <div class="header-stat-num">5</div>
+        <div class="header-stat-label">核心功能模块</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-num">13</div>
+        <div class="header-stat-label">数据表设计</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-num">Spring Boot</div>
+        <div class="header-stat-label">后端架构</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 预览内容区 ===== -->
+<div class="preview-container">
+
+  <!-- ===== 功能模块概览 ===== -->
+  <div style="margin-bottom: 28px;">
+    <div class="mp-section-header" style="padding: 0 0 14px;">
+      <div class="mp-section-title-wrap">
+        <div class="mp-section-bar"></div>
+        <div class="mp-section-title">功能模块概览</div>
+      </div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">📢</div>
+        <div class="feature-name">学院公告</div>
+        <div class="feature-desc">通知公告发布</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe);">🏛</div>
+        <div class="feature-name">社团活动</div>
+        <div class="feature-desc">社团管理报名</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0);">🔄</div>
+        <div class="feature-name">二手市场</div>
+        <div class="feature-desc">闲置物品交易</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #fae8ff, #f5d0fe);">🔍</div>
+        <div class="feature-name">失物招领</div>
+        <div class="feature-desc">寻物发布认领</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #fee2e2, #fecaca);">💬</div>
+        <div class="feature-name">校园论坛</div>
+        <div class="feature-desc">动态互动交流</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd);">👤</div>
+        <div class="feature-name">个人中心</div>
+        <div class="feature-desc">信息管理收藏</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 页面切换导航 ===== -->
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab(this, 'login')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M13.8 12H3"/></svg>
+      登录页
+    </div>
+    <div class="nav-tab" onclick="switchTab(this, 'square')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      校园广场
+    </div>
+    <div class="nav-tab" onclick="switchTab(this, 'club')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      社团活动
+    </div>
+    <div class="nav-tab" onclick="switchTab(this, 'market')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      二手市场
+    </div>
+    <div class="nav-tab" onclick="switchTab(this, 'lostfound')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      失物招领
+    </div>
+    <div class="nav-tab" onclick="switchTab(this, 'profile')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      我的
+    </div>
+  </div>
+
+  <!-- ===== 手机预览区域 ===== -->
+  <div class="phone-frame">
+
+    <!-- ==== 登录页 ==== -->
+    <div class="phone-wrapper page-panel active" id="panel-login">
+      <div class="phone-label">登录页 · Login</div>
+      <div class="phone-device">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="screen-content">
+            <div class="mp-login-top">
+              <div class="mp-login-cloud mp-login-cloud-1"></div>
+              <div class="mp-login-cloud mp-login-cloud-2"></div>
+              <div class="mp-login-logo-zone">
+                <div class="mp-login-logo">
+                  <span class="mp-login-logo-icon">🏫</span>
+                </div>
+                <div class="mp-login-appname">校园生活服务平台</div>
+                <div class="mp-login-sub">CAMPUS LIFE SERVICE</div>
+              </div>
+              <div class="mp-login-wave"></div>
+            </div>
+            <div class="mp-login-form">
+              <div class="mp-login-card">
+                <div class="mp-login-welcome">欢迎回来</div>
+                <div class="mp-login-subtitle">连接校园，精彩生活</div>
+                <div class="mp-input-group">
+                  <div class="mp-input-item">
+                    <span class="mp-input-icon">👤</span>
+                    <div class="mp-input-field">
+                      <div class="mp-input-label">账号</div>
+                      <input class="mp-input-control" type="text" placeholder="请输入学号/账号" value="20220200649">
+                    </div>
+                  </div>
+                  <div class="mp-input-item">
+                    <span class="mp-input-icon">🔒</span>
+                    <div class="mp-input-field">
+                      <div class="mp-input-label">密码</div>
+                      <input class="mp-input-control" type="password" placeholder="请输入密码" value="******">
+                    </div>
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                  <label style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-light);">
+                    <input type="checkbox" checked style="accent-color:var(--primary);"> 记住我
+                  </label>
+                  <span style="font-size:12px; color:var(--primary);">忘记密码？</span>
+                </div>
+                <button class="mp-login-btn">登 录</button>
+                <div class="mp-login-register">还没有账号？<a href="#">立即注册</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==== 校园广场 ==== -->
+    <div class="phone-wrapper page-panel" id="panel-square">
+      <div class="phone-label">校园广场 · Square</div>
+      <div class="phone-device">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="screen-content">
+            <!-- 顶部导航 -->
+            <div class="mp-navbar">
+              <div class="mp-navbar-title">校园广场</div>
+              <div class="mp-search-bar">
+                <span class="mp-search-icon">🔍</span>
+                <input class="mp-search-input" placeholder="搜索校园动态、公告...">
+                <div class="mp-bell">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                  <div class="mp-bell-dot"></div>
+                </div>
+              </div>
+            </div>
+            <!-- 轮播图 -->
+            <div class="mp-banner">
+              <div class="mp-swiper">
+                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=300&fit=crop" alt="校园">
+                <div class="mp-swiper-overlay"></div>
+                <div class="mp-swiper-tag">校园公告</div>
+                <div class="mp-swiper-title">2026春季学期选课通知</div>
+                <div class="mp-dots">
+                  <div class="mp-dot active"></div>
+                  <div class="mp-dot"></div>
+                  <div class="mp-dot"></div>
+                </div>
+              </div>
+            </div>
+            <!-- 快捷入口 -->
+            <div class="mp-quick">
+              <div class="mp-quick-item">
+                <div class="mp-quick-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">📢</div>
+                <div class="mp-quick-name">通知公告</div>
+              </div>
+              <div class="mp-quick-item">
+                <div class="mp-quick-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe);">✏️</div>
+                <div class="mp-quick-name">发布帖子</div>
+              </div>
+              <div class="mp-quick-item">
+                <div class="mp-quick-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0);">🏛</div>
+                <div class="mp-quick-name">学院公告</div>
+              </div>
+              <div class="mp-quick-item">
+                <div class="mp-quick-icon" style="background: linear-gradient(135deg, #fae8ff, #f5d0fe);">🎉</div>
+                <div class="mp-quick-name">社团活动</div>
+              </div>
+            </div>
+            <!-- 通知栏 -->
+            <div class="mp-notice-bar">
+              <div class="mp-notice-label">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <span class="mp-notice-label-text">校园通知</span>
+              </div>
+              <div class="mp-notice-text">关于举办2026年校园科技文化节的通知...</div>
+              <div class="mp-notice-more">更多 ></div>
+            </div>
+            <!-- 区域标题 -->
+            <div class="mp-section-header">
+              <div class="mp-section-title-wrap">
+                <div class="mp-section-bar"></div>
+                <div class="mp-section-title">热门动态</div>
+              </div>
+              <div class="mp-section-count">12 条动态</div>
+            </div>
+            <!-- 帖子列表 -->
+            <div class="mp-post-list">
+              <div class="mp-post-card">
+                <div class="mp-post-header">
+                  <img class="mp-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" alt="">
+                  <div class="mp-user-info">
+                    <div class="mp-user-name">林小雨</div>
+                    <div class="mp-user-time">10分钟前</div>
+                  </div>
+                  <div class="mp-post-hot">🔥 热帖</div>
+                </div>
+                <div class="mp-post-body">
+                  <div class="mp-post-content">图书馆三楼自习室开放了！想找安静学习环境的同学可以去看看～位置很好，插座充足 📚</div>
+                  <div class="mp-post-imgs">
+                    <img class="mp-post-img" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=200&fit=crop">
+                    <img class="mp-post-img" src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=200&h=200&fit=crop">
+                    <img class="mp-post-img" src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=200&h=200&fit=crop">
+                  </div>
+                </div>
+                <div class="mp-post-footer">
+                  <div class="mp-action-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    <span class="mp-action-text">128</span>
+                  </div>
+                  <div class="mp-action-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    <span class="mp-action-text">23</span>
+                  </div>
+                  <div class="mp-action-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                    <span class="mp-action-text">分享</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mp-post-card">
+                <div class="mp-post-header">
+                  <img class="mp-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="">
+                  <div class="mp-user-info">
+                    <div class="mp-user-name">张明远</div>
+                    <div class="mp-user-time">32分钟前</div>
+                  </div>
+                </div>
+                <div class="mp-post-body">
+                  <div class="mp-post-content">有同学拼单购买雅思真题吗？京东上三本套装打7折，人越多越便宜呀 🙋‍♂️</div>
+                  <div class="mp-post-imgs">
+                    <img class="mp-post-img" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&h=200&fit=crop">
+                  </div>
+                </div>
+                <div class="mp-post-footer">
+                  <div class="mp-action-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    <span class="mp-action-text">56</span>
+                  </div>
+                  <div class="mp-action-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    <span class="mp-action-text">8</span>
+                  </div>
+                  <div class="mp-action-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                    <span class="mp-action-text">分享</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 底部占位 -->
+            <div style="height:20px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==== 社团活动 ==== -->
+    <div class="phone-wrapper page-panel" id="panel-club">
+      <div class="phone-label">社团活动 · Club</div>
+      <div class="phone-device">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="screen-content">
+            <div class="mp-navbar">
+              <div class="mp-navbar-title">社团活动</div>
+              <div class="mp-search-bar">
+                <span class="mp-search-icon">🔍</span>
+                <input class="mp-search-input" placeholder="搜索社团、活动...">
+              </div>
+            </div>
+            <!-- Tab栏 -->
+            <div class="mp-tab-bar">
+              <div class="mp-tab-item active">全部社团</div>
+              <div class="mp-tab-item">我的社团</div>
+              <div class="mp-tab-item">活动报名</div>
+            </div>
+            <!-- 社团列表 -->
+            <div class="mp-club-list" style="padding-top:12px;">
+              <div class="mp-club-card">
+                <img class="mp-club-cover" src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=120&h=120&fit=crop">
+                <div class="mp-club-info">
+                  <div class="mp-club-name">计算机协会</div>
+                  <div class="mp-club-desc">探索技术前沿，共享编程乐趣</div>
+                  <div class="mp-club-meta">
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      286人
+                    </div>
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      本月3场
+                    </div>
+                  </div>
+                </div>
+                <button class="mp-club-follow">加入</button>
+              </div>
+              <div class="mp-club-card">
+                <img class="mp-club-cover" src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=120&h=120&fit=crop">
+                <div class="mp-club-info">
+                  <div class="mp-club-name">摄影协会</div>
+                  <div class="mp-club-desc">用镜头记录校园每一个美好瞬间</div>
+                  <div class="mp-club-meta">
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      158人
+                    </div>
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      本月2场
+                    </div>
+                  </div>
+                </div>
+                <button class="mp-club-follow">加入</button>
+              </div>
+              <div class="mp-club-card">
+                <img class="mp-club-cover" src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=120&h=120&fit=crop">
+                <div class="mp-club-info">
+                  <div class="mp-club-name">音乐协会</div>
+                  <div class="mp-club-desc">让音乐成为连接彼此的桥梁</div>
+                  <div class="mp-club-meta">
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      203人
+                    </div>
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      本月4场
+                    </div>
+                  </div>
+                </div>
+                <button class="mp-club-follow">已加入</button>
+              </div>
+              <div class="mp-club-card">
+                <img class="mp-club-cover" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=120&h=120&fit=crop">
+                <div class="mp-club-info">
+                  <div class="mp-club-name">羽毛球协会</div>
+                  <div class="mp-club-desc">健康运动，激情飞扬</div>
+                  <div class="mp-club-meta">
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      412人
+                    </div>
+                    <div class="mp-club-meta-item">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      本月5场
+                    </div>
+                  </div>
+                </div>
+                <button class="mp-club-follow">加入</button>
+              </div>
+            </div>
+            <div style="height:20px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==== 二手市场 ==== -->
+    <div class="phone-wrapper page-panel" id="panel-market">
+      <div class="phone-label">二手市场 · Market</div>
+      <div class="phone-device">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="screen-content">
+            <div class="mp-navbar">
+              <div class="mp-navbar-title">二手市场</div>
+              <div class="mp-search-bar">
+                <span class="mp-search-icon">🔍</span>
+                <input class="mp-search-input" placeholder="搜索闲置好物...">
+                <div style="display:flex; align-items:center; background:var(--primary); color:#fff; border-radius:50px; padding:6px 14px; font-size:12px; font-weight:600; margin-left:8px; cursor:pointer;">+ 发布</div>
+              </div>
+            </div>
+            <!-- Tab -->
+            <div class="mp-tab-bar">
+              <div class="mp-tab-item active">逛市场</div>
+              <div class="mp-tab-item">我的发布</div>
+            </div>
+            <!-- 分类 -->
+            <div class="mp-category-scroll">
+              <div class="mp-category-list">
+                <div class="mp-category-chip active">📚 全部</div>
+                <div class="mp-category-chip">📱 电子设备</div>
+                <div class="mp-category-chip">👕 服饰鞋包</div>
+                <div class="mp-category-chip">📖 书籍文具</div>
+                <div class="mp-category-chip">🎮 数码配件</div>
+                <div class="mp-category-chip">🏠 生活用品</div>
+              </div>
+            </div>
+            <!-- 瀑布流 -->
+            <div class="mp-waterfall">
+              <div class="mp-goods-card">
+                <img class="mp-goods-img" src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=240&fit=crop">
+                <div class="mp-goods-info">
+                  <div class="mp-goods-title">高等数学教材第七版 上下册 几乎全新</div>
+                  <div class="mp-goods-price">¥35 <span class="ori">¥78</span></div>
+                  <div class="mp-goods-seller">
+                    <img class="mp-seller-avatar" src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=40&h=40&fit=crop&crop=face" alt="">
+                    <span class="mp-seller-name">李同学</span>
+                    <span class="mp-goods-like">❤️ 12</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mp-goods-card">
+                <img class="mp-goods-img" src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=300&h=300&fit=crop">
+                <div class="mp-goods-info">
+                  <div class="mp-goods-title">小米蓝牙耳机 Air2 SE 95新 带包装盒</div>
+                  <div class="mp-goods-price">¥89 <span class="ori">¥169</span></div>
+                  <div class="mp-goods-seller">
+                    <img class="mp-seller-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face" alt="">
+                    <span class="mp-seller-name">王同学</span>
+                    <span class="mp-goods-like">❤️ 28</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mp-goods-card">
+                <img class="mp-goods-img" src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=280&fit=crop">
+                <div class="mp-goods-info">
+                  <div class="mp-goods-title">小米电动滑板车 校园代步 续航30km</div>
+                  <div class="mp-goods-price">¥680 <span class="ori">¥1999</span></div>
+                  <div class="mp-goods-seller">
+                    <img class="mp-seller-avatar" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=40&h=40&fit=crop&crop=face" alt="">
+                    <span class="mp-seller-name">陈同学</span>
+                    <span class="mp-goods-like">❤️ 45</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mp-goods-card">
+                <img class="mp-goods-img" src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300&h=260&fit=crop">
+                <div class="mp-goods-info">
+                  <div class="mp-goods-title">拍立得 mini9 粉色 送相纸2盒</div>
+                  <div class="mp-goods-price">¥320 <span class="ori">¥599</span></div>
+                  <div class="mp-goods-seller">
+                    <img class="mp-seller-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="">
+                    <span class="mp-seller-name">刘同学</span>
+                    <span class="mp-goods-like">❤️ 19</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="height:20px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==== 失物招领 ==== -->
+    <div class="phone-wrapper page-panel" id="panel-lostfound">
+      <div class="phone-label">失物招领 · Lost & Found</div>
+      <div class="phone-device">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="screen-content">
+            <div class="mp-navbar">
+              <div class="mp-navbar-title">失物招领</div>
+              <div class="mp-search-bar">
+                <span class="mp-search-icon">🔍</span>
+                <input class="mp-search-input" placeholder="搜索失物、寻物...">
+              </div>
+            </div>
+            <!-- Tab -->
+            <div class="mp-lf-tabs">
+              <div class="mp-lf-tab active">🔍 寻物启事</div>
+              <div class="mp-lf-tab">📋 失物登记</div>
+            </div>
+            <!-- 列表 -->
+            <div class="mp-lf-list">
+              <div class="mp-lf-card">
+                <div class="mp-lf-icon" style="background: linear-gradient(135deg, #fee2e2, #fecaca);">🎒</div>
+                <div class="mp-lf-info">
+                  <div class="mp-lf-title">黑色双肩包 - 北区食堂遗失</div>
+                  <div class="mp-lf-desc">内有学生证和校园卡，拾到者请联系，感谢🙏</div>
+                  <div class="mp-lf-meta">
+                    <div class="mp-lf-meta-item">📍 北区食堂</div>
+                    <div class="mp-lf-meta-item">⏰ 2小时前</div>
+                  </div>
+                </div>
+                <div class="mp-lf-tag">寻物</div>
+              </div>
+              <div class="mp-lf-card">
+                <div class="mp-lf-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0);">🔑</div>
+                <div class="mp-lf-info">
+                  <div class="mp-lf-title">钥匙串 - 图书馆三楼</div>
+                  <div class="mp-lf-desc">一把钥匙串，带有蓝色小挂件，在三楼自习室发现</div>
+                  <div class="mp-lf-meta">
+                    <div class="mp-lf-meta-item">📍 图书馆</div>
+                    <div class="mp-lf-meta-item">⏰ 4小时前</div>
+                  </div>
+                </div>
+                <div class="mp-lf-tag green">招领</div>
+              </div>
+              <div class="mp-lf-card">
+                <div class="mp-lf-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">📱</div>
+                <div class="mp-lf-info">
+                  <div class="mp-lf-title">iPhone 14 黑色 - 操场跑道</div>
+                  <div class="mp-lf-desc">晚跑时在跑道旁捡到，已送至保卫处</div>
+                  <div class="mp-lf-meta">
+                    <div class="mp-lf-meta-item">📍 操场</div>
+                    <div class="mp-lf-meta-item">⏰ 6小时前</div>
+                  </div>
+                </div>
+                <div class="mp-lf-tag green">招领</div>
+              </div>
+              <div class="mp-lf-card">
+                <div class="mp-lf-icon" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd);">🎧</div>
+                <div class="mp-lf-info">
+                  <div class="mp-lf-title">AirPods Pro - 二号楼教室</div>
+                  <div class="mp-lf-desc">周三上午第二节课后遗落，充电盒白色</div>
+                  <div class="mp-lf-meta">
+                    <div class="mp-lf-meta-item">📍 二号楼</div>
+                    <div class="mp-lf-meta-item">⏰ 昨天</div>
+                  </div>
+                </div>
+                <div class="mp-lf-tag">寻物</div>
+              </div>
+            </div>
+            <!-- 发布按钮 -->
+            <div style="padding: 0 16px 16px; display:flex; gap:10px;">
+              <button style="flex:1; height:42px; background:linear-gradient(135deg, var(--primary), var(--ocean)); color:#fff; border:none; border-radius:50px; font-size:13px; font-weight:600; cursor:pointer; box-shadow: 0 4px 14px rgba(91,156,246,0.3);">+ 发布寻物</button>
+              <button style="flex:1; height:42px; background:#fff; color:var(--primary); border:1.5px solid var(--primary-light); border-radius:50px; font-size:13px; font-weight:600; cursor:pointer;">+ 登记失物</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==== 我的页面 ==== -->
+    <div class="phone-wrapper page-panel" id="panel-profile">
+      <div class="phone-label">个人中心 · Profile</div>
+      <div class="phone-device">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="screen-content">
+            <div class="mp-profile-header">
+              <div class="mp-profile-info">
+                <img class="mp-profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&crop=face" alt="">
+                <div>
+                  <div class="mp-profile-name">李炳德</div>
+                  <div class="mp-profile-desc">计算机与大数据科学学院 · A2212班</div>
+                </div>
+              </div>
+              <div class="mp-profile-stats">
+                <div class="mp-stat-item">
+                  <div class="mp-stat-num">12</div>
+                  <div class="mp-stat-label">发布</div>
+                </div>
+                <div class="mp-stat-item">
+                  <div class="mp-stat-num">86</div>
+                  <div class="mp-stat-label">获赞</div>
+                </div>
+                <div class="mp-stat-item">
+                  <div class="mp-stat-num">5</div>
+                  <div class="mp-stat-label">收藏</div>
+                </div>
+              </div>
+            </div>
+            <!-- 菜单 -->
+            <div class="mp-profile-menu">
+              <div class="mp-menu-group">
+                <div class="mp-menu-item">
+                  <div class="mp-menu-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe);">📝</div>
+                  <span class="mp-menu-label">我的发布</span>
+                  <span class="mp-menu-arrow">›</span>
+                </div>
+                <div class="mp-menu-item">
+                  <div class="mp-menu-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0);">❤️</div>
+                  <span class="mp-menu-label">我的收藏</span>
+                  <span class="mp-menu-arrow">›</span>
+                </div>
+                <div class="mp-menu-item">
+                  <div class="mp-menu-icon" style="background: linear-gradient(135deg, #fae8ff, #f5d0fe);">🏛</div>
+                  <span class="mp-menu-label">我的社团</span>
+                  <span class="mp-menu-arrow">›</span>
+                </div>
+                <div class="mp-menu-item">
+                  <div class="mp-menu-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">📅</div>
+                  <span class="mp-menu-label">活动报名</span>
+                  <span class="mp-menu-arrow">›</span>
+                </div>
+              </div>
+              <div class="mp-menu-divider"></div>
+              <div class="mp-menu-group">
+                <div class="mp-menu-item">
+                  <div class="mp-menu-icon" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd);">🔔</div>
+                  <span class="mp-menu-label">消息通知</span>
+                  <span class="mp-menu-arrow">›</span>
+                </div>
+                <div class="mp-menu-item">
+                  <div class="mp-menu-icon" style="background: linear-gradient(135deg, #f3f4f6, #e5e7eb);">⚙️</div>
+                  <span class="mp-menu-label">设置</span>
+                  <span class="mp-menu-arrow">›</span>
+                </div>
+                <div class="mp-menu-item" style="color: var(--accent-rose);">
+                  <div class="mp-menu-icon" style="background: linear-gradient(135deg, #fee2e2, #fecaca);">🚪</div>
+                  <span class="mp-menu-label" style="color: var(--accent-rose);">退出登录</span>
+                  <span class="mp-menu-arrow">›</span>
+                </div>
+              </div>
+            </div>
+            <div style="height:20px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end phone-frame -->
+
+  <!-- ===== 技术架构说明 ===== -->
+  <div style="margin-top: 40px;">
+    <div class="mp-section-header" style="padding: 0 0 14px;">
+      <div class="mp-section-title-wrap">
+        <div class="mp-section-bar"></div>
+        <div class="mp-section-title">技术架构</div>
+      </div>
+    </div>
+    <div style="background:#fff; border-radius:16px; padding:20px; box-shadow:var(--shadow-sm);">
+      <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">微信小程序</div>
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">Vue 3</div>
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">Spring Boot 3</div>
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">MySQL 5.7</div>
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">JWT 鉴权</div>
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">RESTful API</div>
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">vant-weapp</div>
+        <div style="background:var(--primary-lightest); border-radius:10px; padding:8px 16px; font-size:12px; color:var(--primary); font-weight:600;">Maven</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end preview-container -->
+
+<div class="footer-info">
+  基于微信小程序的校园生活服务平台 · 九江大学 计算机与大数据科学学院<br>
+  <a href="#">计科A2212-20220200649-李炳德</a> · 2026毕业设计
+</div>
+
+<script>
+  function switchTab(el, pageId) {
+    // 更新导航高亮
+    document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+    el.classList.add('active');
+    // 切换页面
+    document.querySelectorAll('.page-panel').forEach(panel => panel.classList.remove('active'));
+    document.getElementById('panel-' + pageId).classList.add('active');
+  }
+</script>
+
+</body>
+</html>

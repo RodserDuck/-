@@ -1,0 +1,586 @@
+/* pages/club/club.wxss - 柔和蓝白主题 · 社团活动页 */
+
+/* ===================== 页面基础 ===================== */
+.club-page {
+  min-height: 100vh;
+  background: #f0f6ff;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ===================== 顶部搜索栏 ===================== */
+.top-search {
+  background: linear-gradient(160deg, #5b9cf6 0%, #7dd3fc 60%, #bae6fd 100%);
+  padding: 20rpx 28rpx 28rpx;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50rpx;
+  height: 80rpx;
+  padding: 0 32rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-icon {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+  opacity: 0.5;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1e3a5f;
+}
+
+.search-placeholder {
+  color: #b0c8e8;
+}
+
+/* ===================== Tab标签栏 ===================== */
+.tab-bar {
+  display: flex;
+  background: #fff;
+  border-radius: 0 0 24rpx 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(91, 156, 246, 0.08);
+  position: sticky;
+  top: 128rpx;
+  z-index: 199;
+  overflow: hidden;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 0;
+  gap: 6rpx;
+  position: relative;
+  transition: all 0.25s;
+}
+
+.tab-icon {
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.tab-text {
+  font-size: 24rpx;
+  color: #9ca3af;
+  font-weight: 500;
+  transition: color 0.25s;
+}
+
+.tab-item.active .tab-text {
+  color: #5b9cf6;
+  font-weight: 700;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background: linear-gradient(90deg, #5b9cf6, #38bdf8);
+  border-radius: 3rpx;
+}
+
+/* ===================== 内容区 ===================== */
+.tab-content {
+  padding: 20rpx 28rpx 0;
+}
+
+/* ===================== 分类标签 ===================== */
+.category-scroll {
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+}
+
+.category-list {
+  display: inline-flex;
+  gap: 16rpx;
+  padding: 4rpx 0;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 24rpx;
+  background: #fff;
+  border-radius: 100rpx;
+  border: 1rpx solid #e5e7eb;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.category-chip.active {
+  background: linear-gradient(135deg, #5b9cf6, #38bdf8);
+  border-color: #5b9cf6;
+  box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.25);
+}
+
+.chip-icon {
+  font-size: 26rpx;
+}
+
+.chip-text {
+  font-size: 24rpx;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.category-chip.active .chip-text {
+  color: #fff;
+}
+
+/* ===================== 社团卡片 ===================== */
+.club-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding-bottom: 24rpx;
+}
+
+.club-card {
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  transition: box-shadow 0.2s;
+}
+
+.club-top {
+  display: flex;
+  gap: 20rpx;
+}
+
+.club-icon-wrap {
+  flex-shrink: 0;
+}
+
+.club-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.club-emoji {
+  font-size: 52rpx;
+}
+
+.club-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.club-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.club-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+
+.club-category-tag {
+  background: #eef6ff;
+  border-radius: 100rpx;
+  padding: 4rpx 14rpx;
+  border: 1rpx solid #dbeafe;
+}
+
+.category-text {
+  font-size: 20rpx;
+  color: #5b9cf6;
+  font-weight: 600;
+}
+
+.club-desc {
+  font-size: 24rpx;
+  color: #6b7280;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 10rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.club-stats {
+  display: flex;
+  gap: 24rpx;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.stat-icon {
+  font-size: 24rpx;
+}
+
+.stat-num {
+  font-size: 24rpx;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.club-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 10rpx 28rpx;
+  border-radius: 100rpx;
+  background: linear-gradient(135deg, #5b9cf6, #4891e8);
+  box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.25);
+  transition: all 0.2s;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn.followed {
+  background: #f3f4f6;
+  box-shadow: none;
+}
+
+.follow-icon {
+  font-size: 22rpx;
+  color: #fff;
+  font-weight: 700;
+}
+
+.follow-text {
+  font-size: 24rpx;
+  color: #fff;
+  font-weight: 600;
+}
+
+.action-btn.followed .follow-icon,
+.action-btn.followed .follow-text {
+  color: #6b7280;
+}
+
+/* ===================== 活动卡片 ===================== */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  padding-bottom: 24rpx;
+}
+
+.activity-card {
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
+  overflow: hidden;
+}
+
+.activity-image-wrap {
+  position: relative;
+  height: 320rpx;
+  overflow: hidden;
+}
+
+.activity-img {
+  width: 100%;
+  height: 100%;
+}
+
+.activity-status-badge {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  border-radius: 100rpx;
+  padding: 8rpx 20rpx;
+}
+
+.activity-status-badge.open {
+  background: linear-gradient(135deg, #5b9cf6, #38bdf8);
+}
+
+.activity-status-badge.ongoing {
+  background: linear-gradient(135deg, #34d399, #10b981);
+}
+
+.badge-text {
+  font-size: 22rpx;
+  color: #fff;
+  font-weight: 700;
+}
+
+.activity-club-tag {
+  position: absolute;
+  bottom: 16rpx;
+  left: 20rpx;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8rpx);
+  border-radius: 100rpx;
+  padding: 8rpx 16rpx;
+}
+
+.club-tag-text {
+  font-size: 22rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.activity-info {
+  padding: 24rpx;
+}
+
+.activity-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1e3a5f;
+  display: block;
+  margin-bottom: 16rpx;
+  line-height: 1.4;
+}
+
+.activity-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.meta-icon {
+  font-size: 26rpx;
+}
+
+.meta-text {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.activity-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f3f4f6;
+}
+
+.activity-hot {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.hot-icon {
+  font-size: 28rpx;
+}
+
+.hot-num {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
+
+.join-btn {
+  background: linear-gradient(135deg, #5b9cf6, #4891e8);
+  border-radius: 100rpx;
+  padding: 14rpx 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.25);
+  transition: all 0.2s;
+}
+
+.join-btn:active {
+  transform: scale(0.95);
+}
+
+.join-text {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ===================== 我的社团 ===================== */
+.my-clubs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  padding-bottom: 24rpx;
+}
+
+.section-block {
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
+  overflow: hidden;
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 24rpx 16rpx;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.block-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+
+.block-count {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
+
+.my-club-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-club-card {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid #f3f4f6;
+  gap: 16rpx;
+  transition: background 0.15s;
+}
+
+.my-club-card:last-child {
+  border-bottom: none;
+}
+
+.my-club-card:active {
+  background: #f8fbff;
+}
+
+.my-club-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.my-club-avatar .club-emoji {
+  font-size: 44rpx;
+}
+
+.my-club-info {
+  flex: 1;
+}
+
+.my-club-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1e3a5f;
+  margin-bottom: 4rpx;
+}
+
+.my-club-role {
+  font-size: 22rpx;
+  color: #5b9cf6;
+  font-weight: 500;
+}
+
+.my-club-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.unread-badge {
+  background: #f87171;
+  border-radius: 100rpx;
+  min-width: 36rpx;
+  height: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10rpx;
+}
+
+.badge-num {
+  font-size: 20rpx;
+  color: #fff;
+  font-weight: 700;
+}
+
+.arrow-icon {
+  font-size: 40rpx;
+  color: #d1d5db;
+  font-weight: 300;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 24rpx;
+  gap: 16rpx;
+}
+
+.empty-emoji {
+  font-size: 80rpx;
+  opacity: 0.4;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #9ca3af;
+}
+
+.empty-btn {
+  background: linear-gradient(135deg, #5b9cf6, #4891e8);
+  border-radius: 100rpx;
+  padding: 16rpx 40rpx;
+  margin-top: 8rpx;
+}
+
+.empty-btn-text {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 底部占位 */
+.bottom-space {
+  height: 40rpx;
+}

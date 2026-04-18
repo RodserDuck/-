@@ -1,0 +1,203 @@
+<!-- pages/club/club.wxml -->
+<view class="club-page">
+  <!-- 顶部搜索栏 -->
+  <view class="top-search">
+    <view class="search-bar">
+      <view class="search-icon">🔍</view>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="搜索社团、活动..."
+        placeholder-class="search-placeholder"
+      />
+    </view>
+  </view>
+
+  <!-- Tab标签 -->
+  <view class="tab-bar">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-index="0">
+      <text class="tab-icon">🏘️</text>
+      <text class="tab-text">全部社团</text>
+    </view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="1">
+      <text class="tab-icon">🎉</text>
+      <text class="tab-text">社团活动</text>
+    </view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="2">
+      <text class="tab-icon">👤</text>
+      <text class="tab-text">我的社团</text>
+    </view>
+  </view>
+
+  <!-- ==================== 全部社团 ==================== -->
+  <view class="tab-content" wx:if="{{currentTab === 0}}">
+    <!-- 分类标签 -->
+    <scroll-view class="category-scroll" scroll-x enhanced show-scrollbar="false">
+      <view class="category-list">
+        <view
+          class="category-chip {{selectedCategory === item.id ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="id"
+          bindtap="onCategoryTap"
+          data-id="{{item.id}}"
+        >
+          <text class="chip-icon">{{item.icon}}</text>
+          <text class="chip-text">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 社团卡片列表 -->
+    <view class="club-list">
+      <view
+        class="club-card"
+        wx:for="{{clubs}}"
+        wx:key="id"
+        bindtap="onClubTap"
+        data-id="{{item.id}}"
+      >
+        <view class="club-top">
+          <view class="club-icon-wrap">
+            <view class="club-avatar" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}})">
+              <text class="club-emoji">{{item.icon}}</text>
+            </view>
+          </view>
+          <view class="club-main">
+            <view class="club-name-row">
+              <text class="club-name">{{item.name}}</text>
+              <view class="club-category-tag">
+                <text class="category-text">{{item.category}}</text>
+              </view>
+            </view>
+            <text class="club-desc">{{item.description}}</text>
+            <view class="club-stats">
+              <view class="stat-item">
+                <text class="stat-icon">👥</text>
+                <text class="stat-num">{{item.members}}</text>
+              </view>
+              <view class="stat-item">
+                <text class="stat-icon">🔥</text>
+                <text class="stat-num">{{item.hot}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="club-action">
+          <view class="action-btn follow-btn {{item.followed ? 'followed' : ''}}" bindtap="onFollowClub" data-id="{{item.id}}">
+            <text class="follow-icon">{{item.followed ? '✓' : '+'}}</text>
+            <text class="follow-text">{{item.followed ? '已加入' : '加入'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== 社团活动 ==================== -->
+  <view class="tab-content" wx:if="{{currentTab === 1}}">
+    <view class="activity-list">
+      <!-- 活动卡片 -->
+      <view
+        class="activity-card"
+        wx:for="{{activities}}"
+        wx:key="id"
+        bindtap="onActivityTap"
+        data-id="{{item.id}}"
+      >
+        <view class="activity-image-wrap">
+          <image class="activity-img" src="{{item.image}}" mode="aspectFill"/>
+          <view class="activity-status-badge {{item.statusClass}}">
+            <text class="badge-text">{{item.status}}</text>
+          </view>
+          <view class="activity-club-tag">
+            <text class="club-tag-text">🏘️ {{item.club}}</text>
+          </view>
+        </view>
+        <view class="activity-info">
+          <text class="activity-title">{{item.title}}</text>
+          <view class="activity-meta">
+            <view class="meta-item">
+              <text class="meta-icon">📅</text>
+              <text class="meta-text">{{item.time}}</text>
+            </view>
+            <view class="meta-item">
+              <text class="meta-icon">📍</text>
+              <text class="meta-text">{{item.location}}</text>
+            </view>
+            <view class="meta-item">
+              <text class="meta-icon">👥</text>
+              <text class="meta-text">{{item.participants}}人已报名</text>
+            </view>
+          </view>
+          <view class="activity-footer">
+            <view class="activity-hot">
+              <text class="hot-icon">🔥</text>
+              <text class="hot-num">{{item.hot}}</text>
+            </view>
+            <view class="join-btn" bindtap="onJoinActivity" data-id="{{item.id}}">
+              <text class="join-text">立即报名</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== 我的社团 ==================== -->
+  <view class="tab-content" wx:if="{{currentTab === 2}}">
+    <view class="my-clubs-section">
+      <!-- 我加入的社团 -->
+      <view class="section-block">
+        <view class="block-header">
+          <text class="block-title">我加入的社团</text>
+          <text class="block-count">{{myClubs.length}} 个</text>
+        </view>
+        <view class="my-club-list">
+          <view
+            class="my-club-card"
+            wx:for="{{myClubs}}"
+            wx:key="id"
+            bindtap="onClubTap"
+            data-id="{{item.id}}"
+          >
+            <view class="my-club-avatar" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}})">
+              <text class="club-emoji">{{item.icon}}</text>
+            </view>
+            <view class="my-club-info">
+              <text class="my-club-name">{{item.name}}</text>
+              <text class="my-club-role">{{item.role}}</text>
+            </view>
+            <view class="my-club-right">
+              <view class="unread-badge" wx:if="{{item.unread > 0}}">
+                <text class="badge-num">{{item.unread}}</text>
+              </view>
+              <text class="arrow-icon">›</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 我报名的活动 -->
+      <view class="section-block">
+        <view class="block-header">
+          <text class="block-title">我报名的活动</text>
+        </view>
+        <view class="empty-state" wx:if="{{myActivities.length === 0}}">
+          <text class="empty-emoji">📋</text>
+          <text class="empty-text">暂无报名的活动</text>
+          <view class="empty-btn" bindtap="onTabChange" data-index="1">
+            <text class="empty-btn-text">去报名</text>
+          </view>
+        </view>
+        <view class="my-activity-list" wx:else>
+          <view class="my-activity-card" wx:for="{{myActivities}}" wx:key="id">
+            <text class="my-activity-title">{{item.title}}</text>
+            <text class="my-activity-time">{{item.time}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部占位 -->
+  <view class="bottom-space"></view>
+</view>

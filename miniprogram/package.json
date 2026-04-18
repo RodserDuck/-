@@ -1,0 +1,15 @@
+{
+  "name": "campus-life-miniprogram",
+  "version": "1.0.0",
+  "description": "基于微信小程序的校园生活服务平台",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["miniprogram", "wechat", "campus"],
+  "author": "李炳德",
+  "license": "MIT",
+  "dependencies": {
+    "vant-weapp": "^0.5.29"
+  }
+}

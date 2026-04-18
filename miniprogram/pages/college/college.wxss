@@ -1,0 +1,211 @@
+/* pages/college/college.wxss */
+page {
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding-bottom: 30rpx;
+}
+
+/* 搜索栏 */
+.search-bar {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  padding: 20rpx 30rpx 40rpx;
+}
+
+.search-input {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 40rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+}
+
+.icon-search {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+}
+
+.placeholder {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 标签切换 */
+.tab-bar {
+  display: flex;
+  background: #fff;
+  padding: 0 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 30rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #10b981;
+  font-weight: bold;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background: #10b981;
+  border-radius: 2rpx;
+}
+
+/* 学院网格 */
+.college-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx;
+  gap: 20rpx;
+}
+
+.college-card {
+  width: calc(50% - 10rpx);
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+
+.college-icon {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
+}
+
+.college-name {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 通知列表 */
+.notice-list {
+  padding: 20rpx;
+}
+
+.notice-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.notice-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.notice-tag {
+  background: #10b981;
+  color: #fff;
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  margin-right: 16rpx;
+}
+
+.notice-college {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.notice-title {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 16rpx;
+  line-height: 1.5;
+}
+
+.notice-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 活动列表 */
+.activity-list {
+  padding: 20rpx;
+}
+
+.activity-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+
+.activity-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.activity-college {
+  font-size: 24rpx;
+  color: #10b981;
+  background: #d1fae5;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+}
+
+.activity-info {
+  margin-bottom: 20rpx;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.info-item .icon {
+  margin-right: 12rpx;
+  font-size: 28rpx;
+}
+
+.join-btn {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff;
+  font-size: 28rpx;
+  border: none;
+  border-radius: 30rpx;
+  padding: 16rpx 40rpx;
+  width: 100%;
+}

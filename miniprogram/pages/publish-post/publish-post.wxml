@@ -1,0 +1,42 @@
+<!-- pages/publish-post/publish-post.wxml -->
+<view class="container">
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <text class="cancel-btn" bindtap="onCancel">取消</text>
+    <text class="nav-title">发布帖子</text>
+    <text class="publish-btn {{isSubmitting ? 'disabled' : ''}}" bindtap="onPublish">发布</text>
+  </view>
+
+  <!-- 内容输入 -->
+  <textarea 
+    class="content-input"
+    placeholder="分享你的校园生活..."
+    value="{{content}}"
+    bindinput="onContentInput"
+    maxlength="500"
+  />
+
+  <!-- 图片上传 -->
+  <view class="image-section">
+    <view class="image-grid">
+      <view class="image-item" wx:for="{{images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="uploaded-image"/>
+        <view class="delete-btn" bindtap="onDeleteImage" data-index="{{index}}">
+          <text>×</text>
+        </view>
+      </view>
+      <view class="add-btn" wx:if="{{images.length < maxImages}}" bindtap="onChooseImage">
+        <text class="add-icon">+</text>
+        <text class="add-text">{{images.length}}/{{maxImages}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 选项 -->
+  <view class="options-section">
+    <view class="option-item">
+      <text>匿名发布</text>
+      <switch checked="{{isAnonymous}}" bindchange="onAnonymousChange" color="#3b82f6"/>
+    </view>
+  </view>
+</view>
