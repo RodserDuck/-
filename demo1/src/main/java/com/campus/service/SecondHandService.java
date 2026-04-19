@@ -1,0 +1,16 @@
+package com.campus.service;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.campus.entity.SecondHand;
+
+import java.util.List;
+
+public interface SecondHandService {
+    List<SecondHand> listAll();
+    IPage<SecondHand> page(int pageNum, int pageSize, Long categoryId);
+    SecondHand getById(Long id);
+    void incrementView(Long id);
+    SecondHand save(SecondHand goods, Long userId);
+    void delete(Long itemId, Long userId);
+    List<SecondHand> getMyGoods(Long userId);
+}
