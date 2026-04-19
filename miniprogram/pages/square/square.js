@@ -1,13 +1,26 @@
 // pages/square/square.js
-var { getNoticeTop, getPostList, getNoticeList } = require('../../utils/request.js');
+var { getNoticeTop, getPostList, getNoticeList, getCollegeNoticeList } = require('../../utils/request.js');
 
 Page({
   data: {
     currentBanner: 0,
     banners: [],
-    notices: [],
+    schoolNotices: [],
+    collegeNotices: [],
     posts: [],
-    pullLoading: false
+    pullLoading: false,
+    currentFilter: '',
+    userCollegeName: '学院通知',
+    userCollegeId: null,
+    filterOptions: [
+      { label: '全部', value: '' },
+      { label: '🌈 日常分享', value: '日常分享' },
+      { label: '📚 学习交流', value: '学习交流' },
+      { label: '🎉 活动招募', value: '活动招募' },
+      { label: '🤝 互助问答', value: '互助问答' },
+      { label: '💡 校园吐槽', value: '校园吐槽' },
+      { label: '🎵 兴趣爱好', value: '兴趣爱好' }
+    ]
   },
 
   onLoad() {
@@ -15,25 +28,35 @@ Page({
   },
 
   onShow() {
-    // 每次显示刷新登录状态
+    // 每次显示刷新用户信息
+    this.refreshUserCollege();
+  },
+
+  refreshUserCollege() {
+    var userInfo = wx.getStorageSync('userInfo');
+    if (userInfo && userInfo.college) {
+      this.setData({
+        userCollegeName: userInfo.college,
+        userCollegeId: userInfo.college || null
+      });
+    }
   },
 
   loadData() {
     var self = this;
-    // 并行请求通知和帖子
     Promise.all([
-      self.loadNotices(),
+      self.loadSchoolNotices(),
+      self.loadCollegeNotices(),
       self.loadPosts()
     ]).catch(function(err) {
       console.error('加载数据失败', err);
     });
   },
 
-  loadNotices() {
+  loadSchoolNotices() {
     var self = this;
     return getNoticeTop()
       .then(function(notices) {
-        // 将通知转成轮播图格式
         var banners = notices.map(function(n, i) {
           return {
             id: n.noticeId,
@@ -42,14 +65,12 @@ Page({
             tag: n.type === 'SYSTEM' ? '系统通知' : n.type === 'ALL' ? '全校通知' : '学院通知'
           };
         });
-        // 最多取前3条作为轮播
         self.setData({ banners: banners.slice(0, 3) });
 
-        // 再请求更多通知（列表）
         return getNoticeList(1, 10);
       })
       .then(function(page) {
-        var notices = (page.records || []).map(function(n) {
+        var schoolNotices = (page.records || []).map(function(n) {
           return {
             id: n.noticeId,
             title: n.title,
@@ -57,13 +78,33 @@ Page({
             hot: n.isTop === 1
           };
         });
-        self.setData({ notices: notices });
+        self.setData({ schoolNotices: schoolNotices });
       });
   },
 
-  loadPosts() {
+  loadCollegeNotices() {
     var self = this;
-    return getPostList(1, 20)
+    var collegeId = self.data.userCollegeId;
+    return getCollegeNoticeList(1, 10, collegeId)
+      .then(function(page) {
+        var collegeNotices = (page.records || []).map(function(n) {
+          return {
+            id: n.noticeId,
+            title: n.title,
+            time: n.createTime ? n.createTime.substring(0, 10) : ''
+          };
+        });
+        self.setData({ collegeNotices: collegeNotices });
+      })
+      .catch(function() {
+        self.setData({ collegeNotices: [] });
+      });
+  },
+
+  loadPosts(category) {
+    var self = this;
+    var currentFilter = category !== undefined ? category : self.data.currentFilter;
+    return getPostList(1, 20, currentFilter)
       .then(function(page) {
         var posts = (page.records || []).map(function(p) {
           var images = [];
@@ -103,6 +144,7 @@ Page({
   onPullDownRefresh() {
     var self = this;
     this.setData({ pullLoading: true });
+    this.refreshUserCollege();
     this.loadData()
       .finally(function() {
         wx.stopPullDownRefresh();
@@ -117,9 +159,29 @@ Page({
     console.log('搜索关键词:', keyword);
   },
 
-  // 通知铃铛
+  // 校园公告 - 跳转到通知列表
+  onSchoolNoticeTap() {
+    wx.navigateTo({ url: '/pages/college/college?tab=notice' });
+  },
+
+  // 学院广场 - 跳转到学院通知
+  onCollegeNoticeTap() {
+    wx.navigateTo({ url: '/pages/college/college?tab=college' });
+  },
+
+  // 二手交易
+  onMarketTap() {
+    wx.switchTab({ url: '/pages/market/market' });
+  },
+
+  // 失物招领
+  onLostFoundTap() {
+    wx.switchTab({ url: '/pages/lostfound/lostfound' });
+  },
+
+  // 通知铃铛（保持兼容）
   onNoticeTap() {
-    wx.navigateTo({ url: '/pages/college/college' });
+    this.onSchoolNoticeTap();
   },
 
   // 轮播图点击
@@ -127,6 +189,13 @@ Page({
     var index = e.currentTarget.dataset.index;
     var banner = this.data.banners[index];
     wx.showToast({ title: banner.title, icon: 'none', duration: 2000 });
+  },
+
+  // 动态筛选
+  onFilterTap(e) {
+    var filter = e.currentTarget.dataset.filter;
+    this.setData({ currentFilter: filter });
+    this.loadPosts(filter);
   },
 
   // 点击帖子
@@ -170,15 +239,5 @@ Page({
       return;
     }
     wx.navigateTo({ url: '/pages/publish-post/publish-post' });
-  },
-
-  // 学院公告
-  onCollegeTap() {
-    wx.navigateTo({ url: '/pages/college/college' });
-  },
-
-  // 社团活动
-  onActivityTap() {
-    wx.switchTab({ url: '/pages/club/club' });
   }
 });

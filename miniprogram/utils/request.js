@@ -93,8 +93,11 @@ export const getNoticeDetail = (id) =>
   request(`/notice/detail/${id}`, {}, 'GET', false);
 
 // 学院公告
-export const getCollegeNoticeList = (pageNum = 1, pageSize = 10) =>
-  request(`/college-notice/list?pageNum=${pageNum}&pageSize=${pageSize}`, {}, 'GET', false);
+export const getCollegeNoticeList = (pageNum = 1, pageSize = 10, college = '') => {
+  let url = `/college-notice/list?pageNum=${pageNum}&pageSize=${pageSize}`;
+  if (college) url += `&college=${encodeURIComponent(college)}`;
+  return request(url, {}, 'GET', false);
+};
 
 // 帖子
 export const getPostList = (pageNum = 1, pageSize = 10, category = '', keyword = '') => {
