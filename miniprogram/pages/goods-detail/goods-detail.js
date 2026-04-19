@@ -1,71 +1,89 @@
-// pages/goods-detail/goods-detail.ts
+// pages/goods-detail/goods-detail.js
+var { getGoodsDetail } = require('../../utils/request.js');
+
 Page({
   data: {
-    goods: {
-      id: 1,
-      title: 'iPad Air 5 64G 深空灰',
-      price: 3200,
-      originalPrice: 4399,
-      images: [
-        'https://picsum.photos/600/600?random=40',
-        'https://picsum.photos/600/600?random=41'
-      ],
-      description: '去年9月购买，保修期内，无磕碰无划痕，功能完好。配件齐全。',
-      condition: '95新',
-      location: '西区宿舍',
-      seller: {
-        id: 1,
-        nickname: '数码达人',
-        avatar: 'https://picsum.photos/100/100?random=50'
-      },
-      status: '在售',
-      isLiked: false
-    },
-    currentImageIndex: 0
+    goods: null,
+    currentImageIndex: 0,
+    goodsId: null
   },
 
   onLoad(options) {
-    const goodsId = options.id;
-    console.log('查看商品详情，ID:', goodsId);
+    var goodsId = options.id;
+    this.setData({ goodsId: goodsId });
+    this.loadGoods(goodsId);
   },
 
-  // 轮播图切换
+  loadGoods(goodsId) {
+    var self = this;
+    getGoodsDetail(goodsId)
+      .then(function(g) {
+        var images = [];
+        if (g.images) {
+          try { images = JSON.parse(g.images); } catch(e) {}
+        }
+        self.setData({
+          goods: {
+            id: g.itemId,
+            title: g.title,
+            price: g.price,
+            originalPrice: g.originalPrice,
+            images: images.length ? images : ['https://picsum.photos/600/600?random=40'],
+            description: g.description || '',
+            condition: self.getConditionText(g.conditionLevel),
+            location: g.tradeLocation || '',
+            seller: { id: g.userId, nickname: '校园用户', avatar: 'https://picsum.photos/100/100?random=50' },
+            contact: g.contact || '',
+            status: g.status === 1 ? '在售' : g.status === 2 ? '已售' : '已下架',
+            isLiked: false
+          }
+        });
+      })
+      .catch(function() {});
+  },
+
+  getConditionText(level) {
+    var map = { 1: '全新', 2: '99新', 3: '95新', 4: '9成新', 5: '8成新' };
+    return map[level] || '95新';
+  },
+
   onSwiperChange(e) {
     this.setData({ currentImageIndex: e.detail.current });
   },
 
-  // 收藏
   onLikeTap() {
-    const goods = this.data.goods;
+    var goods = this.data.goods;
+    if (!goods) return;
     goods.isLiked = !goods.isLiked;
-    this.setData({ goods });
-    wx.showToast({
-      title: goods.isLiked ? '收藏成功' : '取消收藏',
-      icon: 'none'
-    });
+    this.setData({ goods: goods });
+    wx.showToast({ title: goods.isLiked ? '收藏成功' : '取消收藏', icon: 'none' });
   },
 
-  // 联系卖家
   onContactTap() {
-    wx.navigateTo({
-      url: `/pages/chat/chat?sellerId=${this.data.goods.seller.id}&goodsId=${this.data.goods.id}`
+    var goods = this.data.goods;
+    if (!goods || !goods.contact) return;
+    wx.showModal({
+      title: '联系方式',
+      content: goods.contact,
+      confirmText: '复制',
+      success: function(res) {
+        if (res.confirm) {
+          wx.setClipboardData({ data: goods.contact, success: function() { wx.showToast({ title: '已复制', icon: 'success' }); } });
+        }
+      }
     });
   },
 
-  // 立即购买
   onBuyTap() {
-    if (this.data.goods.status !== '在售') {
-      wx.showToast({ title: '该商品已售出', icon: 'none' });
-      return;
-    }
+    var goods = this.data.goods;
+    if (!goods) return;
+    if (goods.status !== '在售') { wx.showToast({ title: '该商品已售出', icon: 'none' }); return; }
     wx.showModal({
       title: '发起交易',
-      content: `确定要购买"${this.data.goods.title}"吗？`,
+      content: '确定要购买"' + goods.title + '"吗？',
       confirmText: '发起交易',
-      success: (res) => {
-        if (res.confirm) {
-          wx.showToast({ title: '交易请求已发送', icon: 'success' });
-        }
+      success: function(res) {
+        if (res.confirm) { wx.showToast({ title: '交易请求已发送', icon: 'success' }); }
       }
     });
   }

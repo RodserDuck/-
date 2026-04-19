@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校园生活平台 - API 接口测试</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #21253a;
+      --border: #2e3350;
+      --primary: #6366f1;
+      --primary-hover: #818cf8;
+      --success: #22c55e;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-dim: #475569;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #fff;
+      flex-shrink: 0;
+    }
+
+    h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+    .subtitle { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+    .status-bar {
+      display: flex; align-items: center; gap: 20px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 16px; margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .status-item { display: flex; align-items: center; gap: 8px; }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--text-dim);
+    }
+    .status-dot.live { background: var(--success); box-shadow: 0 0 6px var(--success); }
+    .status-dot.offline { background: var(--error); }
+
+    .base-url-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .base-url-row label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+
+    .base-url-input {
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; color: var(--text);
+      font-size: 13px; font-family: 'Consolas', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .base-url-input:focus { border-color: var(--primary); }
+
+    /* 模块卡片 */
+    .module {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .module-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .module-header:hover { background: var(--surface2); }
+
+    .module-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; font-weight: 600;
+    }
+
+    .module-icon { font-size: 16px; }
+
+    .method-badge {
+      font-size: 10px; font-weight: 700; font-family: 'Consolas', monospace;
+      padding: 2px 7px; border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .method-badge.GET    { background: #1d4ed8; color: #bfdbfe; }
+    .method-badge.POST   { background: #15803d; color: #bbf7d0; }
+    .method-badge.PUT    { background: #b45309; color: #fef3c7; }
+    .method-badge.DELETE { background: #991b1b; color: #fecaca; }
+
+    .endpoint {
+      font-family: 'Consolas', monospace; font-size: 12px;
+      color: var(--text-muted); margin-left: 4px;
+    }
+
+    .expand-icon {
+      color: var(--text-dim); font-size: 12px;
+      transition: transform 0.2s;
+    }
+    .expand-icon.open { transform: rotate(180deg); }
+
+    .module-body {
+      display: none;
+      padding: 0 18px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .module-body.open { display: block; }
+
+    .row { margin-top: 14px; }
+    .row label {
+      display: block; font-size: 12px; color: var(--text-muted);
+      margin-bottom: 6px; font-weight: 500;
+    }
+
+    textarea {
+      width: 100%; min-height: 90px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 12px;
+      color: var(--text); font-family: 'Consolas', monospace; font-size: 12px;
+      resize: vertical; outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: var(--primary); }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+
+    button {
+      padding: 8px 20px; border: none; border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: all 0.15s; font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--primary); color: #fff;
+    }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      background: transparent; color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+    .response-area {
+      margin-top: 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .response-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .response-status {
+      font-weight: 700; font-family: 'Consolas', monospace;
+    }
+    .response-status.ok    { color: var(--success); }
+    .response-status.err   { color: var(--error); }
+    .response-status.warn  { color: var(--warning); }
+
+    .response-time { color: var(--text-dim); }
+
+    .copy-btn {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-muted); padding: 3px 10px;
+      font-size: 11px; border-radius: 5px; cursor: pointer;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .copy-btn:hover { background: var(--surface2); color: var(--text); }
+
+    .response-body {
+      padding: 12px;
+      font-family: 'Consolas', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      max-height: 260px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: var(--text-muted);
+    }
+    .response-body.error { color: var(--error); }
+    .response-body.success { color: var(--success); }
+
+    /* JSON 语法高亮 */
+    .json-key   { color: #a5b4fc; }
+    .json-str   { color: #86efac; }
+    .json-num   { color: #fcd34d; }
+    .json-bool  { color: #f9a8d4; }
+    .json-null  { color: #94a3b8; }
+
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 18px; font-size: 13px;
+      color: var(--text); z-index: 9999;
+      opacity: 0; transform: translateY(10px);
+      transition: all 0.25s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: var(--success); color: var(--success); }
+    .toast.error { border-color: var(--error); color: var(--error); }
+
+    .hint {
+      font-size: 11px; color: var(--text-dim); margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loading::after {
+      content: '';
+      display: inline-block; width: 12px; height: 12px;
+      border: 2px solid var(--text-dim);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-left: 8px; vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="logo">C</div>
+    <div>
+      <h1>校园生活平台 · API 接口测试</h1>
+      <p class="subtitle">Campus Life API Tester &nbsp;|&nbsp; 基于 Fetch API，无依赖</p>
+    </div>
+  </header>
+
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <div class="status-item">
+      <div class="status-dot offline" id="serverDot"></div>
+      <span id="serverStatus">检测后端连接中...</span>
+    </div>
+    <div class="status-item">
+      <span style="color:var(--text-dim)">Base URL:</span>
+      <span id="curBase" style="font-family:Consolas;font-size:12px;color:var(--text-muted)"></span>
+    </div>
+  </div>
+
+  <!-- Base URL 配置 -->
+  <div class="base-url-row">
+    <label>接口地址:</label>
+    <input class="base-url-input" id="baseUrlInput"
+           value="http://localhost:8080/api" placeholder="请输入后端接口地址" />
+  </div>
+
+  <!-- ===== 模块 1: 用户 ===== -->
+  <div class="module" data-open="true">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">👤</span>
+        用户模块
+        <span class="endpoint">/user/*</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge POST">POST</span>
+        <span class="method-badge GET">GET</span>
+        <span class="method-badge PUT">PUT</span>
+        <i class="expand-icon open">▼</i>
+      </div>
+    </div>
+    <div class="module-body open">
+
+      <div class="row">
+        <label>POST /user/login — 微信登录</label>
+        <textarea id="login-body">{
+  "openid": "test_openid_001",
+  "username": "testuser"
+}</textarea>
+        <div class="hint">首次调用会用 openid 自动注册后返回 token，后续直接登录。</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('POST','/user/login','login-body','login-res','login-status')">发送请求</button>
+        <button class="btn-ghost" onclick="fillAndSend('POST','/user/login','login-body','login-res','login-status')">快速测试</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="login-status"></span>
+            <span class="response-time" id="login-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('login-res')">复制</button>
+        </div>
+        <div class="response-body" id="login-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <label>GET /user/info — 获取当前用户信息（需携带 token）</label>
+        <div class="hint">登录后会自动将 token 填入请求头，无需手动填写。</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('GET','/user/info',null,'info-res','info-status',true)">发送请求</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="info-status"></span>
+            <span class="response-time" id="info-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('info-res')">复制</button>
+        </div>
+        <div class="response-body" id="info-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 模块 2: 帖子 ===== -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">📝</span>
+        帖子模块
+        <span class="endpoint">/post/*</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge GET">GET</span>
+        <span class="method-badge POST">POST</span>
+        <span class="method-badge DELETE">DEL</span>
+        <i class="expand-icon">▼</i>
+      </div>
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <label>GET /post/list — 获取帖子列表</label>
+        <textarea id="post-list-body">{}</textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('GET','/post/list','post-list-body','post-list-res','post-list-status')">发送请求</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="post-list-status"></span>
+            <span class="response-time" id="post-list-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('post-list-res')">复制</button>
+        </div>
+        <div class="response-body" id="post-list-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <label>POST /post/publish — 发布帖子（需登录）</label>
+        <textarea id="post-pub-body">{
+  "content": "测试帖子内容：今天阳光明媚！",
+  "title": "今日心情",
+  "category": "校园"
+}</textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('POST','/post/publish','post-pub-body','post-pub-res','post-pub-status',true)">发送请求</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="post-pub-status"></span>
+            <span class="response-time" id="post-pub-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('post-pub-res')">复制</button>
+        </div>
+        <div class="response-body" id="post-pub-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 模块 3: 通知公告 ===== -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">📢</span>
+        通知公告
+        <span class="endpoint">/notice/*</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge GET">GET</span>
+        <i class="expand-icon">▼</i>
+      </div>
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <label>GET /notice/list — 公告列表</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('GET','/notice/list',null,'notice-list-res','notice-list-status')">发送请求</button>
+        <button class="btn-ghost" onclick="sendReq('GET','/notice/top',null,'notice-top-res','notice-top-status')">置顶公告</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="notice-list-status"></span>
+            <span class="response-time" id="notice-list-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('notice-list-res')">复制</button>
+        </div>
+        <div class="response-body" id="notice-list-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 模块 4: 社团 ===== -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">🎭</span>
+        社团
+        <span class="endpoint">/club/*</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge GET">GET</span>
+        <span class="method-badge POST">POST</span>
+        <i class="expand-icon">▼</i>
+      </div>
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <label>GET /club/list — 社团列表</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('GET','/club/list',null,'club-list-res','club-list-status')">发送请求</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="club-list-status"></span>
+            <span class="response-time" id="club-list-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('club-list-res')">复制</button>
+        </div>
+        <div class="response-body" id="club-list-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <label>POST /club/join/:id — 加入社团（需登录）</label>
+        <div class="hint">请先登录获取 token，再点击此按钮（社团 ID 填入 URL 路径）</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('POST','/club/join/1',null,'club-join-res','club-join-status',true)">加入社团 1</button>
+        <button class="btn-primary" onclick="sendReq('POST','/club/join/2',null,'club-join-res','club-join-status',true)">加入社团 2</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="club-join-status"></span>
+            <span class="response-time" id="club-join-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('club-join-res')">复制</button>
+        </div>
+        <div class="response-body" id="club-join-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 模块 5: 二手市场 ===== -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">🛒</span>
+        二手市场
+        <span class="endpoint">/second-hand/*</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge GET">GET</span>
+        <span class="method-badge POST">POST</span>
+        <i class="expand-icon">▼</i>
+      </div>
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <label>GET /second-hand/list — 商品列表</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('GET','/second-hand/list',null,'sh-list-res','sh-list-status')">获取列表</button>
+        <button class="btn-ghost" onclick="sendReq('GET','/second-hand/detail/1',null,'sh-detail-res','sh-detail-status')">商品详情 1</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="sh-list-status"></span>
+            <span class="response-time" id="sh-list-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('sh-list-res')">复制</button>
+        </div>
+        <div class="response-body" id="sh-list-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 模块 6: 失物招领 ===== -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">🔍</span>
+        失物招领
+        <span class="endpoint">/lost-found/*</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge GET">GET</span>
+        <span class="method-badge POST">POST</span>
+        <i class="method-badge PUT">PUT</span>
+        <i class="expand-icon">▼</i>
+      </div>
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <label>GET /lost-found/list — 失物列表</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('GET','/lost-found/list',null,'lf-list-res','lf-list-status')">获取列表</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="lf-list-status"></span>
+            <span class="response-time" id="lf-list-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('lf-list-res')">复制</button>
+        </div>
+        <div class="response-body" id="lf-list-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 模块 7: 活动 ===== -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">🎉</span>
+        社团活动
+        <span class="endpoint">/activity/*</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge GET">GET</span>
+        <span class="method-badge POST">POST</span>
+        <i class="expand-icon">▼</i>
+      </div>
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <label>GET /activity/list — 活动列表</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="sendReq('GET','/activity/list',null,'act-list-res','act-list-status')">获取列表</button>
+        <button class="btn-ghost" onclick="sendReq('GET','/activity/detail/1',null,'act-detail-res','act-detail-status')">活动详情 1</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="act-list-status"></span>
+            <span class="response-time" id="act-list-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('act-list-res')">复制</button>
+        </div>
+        <div class="response-body" id="act-list-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 模块 8: 分类 ===== -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">🏷️</span>
+        分类 & 学院公告
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="method-badge GET">GET</span>
+        <i class="expand-icon">▼</i>
+      </div>
+    </div>
+    <div class="module-body">
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn-primary" onclick="sendReq('GET','/category/list?type=goods',null,'cat-res','cat-status')">商品分类</button>
+        <button class="btn-ghost" onclick="sendReq('GET','/college-notice/list',null,'col-notice-res','col-notice-status')">学院公告</button>
+      </div>
+      <div class="response-area">
+        <div class="response-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="response-status ok" id="cat-status"></span>
+            <span class="response-time" id="cat-time"></span>
+          </div>
+          <button class="copy-btn" onclick="copyResponse('cat-res')">复制</button>
+        </div>
+        <div class="response-body" id="cat-res" style="color:var(--text-dim)">响应结果将显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 Token 管理 -->
+  <div class="module" style="border-style:dashed">
+    <div class="module-header" onclick="toggleModule(this)">
+      <div class="module-title">
+        <span class="module-icon">🔑</span>
+        当前 Token（自动从登录响应中保存）
+      </div>
+      <i class="expand-icon">▼</i>
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <label>Token（会自动附加到需要登录的请求头）</label>
+        <textarea id="token-display" readonly style="min-height:60px;font-size:11px;background:#0d0f18" placeholder="登录成功后 token 会自动保存到这里"></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="clearToken()">清除 Token</button>
+        <button class="btn-ghost" onclick="copyToken()">复制 Token</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ===== 全局状态 =====
+  let currentToken = localStorage.getItem('test_token') || '';
+
+  // ===== Base URL =====
+  const baseInput = document.getElementById('baseUrlInput');
+  const curBase = document.getElementById('curBase');
+
+  function getBase() {
+    return baseInput.value.replace(/\/$/, '');
+  }
+
+  baseInput.addEventListener('input', () => {
+    curBase.textContent = getBase();
+    checkServer();
+  });
+
+  curBase.textContent = getBase();
+
+  // ===== 后端连接检测 =====
+  async function checkServer() {
+    const dot = document.getElementById('serverDot');
+    const status = document.getElementById('serverStatus');
+    dot.className = 'status-dot';
+
+    try {
+      const t0 = Date.now();
+      const res = await fetch(getBase() + '/notice/list', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const ms = Date.now() - t0;
+      if (res.ok) {
+        dot.className = 'status-dot live';
+        status.textContent = `后端正常 (${ms}ms)`;
+      } else {
+        dot.className = 'status-dot offline';
+        status.textContent = `后端异常 HTTP ${res.status}`;
+      }
+    } catch (e) {
+      dot.className = 'status-dot offline';
+      status.textContent = '无法连接后端，请检查服务是否启动';
+    }
+  }
+
+  checkServer();
+
+  // ===== Token 管理 =====
+  function saveToken(token) {
+    currentToken = token;
+    localStorage.setItem('test_token', token);
+    document.getElementById('token-display').value = token;
+    showToast('Token 已保存，自动用于后续请求', 'success');
+  }
+
+  function clearToken() {
+    currentToken = '';
+    localStorage.removeItem('test_token');
+    document.getElementById('token-display').value = '';
+    showToast('Token 已清除', 'info');
+  }
+
+  function copyToken() {
+    if (!currentToken) { showToast('暂无 Token', 'error'); return; }
+    navigator.clipboard.writeText(currentToken).then(() => showToast('Token 已复制', 'success'));
+  }
+
+  // 初始化 token 显示
+  document.getElementById('token-display').value = currentToken;
+
+  // ===== JSON 语法高亮 =====
+  function highlightJson(str) {
+    try {
+      const s = JSON.stringify(JSON.parse(str), null, 2);
+      return s
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
+        .replace(/: "([^"]*)"(,?)$/gm, ': <span class="json-str">"$1"</span>$2')
+        .replace(/: (-?\d+\.?\d*)(,?)$/gm, ': <span class="json-num">$1</span>$2')
+        .replace(/: (true|false)(,?)$/gm, ': <span class="json-bool">$1</span>$2')
+        .replace(/: (null)(,?)$/gm, ': <span class="json-null">$1</span>$2');
+    } catch {
+      return str;
+    }
+  }
+
+  // ===== 发送请求 =====
+  async function sendReq(method, path, bodyId, resId, statusId, needAuth) {
+    const base = getBase();
+    const url = base + path;
+    const resEl = document.getElementById(resId);
+    const statusEl = document.getElementById(statusId);
+    const timeEl = document.getElementById(resId.replace('res', 'time'));
+
+    // 设置 loading 状态
+    resEl.className = 'response-body';
+    resEl.innerHTML = '<span style="color:var(--text-dim)">请求中...</span>';
+    statusEl.className = 'response-status ok';
+    statusEl.textContent = '...';
+    if (timeEl) timeEl.textContent = '';
+
+    const headers = { 'Content-Type': 'application/json' };
+    if (needAuth && currentToken) {
+      headers['Authorization'] = 'Bearer ' + currentToken;
+    }
+
+    const options = { method, headers };
+
+    if (bodyId && (method === 'POST' || method === 'PUT' || method === 'DELETE')) {
+      const raw = document.getElementById(bodyId)?.value || '{}';
+      try {
+        options.body = JSON.stringify(JSON.parse(raw));
+      } catch {
+        options.body = raw;
+      }
+    }
+
+    const t0 = Date.now();
+    try {
+      const res = await fetch(url, options);
+      const ms = Date.now() - t0;
+      const text = await res.text();
+
+      let statusClass = 'err';
+      if (res.ok) statusClass = 'ok';
+      else if (res.status === 401) statusClass = 'warn';
+
+      statusEl.className = `response-status ${statusClass}`;
+      statusEl.textContent = `${res.status} ${res.statusText}`;
+      if (timeEl) timeEl.textContent = `${ms}ms`;
+
+      resEl.className = `response-body ${res.ok ? 'success' : 'error'}`;
+
+      // 尝试解析 JSON 并高亮
+      let display;
+      try {
+        const json = JSON.parse(text);
+        display = highlightJson(JSON.stringify(json, null, 2));
+
+        // 如果是登录响应，提取 token 并保存
+        if (path === '/user/login' && json.data && json.data.token) {
+          saveToken(json.data.token);
+        }
+      } catch {
+        display = text;
+      }
+
+      resEl.innerHTML = display;
+
+    } catch (e) {
+      statusEl.className = 'response-status err';
+      statusEl.textContent = 'ERR';
+      if (timeEl) timeEl.textContent = '';
+      resEl.className = 'response-body error';
+      resEl.innerHTML = `<span style="color:var(--error)">${e.message}</span>\n\n可能原因：\n1. 后端服务未启动\n2. CORS 跨域被拦截\n3. 网络连接问题\n\n请确保：\n• 后端服务运行在 ${base}\n• 浏览器非 file:// 协议（需 http 服务器）`;
+    }
+  }
+
+  // ===== 快速测试：自动填入示例值 =====
+  function fillAndSend(method, path, bodyId, resId, statusId) {
+    const el = document.getElementById(bodyId);
+    // 随机生成一个测试 openid
+    el.value = JSON.stringify({
+      openid: 'test_' + Math.random().toString(36).substr(2, 8),
+      username: '测试用户_' + Date.now()
+    }, null, 2);
+    sendReq(method, path, bodyId, resId, statusId);
+  }
+
+  // ===== 折叠模块 =====
+  function toggleModule(el) {
+    const body = el.nextElementSibling;
+    const icon = el.querySelector('.expand-icon');
+    const isOpen = body.classList.toggle('open');
+    icon.classList.toggle('open', isOpen);
+  }
+
+  // ===== 复制响应 =====
+  function copyResponse(resId) {
+    const el = document.getElementById(resId);
+    // 取原始文本（去掉 HTML 高亮标签）
+    const text = el.innerText || el.textContent;
+    if (!text || text.includes('响应结果将显示在这里')) {
+      showToast('暂无响应可复制', 'error');
+      return;
+    }
+    navigator.clipboard.writeText(text).then(() => showToast('已复制到剪贴板', 'success'));
+  }
+
+  // ===== Toast 提示 =====
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => { t.className = 'toast'; }, 2500);
+  }
+
+  // ===== 打开默认展开模块 =====
+  document.querySelectorAll('.module[data-open] .module-header').forEach(h => {
+    h.click(); // 折叠其他，默认用户模块展开
+  });
+  // 展开第一个模块
+  document.querySelectorAll('.module')[0].querySelector('.module-header').click();
+</script>
+</body>
+</html>

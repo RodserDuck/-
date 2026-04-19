@@ -2,6 +2,7 @@
   "pages": [
     "pages/login/login",
     "pages/register/register",
+    "pages/logs/logs",
     "pages/square/square",
     "pages/college/college",
     "pages/club/club",

@@ -1,4 +1,6 @@
-// pages/club/club.ts
+// pages/club/club.js
+var { getClubList, getActivityList, getMyClubs } = require('../../utils/request.js');
+
 Page({
   data: {
     currentTab: 0,
@@ -11,193 +13,196 @@ Page({
       { id: 4, name: '兴趣爱好', icon: '🎮' },
       { id: 5, name: '创业实践', icon: '💡' }
     ],
-    clubs: [
-      {
-        id: 1,
-        name: '摄影协会',
-        icon: '📷',
-        members: 156,
-        category: '兴趣爱好',
-        description: '用镜头记录美好校园生活，用光影定格青春瞬间',
-        hot: 98,
-        followed: false,
-        color1: '#93c5fd',
-        color2: '#3b82f6'
-      },
-      {
-        id: 2,
-        name: '街舞社',
-        icon: '🕺',
-        members: 89,
-        category: '文艺体育',
-        description: '释放青春活力，舞动校园精彩',
-        hot: 76,
-        followed: true,
-        color1: '#fca5a5',
-        color2: '#ef4444'
-      },
-      {
-        id: 3,
-        name: '志愿者协会',
-        icon: '❤️',
-        members: 234,
-        category: '公益服务',
-        description: '奉献爱心，服务社会，传递正能量',
-        hot: 120,
-        followed: false,
-        color1: '#f9a8d4',
-        color2: '#ec4899'
-      },
-      {
-        id: 4,
-        name: '机器人协会',
-        icon: '🤖',
-        members: 67,
-        category: '科技学术',
-        description: '探索人工智能奥秘，培养科技创新人才',
-        hot: 55,
-        followed: false,
-        color1: '#86efac',
-        color2: '#22c55e'
-      },
-      {
-        id: 5,
-        name: '吉他社',
-        icon: '🎸',
-        members: 112,
-        category: '文艺体育',
-        description: '用音乐连接你我，用旋律奏响青春',
-        hot: 88,
-        followed: false,
-        color1: '#fdba74',
-        color2: '#f97316'
-      },
-      {
-        id: 6,
-        name: '辩论队',
-        icon: '🎤',
-        members: 45,
-        category: '科技学术',
-        description: '思辨明理，以辩会友，提升表达能力',
-        hot: 42,
-        followed: false,
-        color1: '#c4b5fd',
-        color2: '#8b5cf6'
-      }
-    ],
-    activities: [
-      {
-        id: 1,
-        title: '春季摄影大赛作品征集',
-        club: '摄影协会',
-        image: 'https://picsum.photos/800/400?random=30',
-        time: '2026-04-01 ~ 04-30',
-        location: '线上投稿',
-        participants: 45,
-        hot: 86,
-        status: '进行中',
-        statusClass: 'ongoing'
-      },
-      {
-        id: 2,
-        title: '校园街舞快闪活动',
-        club: '街舞社',
-        image: 'https://picsum.photos/800/400?random=31',
-        time: '2026-04-15 18:00',
-        location: '图书馆广场',
-        participants: 30,
-        hot: 64,
-        status: '报名中',
-        statusClass: 'open'
-      },
-      {
-        id: 3,
-        title: '敬老院志愿服务',
-        club: '志愿者协会',
-        image: 'https://picsum.photos/800/400?random=32',
-        time: '2026-04-20 09:00',
-        location: '阳光敬老院',
-        participants: 20,
-        hot: 52,
-        status: '报名中',
-        statusClass: 'open'
-      }
-    ],
-    myClubs: [
-      {
-        id: 2,
-        name: '街舞社',
-        role: '成员',
-        unread: 0,
-        icon: '🕺',
-        color1: '#fca5a5',
-        color2: '#ef4444'
-      },
-      {
-        id: 3,
-        name: '志愿者协会',
-        role: '部长',
-        unread: 5,
-        icon: '❤️',
-        color1: '#f9a8d4',
-        color2: '#ec4899'
-      }
-    ],
-    myActivities: []
+    clubs: [],
+    activities: [],
+    myClubs: [],
+    myActivities: [],
+    followedClubIds: []
   },
 
-  onLoad() {},
+  onLoad() {
+    this.loadClubs();
+    this.loadActivities();
+  },
+
+  onShow() {
+    // 刷新我的社团
+    var token = wx.getStorageSync('token');
+    if (token) {
+      this.loadMyClubs();
+    }
+  },
+
+  loadClubs() {
+    var self = this;
+    getClubList()
+      .then(function(clubs) {
+        var followedIds = clubs.filter(function(c) { return c.followed; }).map(function(c) { return c.clubId; });
+        var clubData = clubs.map(function(c) {
+          var colors = self.getClubColor(c.category);
+          return {
+            id: c.clubId,
+            name: c.name,
+            icon: self.getEmoji(c.category),
+            members: c.memberCount || 0,
+            category: c.category,
+            description: c.description || '',
+            hot: c.memberCount || 0,
+            followed: false,
+            color1: colors[0],
+            color2: colors[1],
+            coverImage: c.coverImage || ''
+          };
+        });
+        self.setData({ clubs: clubData, followedClubIds: followedIds });
+      })
+      .catch(function() {});
+  },
+
+  loadActivities() {
+    var self = this;
+    getActivityList()
+      .then(function(activities) {
+        var actData = activities.map(function(a) {
+          var statusText = a.status === 1 ? '报名中' : a.status === 2 ? '进行中' : a.status === 3 ? '已结束' : '已取消';
+          var statusClass = a.status === 1 ? 'open' : a.status === 2 ? 'ongoing' : 'closed';
+          var timeStr = '';
+          if (a.startTime) {
+            var start = a.startTime.replace('T', ' ').substring(0, 16);
+            if (a.endTime) {
+              var end = a.endTime.replace('T', ' ').substring(0, 16);
+              timeStr = start + ' ~ ' + end;
+            } else {
+              timeStr = start;
+            }
+          }
+          return {
+            id: a.activityId,
+            title: a.title || '校园活动',
+            club: a.organizer || '',
+            image: a.coverImage || 'https://picsum.photos/800/400?random=30',
+            time: timeStr,
+            location: a.location || '',
+            participants: a.currentParticipants || 0,
+            maxParticipants: a.maxParticipants || 0,
+            hot: a.viewCount || 0,
+            status: statusText,
+            statusClass: statusClass
+          };
+        });
+        self.setData({ activities: actData });
+      })
+      .catch(function() {});
+  },
+
+  loadMyClubs() {
+    var self = this;
+    getMyClubs()
+      .then(function(clubs) {
+        var myClubs = clubs.map(function(c) {
+          var colors = self.getClubColor(c.category);
+          return {
+            id: c.clubId,
+            name: c.name,
+            role: c.role === 2 ? '团长' : c.role === 1 ? '管理员' : '成员',
+            unread: 0,
+            icon: self.getEmoji(c.category),
+            color1: colors[0],
+            color2: colors[1]
+          };
+        });
+        self.setData({ myClubs: myClubs });
+      })
+      .catch(function() {});
+  },
+
+  getClubColor(category) {
+    var map = {
+      '文艺体育': ['#fca5a5', '#ef4444'],
+      '科技学术': ['#86efac', '#22c55e'],
+      '公益服务': ['#f9a8d4', '#ec4899'],
+      '兴趣爱好': ['#93c5fd', '#3b82f6'],
+      '创业实践': ['#fdba74', '#f97316'],
+      '默认': ['#c4b5fd', '#8b5cf6']
+    };
+    return map[category] || map['默认'];
+  },
+
+  getEmoji(category) {
+    var map = {
+      '文艺体育': '🎨',
+      '科技学术': '🔬',
+      '公益服务': '❤️',
+      '兴趣爱好': '🎮',
+      '创业实践': '💡'
+    };
+    return map[category] || '🏠';
+  },
 
   // Tab切换
   onTabChange(e) {
-    const index = parseInt(e.currentTarget.dataset.index);
+    var index = parseInt(e.currentTarget.dataset.index);
     this.setData({ currentTab: index });
   },
 
   // 分类筛选
   onCategoryTap(e) {
-    const id = e.currentTarget.dataset.id;
+    var id = e.currentTarget.dataset.id;
     this.setData({ selectedCategory: id });
-    // 实际开发中这里应该根据分类重新请求数据
-    wx.showToast({ title: `已筛选：${this.data.categories[id].name}`, icon: 'none', duration: 1000 });
+    var cat = this.data.categories[id];
+    wx.showToast({ title: '已筛选：' + cat.name, icon: 'none', duration: 1000 });
   },
 
   // 社团详情
   onClubTap(e) {
-    wx.navigateTo({ url: `/pages/club-detail/club-detail?id=${e.currentTarget.dataset.id}` });
+    wx.navigateTo({ url: '/pages/club-detail/club-detail?id=' + e.currentTarget.dataset.id });
   },
 
   // 活动详情
   onActivityTap(e) {
-    wx.navigateTo({ url: `/pages/activity-detail/activity-detail?id=${e.currentTarget.dataset.id}` });
+    wx.navigateTo({ url: '/pages/activity-detail/activity-detail?id=' + e.currentTarget.dataset.id });
   },
 
   // 加入社团
   onFollowClub(e) {
-    const id = e.currentTarget.dataset.id;
-    const clubs = this.data.clubs.map(club => {
+    var self = this;
+    var id = e.currentTarget.dataset.id;
+    var token = wx.getStorageSync('token');
+    if (!token) {
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
+    var clubs = this.data.clubs.map(function(club) {
       if (club.id === id) {
-        return { ...club, followed: !club.followed };
+        return Object.assign({}, club, { followed: !club.followed });
       }
       return club;
     });
-    this.setData({ clubs });
-    const club = clubs.find(c => c.id === id);
+    this.setData({ clubs: clubs });
+    var club = clubs.find(function(c) { return c.id === id; });
     wx.showToast({
       title: club.followed ? '已加入社团' : '已取消加入',
       icon: 'success',
       duration: 1200
     });
+    if (club.followed) {
+      self.loadMyClubs();
+    }
   },
 
   // 报名活动
   onJoinActivity(e) {
-    const activityId = e.currentTarget.dataset.id;
+    var activityId = e.currentTarget.dataset.id;
+    var token = wx.getStorageSync('token');
+    if (!token) {
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
     wx.showModal({
       title: '确认报名',
       content: '确定要报名参加该活动吗？',
       confirmColor: '#5b9cf6',
-      success: (res) => {
+      success: function(res) {
         if (res.confirm) {
           wx.showToast({ title: '报名成功', icon: 'success', duration: 1500 });
         }

@@ -1,9 +1,9 @@
-package com.campus.service;
+package com.campus.service.impl;
 
 import com.campus.entity.User;
 import com.campus.mapper.UserMapper;
+import com.campus.service.UserService;
 import com.campus.utils.JwtUtils;
-import com.campus.vo.LoginVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +32,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User registerWithFull(User user) {
+        user.setStatus(1);
+        user.setCreateTime(LocalDateTime.now());
+        userMapper.insert(user);
+        return user;
+    }
+
+    @Override
     public User login(String openid) {
         LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
         q.eq(User::getOpenid, openid);
@@ -41,6 +49,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long userId) {
         return userMapper.selectById(userId);
+    }
+
+    @Override
+    public User getByOpenid(String openid) {
+        LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
+        q.eq(User::getOpenid, openid);
+        return userMapper.selectOne(q);
     }
 
     @Override

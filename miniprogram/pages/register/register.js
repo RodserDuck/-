@@ -1,8 +1,12 @@
-// pages/register/register.ts
+// pages/register/register.js
+var { userLogin } = require('../../utils/request.js');
+
 Page({
   data: {
-    identity: 'student' as 'student' | 'teacher' | 'admin',
-    account: '',
+    studentNo: '',
+    nickname: '',
+    phone: '',
+    college: '',
     password: '',
     confirmPassword: '',
     isLoading: false
@@ -10,34 +14,48 @@ Page({
 
   onLoad() {},
 
-  onIdentitySelect(e) { this.setData({ identity: e.currentTarget.dataset.type }); },
-  onAccountInput(e) { this.setData({ account: e.detail.value }); },
+  onStudentNoInput(e) { this.setData({ studentNo: e.detail.value }); },
+  onNicknameInput(e) { this.setData({ nickname: e.detail.value }); },
+  onPhoneInput(e) { this.setData({ phone: e.detail.value }); },
+  onCollegeInput(e) { this.setData({ college: e.detail.value }); },
   onPasswordInput(e) { this.setData({ password: e.detail.value }); },
-  onConfirmPasswordInput(e) { this.setData({ confirmPassword: e.detail.value }); },
+  onConfirmInput(e) { this.setData({ confirmPassword: e.detail.value }); },
 
   onRegister() {
-    const { identity: userIdentity, account, password, confirmPassword, isLoading } = this.data;
-    console.log('注册身份:', userIdentity);
-    if (isLoading) return;
-    if (!account.trim()) { wx.showToast({ title: '请输入账号', icon: 'none' }); return; }
-    if (account.length < 6) { wx.showToast({ title: '账号至少6位', icon: 'none' }); return; }
-    if (!password.trim()) { wx.showToast({ title: '请输入密码', icon: 'none' }); return; }
-    if (password.length < 6) { wx.showToast({ title: '密码至少6位', icon: 'none' }); return; }
-    if (password !== confirmPassword) { wx.showToast({ title: '两次密码不一致', icon: 'none' }); return; }
+    var self = this;
+    var d = self.data;
+    if (!d.studentNo.trim()) { wx.showToast({ title: '请输入学号', icon: 'none' }); return; }
+    if (!d.nickname.trim()) { wx.showToast({ title: '请输入昵称', icon: 'none' }); return; }
+    if (!d.password.trim()) { wx.showToast({ title: '请输入密码', icon: 'none' }); return; }
+    if (d.password !== d.confirmPassword) { wx.showToast({ title: '两次密码不一致', icon: 'none' }); return; }
 
-    this.setData({ isLoading: true });
+    self.setData({ isLoading: true });
     wx.showLoading({ title: '注册中...', mask: true });
 
-    setTimeout(() => {
-      wx.hideLoading();
-      if (account === 'test123') {
-        this.setData({ isLoading: false });
-        wx.showModal({ title: '注册失败', content: '该账号已存在，请更换账号', showCancel: false, confirmText: '确定' });
-      } else {
-        wx.showToast({ title: '注册成功', icon: 'success', duration: 1500, success: () => setTimeout(() => wx.switchTab({ url: '/pages/square/square' }), 1500) });
-      }
-    }, 1500);
-  },
-
-  onGoLogin() { wx.navigateBack(); }
+    // 用学号作为openid注册
+    var openid = 'student_' + d.studentNo;
+    userLogin(openid, d.nickname)
+      .then(function(res) {
+        // 注册成功，自动登录，保存信息
+        wx.setStorageSync('token', res.token);
+        wx.setStorageSync('userId', res.userId);
+        wx.setStorageSync('userInfo', {
+          userId: res.userId,
+          username: d.nickname,
+          studentNo: d.studentNo,
+          phone: d.phone,
+          college: d.college,
+          avatar: 'https://picsum.photos/200/200?random=99'
+        });
+        wx.setStorageSync('isLoggedIn', true);
+        wx.hideLoading();
+        wx.showToast({ title: '注册成功', icon: 'success' });
+        setTimeout(function() { wx.switchTab({ url: '/pages/square/square' }); }, 1500);
+      })
+      .catch(function() {
+        wx.hideLoading();
+        self.setData({ isLoading: false });
+        wx.showToast({ title: '注册失败，请重试', icon: 'none' });
+      });
+  }
 });

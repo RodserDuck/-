@@ -63,4 +63,24 @@ public class UserController {
         user.setUserId(userId);
         return Result.ok(userService.updateUser(user));
     }
+
+    /** 注册 */
+    @PostMapping("/register")
+    public Result<LoginVO> register(@RequestBody User req) {
+        User exist = userService.getByOpenid(req.getOpenid());
+        if (exist != null) {
+            return Result.fail("该账号已注册，请直接登录");
+        }
+        User user = userService.registerWithFull(req);
+        String token = jwtUtils.generateToken(user.getUserId(), user.getUsername());
+        LoginVO vo = new LoginVO();
+        vo.setToken(token);
+        vo.setUserId(user.getUserId());
+        vo.setUsername(user.getUsername());
+        vo.setAvatar(user.getAvatar());
+        vo.setOpenid(user.getOpenid());
+        vo.setStudentNo(user.getStudentNo());
+        vo.setCollege(user.getCollege());
+        return Result.ok(vo);
+    }
 }

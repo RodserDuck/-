@@ -1,55 +1,30 @@
-// pages/chat/chat.ts
+// pages/chat/chat.js
 Page({
   data: {
-    goods: {
-      id: 1,
-      title: 'iPad Air 5 64G 深空灰',
-      price: 3200,
-      image: 'https://picsum.photos/300/300?random=40'
-    },
     messages: [
-      { id: 1, type: 'other', content: '你好，请问这个还在吗？', time: '14:30', avatar: 'https://picsum.photos/100/100?random=50' },
-      { id: 2, type: 'self', content: '在的，还在保修期内', time: '14:32', avatar: 'https://picsum.photos/100/100?random=99' },
-      { id: 3, type: 'other', content: '价格还能便宜点吗？', time: '14:35', avatar: 'https://picsum.photos/100/100?random=50' }
+      { id: 1, type: 'other', avatar: 'https://picsum.photos/100/100?random=30', content: '你好，商品还在吗？', time: '10:30' },
+      { id: 2, type: 'me', avatar: '', content: '在的，可以约时间看货', time: '10:32' },
+      { id: 3, type: 'other', avatar: 'https://picsum.photos/100/100?random=30', content: '好的，我明天下午有空', time: '10:33' }
     ],
     inputValue: ''
   },
 
   onLoad(options) {
-    const sellerId = options.sellerId;
-    const goodsId = options.goodsId;
-    console.log('聊天页面，卖家ID:', sellerId, '商品ID:', goodsId);
+    console.log('打开聊天', options);
   },
 
-  // 输入消息
-  onInput(e) {
-    this.setData({ inputValue: e.detail.value });
-  },
+  onInput(e) { this.setData({ inputValue: e.detail.value }); },
 
-  // 发送消息
   onSend() {
-    const content = this.data.inputValue.trim();
-    if (!content) {
-      wx.showToast({ title: '请输入消息', icon: 'none' });
-      return;
-    }
-
-    const newMessage = {
-      id.now(),
-      type: 'self',
-      content: content,
-      time: this.getCurrentTime(),
-      avatar: 'https://picsum.photos/100/100?random=99'
-    };
-
-    this.setData({
-      messages: [...this.data.messages, newMessage],
-      inputValue: ''
-    });
+    var self = this;
+    var content = self.data.inputValue.trim();
+    if (!content) return;
+    var newMsg = { id: Date.now(), type: 'me', avatar: '', content: content, time: self.getNowTime() };
+    self.setData({ messages: self.data.messages.concat([newMsg]), inputValue: '' });
   },
 
-  getCurrentTime() {
-    const now = new Date();
-    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  getNowTime() {
+    var now = new Date();
+    return now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
   }
 });
