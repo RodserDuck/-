@@ -1,14 +1,25 @@
 <!-- pages/publish-post/publish-post.wxml -->
 <view class="container">
-  <!-- 顶部导航 -->
-  <view class="nav-bar">
-    <text class="cancel-btn" bindtap="onCancel">取消</text>
-    <text class="nav-title">发布帖子</text>
-    <text class="publish-btn {{isSubmitting ? 'disabled' : ''}}" bindtap="onPublish">发布</text>
+  <!-- 帖子分区选择 -->
+  <view class="category-bar">
+    <text class="category-label">选择分区</text>
+    <scroll-view class="category-scroll" scroll-x>
+      <view class="category-list">
+        <view
+          class="category-item {{currentCategory === item.value ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="value"
+          bindtap="onCategoryTap"
+          data-value="{{item.value}}"
+        >
+          <text class="category-text">{{item.label}}</text>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 
   <!-- 内容输入 -->
-  <textarea 
+  <textarea
     class="content-input"
     placeholder="分享你的校园生活..."
     value="{{content}}"
@@ -18,6 +29,7 @@
 
   <!-- 图片上传 -->
   <view class="image-section">
+    <view class="section-title">图片（选填）</view>
     <view class="image-grid">
       <view class="image-item" wx:for="{{images}}" wx:key="*this">
         <image src="{{item}}" mode="aspectFill" class="uploaded-image"/>
@@ -32,11 +44,17 @@
     </view>
   </view>
 
-  <!-- 选项 -->
-  <view class="options-section">
-    <view class="option-item">
-      <text>匿名发布</text>
-      <switch checked="{{isAnonymous}}" bindchange="onAnonymousChange" color="#3b82f6"/>
+  <!-- 底部占位（为固定发布栏留空间） -->
+  <view class="bottom-space"></view>
+
+  <!-- 底部固定发布按钮 -->
+  <view class="bottom-publish-bar">
+    <view
+      class="publish-btn-full {{isSubmitting ? 'disabled' : ''}}"
+      bindtap="onPublish"
+    >
+      <text class="btn-icon">✏️</text>
+      <text class="btn-text">发布帖子</text>
     </view>
   </view>
 </view>

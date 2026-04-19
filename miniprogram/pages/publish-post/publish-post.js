@@ -7,10 +7,23 @@ Page({
     images: [],
     maxImages: 9,
     isSubmitting: false,
-    isAnonymous: false
+    currentCategory: '校园生活',
+    categories: [
+      { label: '🌈 校园生活', value: '校园生活' },
+      { label: '📚 学习交流', value: '学习交流' },
+      { label: '🎉 活动招募', value: '活动招募' },
+      { label: '🤝 互助问答', value: '互助问答' },
+      { label: '💡 校园吐槽', value: '校园吐槽' },
+      { label: '🎵 兴趣爱好', value: '兴趣爱好' },
+      { label: '🤝 二手交易', value: '二手交易' }
+    ]
   },
 
-  onLoad() {},
+  onLoad() {
+    wx.setNavigationBarTitle({
+      title: '发布帖子'
+    });
+  },
 
   onContentInput(e) {
     this.setData({ content: e.detail.value });
@@ -37,8 +50,8 @@ Page({
     this.setData({ images: images });
   },
 
-  onAnonymousChange(e) {
-    this.setData({ isAnonymous: e.detail.value });
+  onCategoryTap(e) {
+    this.setData({ currentCategory: e.currentTarget.dataset.value });
   },
 
   onPublish() {
@@ -50,7 +63,11 @@ Page({
     self.setData({ isSubmitting: true });
     wx.showLoading({ title: '发布中...', mask: true });
 
-    publishPost({ content: self.data.content, images: JSON.stringify(self.data.images) })
+    publishPost({
+      content: self.data.content,
+      images: JSON.stringify(self.data.images),
+      category: self.data.currentCategory
+    })
       .then(function(res) {
         wx.hideLoading();
         wx.showToast({ title: '发布成功', icon: 'success', duration: 1500 });
@@ -61,18 +78,5 @@ Page({
         self.setData({ isSubmitting: false });
         wx.showToast({ title: '发布失败', icon: 'none' });
       });
-  },
-
-  onCancel() {
-    var self = this;
-    if (self.data.content.trim() || self.data.images.length > 0) {
-      wx.showModal({
-        title: '确认退出',
-        content: '退出后内容将不会保存',
-        success: function(res) { if (res.confirm) wx.navigateBack(); }
-      });
-    } else {
-      wx.navigateBack();
-    }
   }
 });
