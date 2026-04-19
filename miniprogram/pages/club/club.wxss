@@ -1,21 +1,77 @@
-/* pages/club/club.wxss - 柔和蓝白主题 · 社团活动页 */
+/* pages/club/club.wxss - 社团活动页 · 蓝白主题重设计 */
 
 /* ===================== 页面基础 ===================== */
+page {
+  background: #f0f6ff;
+}
+
 .club-page {
   min-height: 100vh;
   background: #f0f6ff;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* ===================== 顶部搜索栏 ===================== */
-.top-search {
-  background: linear-gradient(160deg, #5b9cf6 0%, #7dd3fc 60%, #bae6fd 100%);
-  padding: 20rpx 28rpx 28rpx;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  left: 0;
-  right: 0;
+/* ===================== 顶部区域 ===================== */
+.top-area {
+  background: linear-gradient(160deg, #5b9cf6 0%, #74aef8 50%, #bae6fd 100%);
+  padding: calc(20rpx + env(safe-area-inset-top)) 28rpx 0;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.page-title {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 2rpx;
+  text-shadow: 0 2rpx 8rpx rgba(30, 58, 95, 0.15);
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.action-icon-btn {
+  position: relative;
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8rpx);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.action-icon-btn:active {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.icon-text {
+  font-size: 32rpx;
+}
+
+.red-dot {
+  position: absolute;
+  top: 14rpx;
+  right: 16rpx;
+  width: 14rpx;
+  height: 14rpx;
+  background: #f87171;
+  border-radius: 50%;
+  border: 3rpx solid #fff;
+}
+
+.search-row {
+  padding-bottom: 6rpx;
 }
 
 .search-bar {
@@ -24,14 +80,14 @@
   background: rgba(255, 255, 255, 0.95);
   border-radius: 50rpx;
   height: 80rpx;
-  padding: 0 32rpx;
-  box-shadow: var(--shadow-sm);
+  padding: 0 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(30, 58, 95, 0.08);
 }
 
-.search-icon {
-  font-size: 32rpx;
-  margin-right: 16rpx;
-  opacity: 0.5;
+.search-icon-text {
+  font-size: 30rpx;
+  margin-right: 12rpx;
+  opacity: 0.45;
 }
 
 .search-input {
@@ -48,12 +104,13 @@
 .tab-bar {
   display: flex;
   background: #fff;
-  border-radius: 0 0 24rpx 24rpx;
-  box-shadow: 0 4rpx 16rpx rgba(91, 156, 246, 0.08);
-  position: sticky;
-  top: 128rpx;
-  z-index: 100;
+  margin: 0 28rpx;
+  border-radius: 20rpx 20rpx 0 0;
+  box-shadow: 0 -4rpx 20rpx rgba(91, 156, 246, 0.06);
   overflow: hidden;
+  position: relative;
+  z-index: 10;
+  margin-top: -4rpx;
 }
 
 .tab-item {
@@ -62,22 +119,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20rpx 0;
-  gap: 6rpx;
+  padding: 26rpx 0 22rpx;
   position: relative;
   transition: all 0.25s;
 }
 
-.tab-icon {
-  font-size: 36rpx;
-  line-height: 1;
-}
-
 .tab-text {
-  font-size: 24rpx;
-  color: #9ca3af;
+  font-size: 30rpx;
   font-weight: 500;
+  color: #9ca3af;
   transition: color 0.25s;
+  line-height: 1;
 }
 
 .tab-item.active .tab-text {
@@ -85,65 +137,65 @@
   font-weight: 700;
 }
 
-.tab-item.active::after {
-  content: '';
+.tab-indicator {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 60rpx;
+  width: 56rpx;
   height: 6rpx;
   background: linear-gradient(90deg, #5b9cf6, #38bdf8);
-  border-radius: 3rpx;
+  border-radius: 3rpx 3rpx 0 0;
 }
 
 /* ===================== 内容区 ===================== */
 .tab-content {
-  padding: 20rpx 28rpx 0;
+  padding: 0 28rpx 0;
 }
 
 /* ===================== 分类标签 ===================== */
 .category-scroll {
   white-space: nowrap;
-  margin-bottom: 20rpx;
+  margin: 24rpx 0 20rpx;
 }
 
 .category-list {
   display: inline-flex;
   gap: 16rpx;
-  padding: 4rpx 0;
+  padding: 0 4rpx;
 }
 
 .category-chip {
   display: inline-flex;
   align-items: center;
-  gap: 8rpx;
-  padding: 12rpx 24rpx;
+  padding: 14rpx 28rpx;
   background: #fff;
   border-radius: 100rpx;
-  border: 1rpx solid #e5e7eb;
+  border: 2rpx solid #e5e7eb;
   flex-shrink: 0;
   transition: all 0.2s;
+  box-shadow: 0 2rpx 8rpx rgba(91, 156, 246, 0.04);
+}
+
+.category-chip:active {
+  transform: scale(0.96);
 }
 
 .category-chip.active {
-  background: linear-gradient(135deg, #5b9cf6, #38bdf8);
+  background: linear-gradient(135deg, #5b9cf6, #4891e8);
   border-color: #5b9cf6;
-  box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.25);
-}
-
-.chip-icon {
-  font-size: 26rpx;
+  box-shadow: 0 6rpx 18rpx rgba(91, 156, 246, 0.28);
 }
 
 .chip-text {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #6b7280;
   font-weight: 500;
 }
 
 .category-chip.active .chip-text {
   color: #fff;
+  font-weight: 600;
 }
 
 /* ===================== 社团卡片 ===================== */
@@ -160,35 +212,35 @@
   box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
   padding: 24rpx;
   display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-  transition: box-shadow 0.2s;
-}
-
-.club-top {
-  display: flex;
+  align-items: flex-start;
   gap: 20rpx;
+  transition: box-shadow 0.2s, transform 0.2s;
 }
 
-.club-icon-wrap {
+.club-card:active {
+  box-shadow: 0 2rpx 10rpx rgba(91, 156, 246, 0.06);
+  transform: scale(0.99);
+}
+
+.club-avatar-zone {
   flex-shrink: 0;
 }
 
 .club-avatar {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 24rpx;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 22rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.1);
 }
 
 .club-emoji {
-  font-size: 52rpx;
+  font-size: 48rpx;
 }
 
-.club-main {
+.club-info-zone {
   flex: 1;
   min-width: 0;
 }
@@ -204,93 +256,161 @@
   font-size: 32rpx;
   font-weight: 700;
   color: #1e3a5f;
-}
-
-.club-category-tag {
-  background: #eef6ff;
-  border-radius: 100rpx;
-  padding: 4rpx 14rpx;
-  border: 1rpx solid #dbeafe;
-}
-
-.category-text {
-  font-size: 20rpx;
-  color: #5b9cf6;
-  font-weight: 600;
-}
-
-.club-desc {
-  font-size: 24rpx;
-  color: #6b7280;
-  line-height: 1.5;
-  display: block;
-  margin-bottom: 10rpx;
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.club-stats {
-  display: flex;
-  gap: 24rpx;
-}
-
-.stat-item {
+.club-category-badge {
   display: flex;
   align-items: center;
   gap: 6rpx;
+  background: #f0f6ff;
+  border-radius: 100rpx;
+  padding: 4rpx 12rpx;
+  flex-shrink: 0;
 }
 
-.stat-icon {
-  font-size: 24rpx;
+.badge-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.stat-num {
+.badge-text {
+  font-size: 20rpx;
+  color: #5b9cf6;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.club-desc {
   font-size: 24rpx;
   color: #9ca3af;
-  font-weight: 500;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 12rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.club-action {
+.club-meta-row {
   display: flex;
-  justify-content: flex-end;
+  gap: 12rpx;
 }
 
-.action-btn {
+.meta-pill {
   display: flex;
   align-items: center;
   gap: 6rpx;
+  background: #f8fafc;
+  border-radius: 100rpx;
+  padding: 6rpx 14rpx;
+}
+
+.pill-icon {
+  font-size: 22rpx;
+}
+
+.pill-num {
+  font-size: 24rpx;
+  color: #4a6fa5;
+  font-weight: 600;
+}
+
+.pill-label {
+  font-size: 22rpx;
+  color: #9ca3af;
+}
+
+.hot-pill {
+  background: #fff7ed;
+}
+
+.hot-pill .pill-num {
+  color: #ea580c;
+}
+
+.club-action-zone {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4rpx;
+}
+
+.join-btn {
   padding: 10rpx 28rpx;
   border-radius: 100rpx;
   background: linear-gradient(135deg, #5b9cf6, #4891e8);
-  box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.25);
+  box-shadow: 0 4rpx 14rpx rgba(91, 156, 246, 0.28);
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.action-btn:active {
-  transform: scale(0.95);
+.join-btn:active {
+  transform: scale(0.94);
+  box-shadow: 0 2rpx 8rpx rgba(91, 156, 246, 0.2);
 }
 
-.action-btn.followed {
+.join-btn.joined {
   background: #f3f4f6;
   box-shadow: none;
+  border: 1rpx solid #e5e7eb;
 }
 
-.follow-icon {
-  font-size: 22rpx;
+.join-btn-text {
+  font-size: 24rpx;
   color: #fff;
   font-weight: 700;
 }
 
-.follow-text {
-  font-size: 24rpx;
-  color: #fff;
-  font-weight: 600;
+.join-btn.joined .join-btn-text {
+  color: #9ca3af;
 }
 
-.action-btn.followed .follow-icon,
-.action-btn.followed .follow-text {
+/* ===================== 活动筛选 ===================== */
+.activity-filter-scroll {
+  white-space: nowrap;
+  margin: 24rpx 0 20rpx;
+}
+
+.activity-filter-list {
+  display: inline-flex;
+  gap: 16rpx;
+  padding: 0 4rpx;
+}
+
+.act-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 14rpx 28rpx;
+  background: #fff;
+  border-radius: 100rpx;
+  border: 2rpx solid #e5e7eb;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.act-filter-chip text {
+  font-size: 26rpx;
   color: #6b7280;
+  font-weight: 500;
+}
+
+.act-filter-chip.active {
+  background: linear-gradient(135deg, #5b9cf6, #4891e8);
+  border-color: #5b9cf6;
+  box-shadow: 0 6rpx 18rpx rgba(91, 156, 246, 0.28);
+}
+
+.act-filter-chip.active text {
+  color: #fff;
+  font-weight: 600;
 }
 
 /* ===================== 活动卡片 ===================== */
@@ -306,149 +426,270 @@
   border-radius: 24rpx;
   box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
   overflow: hidden;
+  display: flex;
+  transition: box-shadow 0.2s, transform 0.2s;
 }
 
-.activity-image-wrap {
+.activity-card:active {
+  box-shadow: 0 2rpx 10rpx rgba(91, 156, 246, 0.06);
+  transform: scale(0.99);
+}
+
+.act-image-wrap {
+  width: 240rpx;
+  height: 240rpx;
+  flex-shrink: 0;
   position: relative;
-  height: 320rpx;
   overflow: hidden;
+  border-radius: 24rpx 0 0 24rpx;
 }
 
-.activity-img {
+.act-image {
   width: 100%;
   height: 100%;
 }
 
-.activity-status-badge {
+.act-status-strip {
   position: absolute;
-  top: 20rpx;
-  right: 20rpx;
-  border-radius: 100rpx;
-  padding: 8rpx 20rpx;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 8rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.activity-status-badge.open {
+.act-status-strip.open {
   background: linear-gradient(135deg, #5b9cf6, #38bdf8);
 }
 
-.activity-status-badge.ongoing {
+.act-status-strip.ongoing {
   background: linear-gradient(135deg, #34d399, #10b981);
 }
 
-.badge-text {
-  font-size: 22rpx;
+.act-status-strip.closed {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.act-status-text {
+  font-size: 20rpx;
   color: #fff;
   font-weight: 700;
+  letter-spacing: 1rpx;
 }
 
-.activity-club-tag {
-  position: absolute;
-  bottom: 16rpx;
-  left: 20rpx;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8rpx);
-  border-radius: 100rpx;
-  padding: 8rpx 16rpx;
+.act-info-wrap {
+  flex: 1;
+  padding: 20rpx 20rpx 20rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
 }
 
-.club-tag-text {
-  font-size: 22rpx;
-  color: #fff;
-  font-weight: 500;
-}
-
-.activity-info {
-  padding: 24rpx;
-}
-
-.activity-title {
-  font-size: 32rpx;
+.act-title {
+  font-size: 30rpx;
   font-weight: 700;
   color: #1e3a5f;
-  display: block;
-  margin-bottom: 16rpx;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 8rpx;
+}
+
+.act-org {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  margin-bottom: 8rpx;
+}
+
+.act-org-icon {
+  font-size: 22rpx;
+}
+
+.act-org-name {
+  font-size: 22rpx;
+  color: #5b9cf6;
+  font-weight: 600;
+}
+
+.act-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8rpx;
+  margin-bottom: 6rpx;
+}
+
+.act-detail-icon {
+  font-size: 22rpx;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+}
+
+.act-detail-text {
+  font-size: 22rpx;
+  color: #9ca3af;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   line-height: 1.4;
 }
 
-.activity-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 10rpx;
-  margin-bottom: 20rpx;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
-}
-
-.meta-icon {
-  font-size: 26rpx;
-}
-
-.meta-text {
-  font-size: 24rpx;
-  color: #6b7280;
-}
-
-.activity-footer {
+.act-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 16rpx;
+  margin-top: 8rpx;
+  padding-top: 12rpx;
   border-top: 1rpx solid #f3f4f6;
 }
 
-.activity-hot {
+.act-hot-wrap {
   display: flex;
   align-items: center;
   gap: 6rpx;
 }
 
-.hot-icon {
-  font-size: 28rpx;
+.act-hot-icon {
+  font-size: 26rpx;
 }
 
-.hot-num {
-  font-size: 24rpx;
+.act-hot-num {
+  font-size: 22rpx;
   color: #9ca3af;
+  font-weight: 500;
 }
 
-.join-btn {
+.act-sign-btn {
   background: linear-gradient(135deg, #5b9cf6, #4891e8);
   border-radius: 100rpx;
-  padding: 14rpx 40rpx;
+  padding: 10rpx 24rpx;
   box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.25);
   transition: all 0.2s;
 }
 
-.join-btn:active {
-  transform: scale(0.95);
+.act-sign-btn:active {
+  transform: scale(0.94);
 }
 
-.join-text {
-  font-size: 26rpx;
+.act-sign-btn.disabled {
+  background: #f3f4f6;
+  box-shadow: none;
+}
+
+.sign-btn-text {
+  font-size: 24rpx;
   color: #fff;
   font-weight: 700;
 }
 
-/* ===================== 我的社团 ===================== */
-.my-clubs-section {
-  display: flex;
-  flex-direction: column;
-  gap: 24rpx;
-  padding-bottom: 24rpx;
+.act-sign-btn.disabled .sign-btn-text {
+  color: #9ca3af;
 }
 
+/* ===================== 我的社团 ===================== */
+.profile-card {
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
+  margin: 24rpx 0;
+  padding: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.profile-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  border: 4rpx solid #e8f2ff;
+  overflow: hidden;
+  box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.15);
+  flex-shrink: 0;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.profile-name {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+
+.profile-sub {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
+
+.profile-right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #f0f6ff;
+  border-radius: 16rpx;
+  padding: 16rpx 24rpx;
+}
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  min-width: 80rpx;
+}
+
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #5b9cf6;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.stat-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: #dbeafe;
+  margin: 0 20rpx;
+}
+
+/* section-block */
 .section-block {
   background: #fff;
   border-radius: 24rpx;
   box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
+  margin-bottom: 20rpx;
   overflow: hidden;
 }
 
-.block-header {
+.section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -456,133 +697,238 @@
   border-bottom: 1rpx solid #f3f4f6;
 }
 
-.block-title {
+.section-title {
   font-size: 30rpx;
   font-weight: 700;
   color: #1e3a5f;
 }
 
-.block-count {
+.section-count {
   font-size: 24rpx;
   color: #9ca3af;
 }
 
-.my-club-list {
+.section-more {
+  font-size: 24rpx;
+  color: #5b9cf6;
+  font-weight: 500;
+}
+
+/* 我加入的社团 - 横向滑动卡片 */
+.my-club-cards {
+  display: flex;
+  gap: 16rpx;
+  padding: 20rpx 24rpx;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.my-club-cards::-webkit-scrollbar {
+  display: none;
+}
+
+.my-club-chip {
   display: flex;
   flex-direction: column;
-}
-
-.my-club-card {
-  display: flex;
   align-items: center;
+  gap: 10rpx;
+  background: #f8fafc;
+  border-radius: 20rpx;
   padding: 20rpx 24rpx;
-  border-bottom: 1rpx solid #f3f4f6;
-  gap: 16rpx;
-  transition: background 0.15s;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  min-width: 160rpx;
 }
 
-.my-club-card:last-child {
-  border-bottom: none;
+.my-club-chip:active {
+  background: #eef6ff;
 }
 
-.my-club-card:active {
-  background: #f8fbff;
-}
-
-.my-club-avatar {
+.chip-avatar {
   width: 80rpx;
   height: 80rpx;
   border-radius: 20rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.08);
 }
 
-.my-club-avatar .club-emoji {
+.chip-emoji {
   font-size: 44rpx;
 }
 
-.my-club-info {
-  flex: 1;
-}
-
-.my-club-name {
-  display: block;
-  font-size: 30rpx;
+.chip-name {
+  font-size: 26rpx;
   font-weight: 600;
   color: #1e3a5f;
-  margin-bottom: 4rpx;
+  text-align: center;
+  max-width: 140rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.my-club-role {
-  font-size: 22rpx;
-  color: #5b9cf6;
-  font-weight: 500;
-}
-
-.my-club-right {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-}
-
-.unread-badge {
-  background: #f87171;
-  border-radius: 100rpx;
-  min-width: 36rpx;
-  height: 36rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 10rpx;
-}
-
-.badge-num {
+.chip-role {
   font-size: 20rpx;
-  color: #fff;
-  font-weight: 700;
+  font-weight: 600;
+  padding: 4rpx 14rpx;
+  border-radius: 100rpx;
 }
 
-.arrow-icon {
-  font-size: 40rpx;
-  color: #d1d5db;
-  font-weight: 300;
+.chip-role.owner {
+  background: #fef3c7;
+  color: #d97706;
 }
 
-/* 空状态 */
+.chip-role.admin {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.chip-role.member {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+/* 我报名的活动 */
+.my-activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-act-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid #f9fafb;
+  transition: background 0.15s;
+}
+
+.my-act-item:last-child {
+  border-bottom: none;
+}
+
+.my-act-item:active {
+  background: #f8fbff;
+}
+
+.my-act-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.my-act-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1e3a5f;
+  margin-bottom: 6rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.my-act-meta {
+  font-size: 22rpx;
+  color: #9ca3af;
+}
+
+.my-act-status {
+  flex-shrink: 0;
+  margin-left: 16rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 100rpx;
+}
+
+.my-act-status.open {
+  background: #dbeafe;
+}
+
+.my-act-status.open .my-act-status-text {
+  color: #2563eb;
+}
+
+.my-act-status.ongoing {
+  background: #d1fae5;
+}
+
+.my-act-status.ongoing .my-act-status-text {
+  color: #059669;
+}
+
+.my-act-status.closed {
+  background: #f3f4f6;
+}
+
+.my-act-status.closed .my-act-status-text {
+  color: #9ca3af;
+}
+
+.my-act-status-text {
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+/* ===================== 空状态 ===================== */
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60rpx 24rpx;
-  gap: 16rpx;
+  padding: 80rpx 24rpx;
+  gap: 12rpx;
 }
 
-.empty-emoji {
-  font-size: 80rpx;
-  opacity: 0.4;
+.empty-icon {
+  font-size: 100rpx;
+  opacity: 0.3;
 }
 
-.empty-text {
-  font-size: 28rpx;
-  color: #9ca3af;
+.empty-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #d1d5db;
 }
 
-.empty-btn {
+.empty-sub {
+  font-size: 26rpx;
+  color: #d1d5db;
+}
+
+.empty-state-sm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 24rpx;
+  gap: 12rpx;
+}
+
+.empty-sm-icon {
+  font-size: 60rpx;
+  opacity: 0.3;
+}
+
+.empty-sm-text {
+  font-size: 26rpx;
+  color: #d1d5db;
+}
+
+.empty-sm-btn {
   background: linear-gradient(135deg, #5b9cf6, #4891e8);
   border-radius: 100rpx;
-  padding: 16rpx 40rpx;
+  padding: 14rpx 36rpx;
   margin-top: 8rpx;
+  box-shadow: 0 4rpx 14rpx rgba(91, 156, 246, 0.25);
 }
 
-.empty-btn-text {
+.empty-sm-btn-text {
   font-size: 26rpx;
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* 底部占位 */
+/* ===================== 底部占位 ===================== */
 .bottom-space {
   height: 40rpx;
 }
