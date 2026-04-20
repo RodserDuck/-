@@ -15,7 +15,11 @@ Page({
     loading: false
   },
 
-  onLoad() {
+  onLoad(options) {
+    if (options.tab === 'mine') {
+      this.setData({ currentTab: 1 });
+      this.loadMyGoods();
+    }
     this.loadCategories();
     this.loadGoods(true);
   },
@@ -63,10 +67,6 @@ Page({
             avatar: g.sellerAvatar || 'https://picsum.photos/100/100?random=50',
             location: g.tradeLocation || '校园内',
             time: g.createTime ? self.formatTime(g.createTime) : '',
-            likes: g.favoriteCount || 0,
-            liked: false,
-            status: g.status === 1 ? '在售' : g.status === 2 ? '已售' : '已下架',
-            statusCode: g.status,
             views: g.viewCount || 0
           };
         });
@@ -99,11 +99,10 @@ Page({
             title: g.title,
             price: g.price,
             originalPrice: g.originalPrice,
-            image: images[0] || 'https://picsum.photos/400/400?random=50',
+            image: images[0] || 'https://picsum.photos/200/200?random=60',
             status: g.status === 1 ? '在售' : g.status === 2 ? '已售' : '已下架',
             statusCode: g.status,
-            views: g.viewCount || 0,
-            likes: g.favoriteCount || 0
+            views: g.viewCount || 0
           };
         });
         self.setData({ myGoods: goods });
@@ -151,30 +150,6 @@ Page({
       return;
     }
     wx.navigateTo({ url: '/pages/publish-goods/publish-goods' });
-  },
-
-  onLikeTap(e) {
-    var id = e.currentTarget.dataset.id;
-    var allGoods = this.data.allGoods.map(function(item) {
-      if (item.id === id) {
-        return Object.assign({}, item, {
-          liked: !item.liked,
-          likes: item.liked ? item.likes - 1 : item.likes + 1
-        });
-      }
-      return item;
-    });
-    var self = this;
-    this.setData({ allGoods: allGoods }, function() {
-      self.refreshWaterfall();
-    });
-  },
-
-  refreshWaterfall() {
-    this.setData({
-      leftGoods: this.data.allGoods.filter(function(_, i) { return i % 2 === 0; }),
-      rightGoods: this.data.allGoods.filter(function(_, i) { return i % 2 === 1; })
-    });
   },
 
   onReachBottom() {

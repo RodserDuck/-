@@ -1,5 +1,5 @@
 // pages/profile/profile.js
-var { getUserInfo, getMyGoods, getMyClubs, getMyBuy, getMySell } = require('../../utils/request.js');
+var { getUserInfo, getMyGoods, getMyClubs, getMyBuy, getMySell, confirmTrade, cancelTrade } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -11,7 +11,6 @@ Page({
     },
     statsList: [
       { id: 1, value: 0, label: '帖子' },
-      { id: 2, value: 0, label: '收藏' },
       { id: 3, value: 0, label: '闲置' },
       { id: 4, value: 0, label: '寻物' }
     ],
@@ -31,7 +30,6 @@ Page({
         title: '我的内容',
         items: [
           { id: 1, icon: '📝', name: '我的帖子', count: 0, iconBg: 'rgba(91, 156, 246, 0.12)', sub: '管理发布的内容' },
-          { id: 2, icon: '⭐', name: '我的收藏', count: 0, iconBg: 'rgba(251, 146, 60, 0.12)', sub: '收藏的文章和商品' },
           { id: 3, icon: '📦', name: '我的闲置', count: 0, iconBg: 'rgba(52, 211, 153, 0.12)', sub: '发布和管理的商品' }
         ]
       },
@@ -109,9 +107,9 @@ Page({
     getMyGoods()
       .then(function(goods) {
         var stats = self.data.statsList;
-        stats[2].value = goods ? goods.length : 0;
+        stats[1].value = goods ? goods.length : 0;
         var menuGroups = self.data.menuGroups;
-        menuGroups[0].items[2].count = goods ? goods.length : 0;
+        menuGroups[0].items[1].count = goods ? goods.length : 0;
         self.setData({ statsList: stats, menuGroups: menuGroups });
       })
       .catch(function() {});
@@ -149,7 +147,7 @@ Page({
   },
 
   onEditProfile() {
-    wx.showToast({ title: '编辑资料', icon: 'none' });
+    wx.navigateTo({ url: '/pages/settings/settings' });
   },
 
   onQuickAction(e) {
@@ -174,12 +172,20 @@ Page({
     } else if (id === 10) {
       this.showTradeSheet('sell');
     } else {
-      var menuMap = {
-        1: '我的帖子', 2: '我的收藏', 3: '我的闲置',
-        4: '我的社团', 5: '我的活动', 6: '消息通知',
-        7: '设置'
+      var pageMap = {
+        1: '/pages/my-posts/my-posts',
+        3: '/pages/market/market?tab=mine',
+        4: '/pages/my-clubs/my-clubs',
+        5: '/pages/my-activities/my-activities',
+        6: '/pages/notifications/notifications',
+        7: '/pages/settings/settings'
       };
-      wx.showToast({ title: menuMap[id] || '功能开发中', icon: 'none' });
+      var url = pageMap[id];
+      if (url) {
+        wx.navigateTo({ url: url });
+      } else {
+        wx.showToast({ title: '功能开发中', icon: 'none' });
+      }
     }
   },
 
@@ -190,6 +196,51 @@ Page({
 
   closeTradeSheet() {
     this.setData({ showTradeSheet: false });
+  },
+
+  onBuyerConfirm(e) {
+    var self = this;
+    var recordId = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '确认收货',
+      content: '确认已收到商品且无问题，交易完成？',
+      confirmColor: '#22c55e',
+      success: function(res) {
+        if (res.confirm) {
+          confirmTrade(recordId)
+            .then(function() {
+              wx.showToast({ title: '交易已完成', icon: 'success' });
+              self.loadMyData();
+              self.closeTradeSheet();
+            })
+            .catch(function(err) {
+              wx.showToast({ title: err.msg || '操作失败', icon: 'none' });
+            });
+        }
+      }
+    });
+  },
+
+  onBuyerCancel(e) {
+    var self = this;
+    var recordId = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '取消交易',
+      content: '确定要取消该交易吗？',
+      confirmColor: '#ef4444',
+      success: function(res) {
+        if (res.confirm) {
+          cancelTrade(recordId)
+            .then(function() {
+              wx.showToast({ title: '已取消', icon: 'success' });
+              self.loadMyData();
+            })
+            .catch(function(err) {
+              wx.showToast({ title: err.msg || '操作失败', icon: 'none' });
+            });
+        }
+      }
+    });
   },
 
   onLogout() {

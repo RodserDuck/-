@@ -1,0 +1,41 @@
+<!-- pages/my-clubs/my-clubs.wxml -->
+<view class="page">
+  <view class="club-list" wx:if="{{!empty}}">
+    <view
+      class="club-card"
+      wx:for="{{clubs}}"
+      wx:key="id"
+    >
+      <view class="club-main" bindtap="onClubTap" data-id="{{item.id}}">
+        <image class="club-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+        <view class="club-info">
+          <view class="club-name-row">
+            <text class="club-name">{{item.name}}</text>
+            <view class="club-role-badge">
+              <text class="role-text">{{item.role}}</text>
+            </view>
+          </view>
+          <text class="club-desc">{{item.description}}</text>
+          <text class="club-member-count">👥 {{item.memberCount}} 名成员</text>
+        </view>
+        <text class="club-arrow">›</text>
+      </view>
+      <view class="club-actions">
+        <view class="club-btn danger" catchtap="onLeaveTap" data-id="{{item.id}}">
+          <text>退出社团</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{empty && !loading}}">
+    <text class="empty-emoji">👥</text>
+    <text class="empty-title">还没有加入社团</text>
+    <text class="empty-sub">在社团活动页面加入感兴趣的社团</text>
+  </view>
+
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

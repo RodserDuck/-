@@ -57,9 +57,6 @@
         >
           <view class="goods-img-wrap">
             <image class="goods-img" src="{{item.image}}" mode="aspectFill"/>
-            <view class="goods-status-tag" wx:if="{{item.statusCode === 2}}">
-              <text class="status-text">已售</text>
-            </view>
           </view>
           <view class="goods-info">
             <text class="goods-title">{{item.title}}</text>
@@ -73,10 +70,6 @@
             </view>
             <view class="goods-meta-row">
               <text class="goods-location">📍 {{item.location}}</text>
-              <view class="goods-like" bindtap="onLikeTap" data-id="{{item.id}}">
-                <text class="like-icon">{{item.liked ? '❤️' : '🤍'}}</text>
-                <text class="like-num">{{item.likes}}</text>
-              </view>
             </view>
           </view>
         </view>
@@ -91,9 +84,6 @@
         >
           <view class="goods-img-wrap">
             <image class="goods-img" src="{{item.image}}" mode="aspectFill"/>
-            <view class="goods-status-tag" wx:if="{{item.statusCode === 2}}">
-              <text class="status-text">已售</text>
-            </view>
           </view>
           <view class="goods-info">
             <text class="goods-title">{{item.title}}</text>
@@ -107,10 +97,6 @@
             </view>
             <view class="goods-meta-row">
               <text class="goods-location">📍 {{item.location}}</text>
-              <view class="goods-like" bindtap="onLikeTap" data-id="{{item.id}}">
-                <text class="like-icon">{{item.liked ? '❤️' : '🤍'}}</text>
-                <text class="like-num">{{item.likes}}</text>
-              </view>
             </view>
           </view>
         </view>
@@ -136,7 +122,6 @@
             </view>
             <view class="my-goods-meta">
               <text class="my-meta-item">👁 {{item.views || 0}} 浏览</text>
-              <text class="my-meta-item">❤️ {{item.likes || 0}} 收藏</text>
             </view>
           </view>
         </view>

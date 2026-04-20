@@ -1,0 +1,40 @@
+<!-- pages/my-activities/my-activities.wxml -->
+<view class="page">
+  <view class="activity-list" wx:if="{{!empty}}">
+    <view
+      class="activity-card"
+      wx:for="{{activities}}"
+      wx:key="id"
+    >
+      <image class="activity-cover" src="{{item.cover}}" mode="aspectFill"/>
+      <view class="activity-info">
+        <view class="activity-header">
+          <text class="activity-title">{{item.title}}</text>
+          <view class="activity-status {{item.statusCode === 1 ? 'ongoing' : item.statusCode === 2 ? 'active' : 'done'}}">
+            <text class="status-text">{{item.status}}</text>
+          </view>
+        </view>
+        <view class="activity-meta">
+          <text class="meta-item">🕐 {{item.time}}</text>
+          <text class="meta-item">📍 {{item.location}}</text>
+        </view>
+        <view class="activity-actions" wx:if="{{item.statusCode === 1 || item.statusCode === 2}}">
+          <view class="activity-btn danger" catchtap="onCancelTap" data-id="{{item.id}}">
+            <text>取消报名</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{empty && !loading}}">
+    <text class="empty-emoji">🎯</text>
+    <text class="empty-title">还没有报名的活动</text>
+    <text class="empty-sub">在社团活动页面报名感兴趣的活动</text>
+  </view>
+
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

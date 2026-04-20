@@ -86,9 +86,9 @@
           </view>
         </view>
         <view class="item-image-wrap no-image" wx:else>
-          <text class="no-image-icon">🔍</text>
-          <view class="item-type-corner lost-corner">
-            <text class="corner-text">寻物</text>
+          <text class="no-image-icon">{{item.type === 'lost' ? '🔍' : '📦'}}</text>
+          <view class="item-type-corner {{item.type === 'lost' ? 'lost-corner' : 'found-corner'}}">
+            <text class="corner-text">{{item.type === 'lost' ? '寻物' : '招领'}}</text>
           </view>
         </view>
         <view class="item-info">

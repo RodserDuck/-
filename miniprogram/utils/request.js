@@ -247,3 +247,11 @@ export const getMySell = () =>
 
 export const getPendingTrade = () =>
   request('/trade/pending', {}, 'GET', false);
+
+// 我的帖子
+export const getMyPosts = () =>
+  request('/post/my', {}, 'GET', false);
+
+// 我的活动报名
+export const getMyActivities = () =>
+  request('/activity/my', {}, 'GET', false);

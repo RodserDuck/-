@@ -529,6 +529,34 @@
   margin-top: 8rpx;
 }
 
+.record-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.record-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.record-btn.confirm {
+  background: linear-gradient(135deg, #34d399, #10b981);
+  color: #fff;
+}
+
+.record-btn.cancel {
+  background: #f3f4f6;
+  color: #9ca3af;
+  border: 1rpx solid #e5e7eb;
+}
+
 /* 售出待处理红点 */
 .trade-badge {
   background: #ef4444;

@@ -20,7 +20,12 @@
     "pages/college-activity-detail/college-activity-detail",
     "pages/lostfound-detail/lostfound-detail",
     "pages/notice-detail/notice-detail",
-    "pages/college-notice-detail/college-notice-detail"
+    "pages/college-notice-detail/college-notice-detail",
+    "pages/my-posts/my-posts",
+    "pages/my-clubs/my-clubs",
+    "pages/my-activities/my-activities",
+    "pages/notifications/notifications",
+    "pages/settings/settings"
   ],
   "window": {
     "navigationBarTextStyle": "white",

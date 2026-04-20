@@ -1,0 +1,36 @@
+/* pages/my-activities/my-activities.wxss */
+page { background: #f0f6ff; }
+.page { min-height: 100vh; padding: 24rpx 28rpx; }
+
+.activity-list { display: flex; flex-direction: column; gap: 20rpx; }
+
+.activity-card {
+  background: #fff; border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(91,156,246,0.08); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.activity-cover { width: 100%; height: 280rpx; }
+
+.activity-info { padding: 20rpx 24rpx; display: flex; flex-direction: column; gap: 12rpx; }
+.activity-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; }
+.activity-title { font-size: 30rpx; font-weight: 700; color: #1e3a5f; flex: 1; }
+.activity-status { border-radius: 100rpx; padding: 4rpx 16rpx; flex-shrink: 0; }
+.activity-status.ongoing, .activity-status.active { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669; }
+.activity-status.done { background: #f3f4f6; color: #9ca3af; }
+.status-text { font-size: 22rpx; font-weight: 600; }
+
+.activity-meta { display: flex; flex-direction: column; gap: 6rpx; }
+.meta-item { font-size: 24rpx; color: #9ca3af; }
+
+.activity-actions { display: flex; border-top: 1rpx solid #f3f4f6; padding-top: 12rpx; margin-top: 4rpx; }
+.activity-btn { padding: 12rpx 24rpx; border-radius: 100rpx; font-size: 26rpx; font-weight: 500; }
+.activity-btn.danger { background: #fef2f2; color: #ef4444; }
+
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: 120rpx 24rpx; gap: 16rpx; }
+.empty-emoji { font-size: 96rpx; opacity: 0.3; }
+.empty-title { font-size: 32rpx; font-weight: 600; color: #374151; }
+.empty-sub { font-size: 26rpx; color: #9ca3af; }
+
+.loading-state { display: flex; justify-content: center; padding: 60rpx; }
+.loading-text { font-size: 28rpx; color: #9ca3af; }

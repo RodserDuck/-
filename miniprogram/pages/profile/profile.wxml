@@ -120,7 +120,7 @@
           <view class="record-header">
             <text class="record-title">{{item.itemTitle}}</text>
             <view class="record-status {{item.status === 1 ? 'done' : item.status === 2 ? 'canceled' : 'pending'}}">
-              <text>{{item.status === 0 ? '待确认' : item.status === 1 ? '已完成' : '已取消'}}</text>
+              <text>{{item.status === 0 ? '等待确认' : item.status === 1 ? '已完成' : '已取消'}}</text>
             </view>
           </view>
           <view class="record-info">
@@ -132,6 +132,17 @@
           </view>
           <view class="record-remark" wx:if="{{item.remark}}">
             <text>留言：{{item.remark}}</text>
+          </view>
+          <view class="record-tip" wx:if="{{item.status === 0}}">
+            <text>请与卖家线下交易后，确认收货</text>
+          </view>
+          <view class="record-actions" wx:if="{{item.status === 0}}">
+            <view class="record-btn confirm" bindtap="onBuyerConfirm" data-id="{{item.recordId}}" data-title="{{item.itemTitle}}">
+              <text>✅ 确认收货</text>
+            </view>
+            <view class="record-btn cancel" bindtap="onBuyerCancel" data-id="{{item.recordId}}">
+              <text>❌ 取消</text>
+            </view>
           </view>
         </view>
       </scroll-view>

@@ -1,5 +1,5 @@
 // pages/goods-detail/goods-detail.js
-var { getGoodsDetail, createTrade, confirmTrade, cancelTrade, getMySell, getPendingTrade } = require('../../utils/request.js');
+var { getGoodsDetail, createTrade, confirmTrade, cancelTrade, getMySell, getPendingTrade, getMyBuy } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -7,10 +7,12 @@ Page({
     currentImageIndex: 0,
     goodsId: null,
     isOwner: false,
+    isBuyer: false,
     tradeList: [],
     showTradeModal: false,
     remark: '',
-    showMyTrade: false
+    showMyTrade: false,
+    myBuyList: []
   },
 
   onLoad(options) {
@@ -56,10 +58,12 @@ Page({
           },
           isOwner: userId && g.userId && String(userId) === String(g.userId)
         });
-        // 如果是卖家，加载交易请求
+        // 卖家：加载待处理交易请求
         if (userId && g.userId && String(userId) === String(g.userId)) {
           self.loadTradeList();
         }
+        // 买家：加载自己的购买记录
+        self.loadMyBuyList(goodsId);
       })
       .catch(function() {});
   },
@@ -76,6 +80,21 @@ Page({
       .catch(function() {});
   },
 
+  loadMyBuyList(goodsId) {
+    var self = this;
+    getMyBuy()
+      .then(function(list) {
+        var records = (list || []).filter(function(r) {
+          return r.itemId === goodsId;
+        });
+        self.setData({
+          myBuyList: records,
+          isBuyer: records.length > 0
+        });
+      })
+      .catch(function() {});
+  },
+
   getConditionText(level) {
     var map = { 1: '全新', 2: '99新', 3: '95新', 4: '9成新', 5: '8成新' };
     return map[level] || '95新';
@@ -83,14 +102,6 @@ Page({
 
   onSwiperChange(e) {
     this.setData({ currentImageIndex: e.detail.current });
-  },
-
-  onLikeTap() {
-    var goods = this.data.goods;
-    if (!goods) return;
-    goods.isLiked = !goods.isLiked;
-    this.setData({ goods: goods });
-    wx.showToast({ title: goods.isLiked ? '收藏成功' : '取消收藏', icon: 'none' });
   },
 
   onContactTap() {
@@ -134,6 +145,7 @@ Page({
                 createTrade(goods.id, confirmRes.content || '')
                   .then(function() {
                     wx.showToast({ title: '交易请求已发送，等待卖家确认', icon: 'none', duration: 3000 });
+                    self.loadGoods(goods.id);
                   })
                   .catch(function(err) {
                     wx.showToast({ title: err.msg || '发起失败', icon: 'none' });
@@ -176,6 +188,30 @@ Page({
     });
   },
 
+  // 买家：确认完成交易
+  onConfirmBuyTrade(e) {
+    var self = this;
+    var recordId = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '确认收货',
+      content: '确认已收到商品且无问题，交易完成？',
+      confirmColor: '#22c55e',
+      success: function(res) {
+        if (res.confirm) {
+          confirmTrade(recordId)
+            .then(function() {
+              wx.showToast({ title: '交易已完成', icon: 'success' });
+              self.loadGoods(self.data.goodsId);
+              self.loadMyBuyList(self.data.goodsId);
+            })
+            .catch(function(err) {
+              wx.showToast({ title: err.msg || '操作失败', icon: 'none' });
+            });
+        }
+      }
+    });
+  },
+
   // 取消交易（买家/卖家通用）
   onCancelTrade(e) {
     var self = this;
@@ -190,6 +226,7 @@ Page({
             .then(function() {
               wx.showToast({ title: '已取消', icon: 'success' });
               self.loadTradeList();
+              self.loadMyBuyList(self.data.goodsId);
             })
             .catch(function(err) {
               wx.showToast({ title: err.msg || '操作失败', icon: 'none' });
