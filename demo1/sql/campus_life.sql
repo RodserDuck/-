@@ -32,7 +32,7 @@ CREATE TABLE `t_admin` (
   PRIMARY KEY (`admin_id`),
   UNIQUE KEY `uk_admin_username`(`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='管理员表';
-INSERT INTO `t_admin` VALUES (1, 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5EH', '系统管理员', '13800138000', NULL, NOW(), NOW(), 0);
+INSERT INTO `t_admin` VALUES (1, 'admin', '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2', '系统管理员', '13800138000', NULL, NOW(), NOW(), 0);
 
 -- ------------------------------
 -- 2. 用户表
@@ -43,6 +43,7 @@ CREATE TABLE `t_user` (
   `openid`         VARCHAR(100)  DEFAULT NULL COMMENT '微信openid',
   `username`       VARCHAR(50)  DEFAULT NULL COMMENT '用户名/昵称',
   `student_no`     VARCHAR(30)  DEFAULT NULL COMMENT '学号',
+  `password`       VARCHAR(255) DEFAULT NULL COMMENT '密码（BCrypt加密）',
   `avatar`         VARCHAR(500) DEFAULT NULL COMMENT '头像URL',
   `phone`          VARCHAR(20)  DEFAULT NULL COMMENT '手机号',
   `email`          VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
@@ -54,12 +55,53 @@ CREATE TABLE `t_user` (
   `update_time`    DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted`        TINYINT DEFAULT 0 COMMENT '逻辑删除',
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `uk_user_openid`(`openid`),
-  UNIQUE KEY `uk_user_student_no`(`student_no`)
+  KEY `uk_user_openid`(`openid`),
+  KEY `uk_user_student_no`(`student_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户表';
-INSERT INTO `t_user` VALUES (1, 'openid_001', '校园小达人', '20220200649', 'https://picsum.photos/200/200?random=10', '13800001111', 'lbb@example.com', '计算机与大数据科学学院', '计算机科学与技术', 'A2212', 1, NOW(), NOW(), 0);
-INSERT INTO `t_user` VALUES (2, 'openid_002', '学霸君', '20220200650', 'https://picsum.photos/200/200?random=11', '13800002222', 'xueba@example.com', '计算机与大数据科学学院', '软件工程', 'A2212', 1, NOW(), NOW(), 0);
-INSERT INTO `t_user` VALUES (3, 'openid_003', '运动达人', '20220200651', 'https://picsum.photos/200/200?random=12', '13800003333', 'sport@example.com', '体育学院', '体育教育', 'B2211', 1, NOW(), NOW(), 0);
+-- 密码均为 123456（BCrypt加密后的结果）
+-- openid 格式为 student_ + 学号，与登录逻辑保持一致
+INSERT INTO `t_user` VALUES (1, 'student_20220200649', '校园小达人', '20220200649', '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2', 'https://picsum.photos/200/200?random=10', '13800001111', 'lbb@example.com', '计算机与大数据科学学院', '计算机科学与技术', 'A2212', 1, NOW(), NOW(), 0);
+INSERT INTO `t_user` VALUES (2, 'student_20220200650', '学霸君', '20220200650', '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2', 'https://picsum.photos/200/200?random=11', '13800002222', 'xueba@example.com', '计算机与大数据科学学院', '软件工程', 'A2212', 1, NOW(), NOW(), 0);
+INSERT INTO `t_user` VALUES (3, 'student_20220200651', '运动达人', '20220200651', '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2', 'https://picsum.photos/200/200?random=12', '13800003333', 'sport@example.com', '体育学院', '体育教育', 'B2211', 1, NOW(), NOW(), 0);
+
+-- 管理员密码也是 123456
+INSERT INTO `t_admin` VALUES (1, 'admin', '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2', '系统管理员', '13800138000', NULL, NOW(), NOW(), 0);
+
+-- ------------------------------
+-- 2.1 学院字典表（供注册时选择）
+-- ------------------------------
+DROP TABLE IF EXISTS `t_college`;
+CREATE TABLE `t_college` (
+  `college_id`     BIGINT NOT NULL AUTO_INCREMENT COMMENT '学院ID',
+  `name`           VARCHAR(100) NOT NULL COMMENT '学院名称',
+  `code`           VARCHAR(50)  NOT NULL COMMENT '学院代码',
+  `sort_order`     INT DEFAULT 0 COMMENT '排序',
+  `status`        TINYINT DEFAULT 1 COMMENT '状态：1-启用 0-停用',
+  `create_time`    DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `deleted`        TINYINT DEFAULT 0,
+  PRIMARY KEY (`college_id`),
+  UNIQUE KEY `uk_college_code`(`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='学院字典表';
+INSERT INTO `t_college` VALUES (1,  '计算机与大数据科学学院', 'CS', 1,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (2,  '人工智能学院',           'AI', 2,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (3,  '软件学院',               'SE', 3,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (4,  '信息与通信工程学院',     'ICT',4,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (5,  '电子工程学院',           'EE', 5,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (6,  '自动化学院',             'AU', 6,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (7,  '机械工程学院',           'ME', 7,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (8,  '土木与交通工程学院',     'CE', 8,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (9,  '经济管理学院',           'EM', 9,  1, NOW(), 0);
+INSERT INTO `t_college` VALUES (10, '法学院',                 'LA', 10, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (11, '文学院',                 'CL', 11, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (12, '外国语学院',             'FL', 12, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (13, '理学院',                 'SC', 13, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (14, '体育学院',               'PE', 14, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (15, '艺术设计学院',           'AD', 15, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (16, '马克思主义学院',         'MR', 16, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (17, '教育学院',               'ED', 17, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (18, '医学院',                 'MD', 18, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (19, '护理学院',               'NM', 19, 1, NOW(), 0);
+INSERT INTO `t_college` VALUES (20, '国际学院',               'IB', 20, 1, NOW(), 0);
 
 -- ------------------------------
 -- 3. 通知公告表

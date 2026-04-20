@@ -1,61 +1,113 @@
 // pages/register/register.js
-var { userLogin } = require('../../utils/request.js');
+var { userRegister, getCollegeList } = require('../../utils/request.js');
 
 Page({
   data: {
     studentNo: '',
-    nickname: '',
-    phone: '',
-    college: '',
+    username: '',
     password: '',
     confirmPassword: '',
-    isLoading: false
+    phone: '',
+    collegeList: [],
+    selectedCollege: '',
+    selectedCollegeName: '',
+    major: '',
+    className: '',
+    isLoading: false,
+    showCollegePicker: false
   },
 
-  onLoad() {},
+  onLoad() {
+    this.loadCollegeList();
+  },
+
+  loadCollegeList() {
+    getCollegeList()
+      .then(list => {
+        this.setData({ collegeList: list || [] });
+      })
+      .catch(() => {});
+  },
 
   onStudentNoInput(e) { this.setData({ studentNo: e.detail.value }); },
-  onNicknameInput(e) { this.setData({ nickname: e.detail.value }); },
-  onPhoneInput(e) { this.setData({ phone: e.detail.value }); },
-  onCollegeInput(e) { this.setData({ college: e.detail.value }); },
+  onUsernameInput(e) { this.setData({ username: e.detail.value }); },
   onPasswordInput(e) { this.setData({ password: e.detail.value }); },
   onConfirmInput(e) { this.setData({ confirmPassword: e.detail.value }); },
+  onPhoneInput(e) { this.setData({ phone: e.detail.value }); },
+  onMajorInput(e) { this.setData({ major: e.detail.value }); },
+  onClassInput(e) { this.setData({ className: e.detail.value }); },
+
+  onCollegeTap() {
+    if (!this.data.collegeList.length) {
+      wx.showToast({ title: '学院列表加载中', icon: 'none' });
+      return;
+    }
+    wx.showActionSheet({
+      itemList: this.data.collegeList.map(c => c.name),
+      success: res => {
+        var college = this.data.collegeList[res.tapIndex];
+        this.setData({
+          selectedCollege: college.name,
+          selectedCollegeName: college.name
+        });
+      }
+    });
+  },
 
   onRegister() {
     var self = this;
     var d = self.data;
+
     if (!d.studentNo.trim()) { wx.showToast({ title: '请输入学号', icon: 'none' }); return; }
-    if (!d.nickname.trim()) { wx.showToast({ title: '请输入昵称', icon: 'none' }); return; }
+    if (!d.username.trim()) { wx.showToast({ title: '请输入昵称', icon: 'none' }); return; }
     if (!d.password.trim()) { wx.showToast({ title: '请输入密码', icon: 'none' }); return; }
+    if (d.password.length < 6) { wx.showToast({ title: '密码至少6位', icon: 'none' }); return; }
     if (d.password !== d.confirmPassword) { wx.showToast({ title: '两次密码不一致', icon: 'none' }); return; }
+    if (!d.selectedCollege) { wx.showToast({ title: '请选择学院', icon: 'none' }); return; }
 
     self.setData({ isLoading: true });
     wx.showLoading({ title: '注册中...', mask: true });
 
-    // 用学号作为openid注册
-    var openid = 'student_' + d.studentNo;
-    userLogin(openid, d.nickname)
+    userRegister({
+      studentNo: d.studentNo.trim(),
+      username: d.username.trim(),
+      password: d.password,
+      phone: d.phone.trim(),
+      college: d.selectedCollege,
+      major: d.major.trim(),
+      className: d.className.trim()
+    })
       .then(function(res) {
-        // 注册成功，自动登录，保存信息
+        wx.hideLoading();
         wx.setStorageSync('token', res.token);
         wx.setStorageSync('userId', res.userId);
         wx.setStorageSync('userInfo', {
           userId: res.userId,
-          username: d.nickname,
-          studentNo: d.studentNo,
-          phone: d.phone,
-          college: d.college,
-          avatar: 'https://picsum.photos/200/200?random=99'
+          username: d.username.trim(),
+          studentNo: d.studentNo.trim(),
+          phone: d.phone.trim(),
+          college: d.selectedCollege,
+          major: d.major.trim(),
+          avatar: 'https://picsum.photos/200/200?random=' + Math.floor(Math.random() * 200)
         });
         wx.setStorageSync('isLoggedIn', true);
-        wx.hideLoading();
         wx.showToast({ title: '注册成功', icon: 'success' });
-        setTimeout(function() { wx.switchTab({ url: '/pages/square/square' }); }, 1500);
+        setTimeout(function() {
+          wx.switchTab({ url: '/pages/square/square' });
+        }, 1500);
+        self.setData({ isLoading: false });
       })
-      .catch(function() {
+      .catch(function(err) {
         wx.hideLoading();
         self.setData({ isLoading: false });
-        wx.showToast({ title: '注册失败，请重试', icon: 'none' });
+        wx.showModal({
+          title: '注册失败',
+          content: err.msg || '注册失败，请检查学号是否已注册',
+          showCancel: false,
+          confirmText: '知道了'
+        });
       });
-  }
+  },
+
+  onGoLogin() { wx.navigateBack(); }
 });

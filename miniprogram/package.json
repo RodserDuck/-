@@ -6,10 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["miniprogram", "wechat", "campus"],
+  "keywords": [
+    "miniprogram",
+    "wechat",
+    "campus"
+  ],
   "author": "李炳德",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "vant-weapp": "^0.5.29"
   }
 }

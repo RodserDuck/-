@@ -12,6 +12,7 @@ public class User {
     private String openid;
     private String username;
     private String studentNo;
+    private String password;
     private String avatar;
     private String phone;
     private String email;

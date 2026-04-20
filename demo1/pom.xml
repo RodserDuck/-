@@ -75,6 +75,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Spring Security Crypto（提供 BCrypt 密码加密） -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
         <!-- Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

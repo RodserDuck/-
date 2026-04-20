@@ -1,45 +1,133 @@
 <!-- pages/register/register.wxml -->
-<view class="container">
-  <view class="header">
-    <text class="title">注册账号</text>
-    <text class="subtitle">请选择身份并填写信息</text>
-  </view>
-
-  <view class="identity-section">
-    <text class="section-title">选择身份</text>
-    <view class="identity-options">
-      <view class="identity-item {{identity === 'student' ? 'active' : ''}}" bindtap="onIdentitySelect" data-type="student">
-        <text class="icon">🎓</text><text class="name">学生</text>
+<view class="register-page">
+  <!-- 顶部装饰 -->
+  <view class="top-area">
+    <view class="cloud cloud-1"></view>
+    <view class="cloud cloud-2"></view>
+    <view class="logo-zone">
+      <view class="logo-circle">
+        <view class="logo-icon">🎓</view>
       </view>
-      <view class="identity-item {{identity === 'teacher' ? 'active' : ''}}" bindtap="onIdentitySelect" data-type="teacher">
-        <text class="icon">👨‍🏫</text><text class="name">教师</text>
-      </view>
-      <view class="identity-item {{identity === 'admin' ? 'active' : ''}}" bindtap="onIdentitySelect" data-type="admin">
-        <text class="icon">👨‍💼</text><text class="name">管理员</text>
+      <view class="logo-text-wrap">
+        <text class="app-name">学生账号注册</text>
+        <text class="app-sub">Join Campus Life</text>
       </view>
     </view>
-  </view>
-
-  <view class="form-section">
-    <view class="input-item">
-      <text class="label">账号</text>
-      <input type="text" placeholder="请输入账号（至少6位）" value="{{account}}" bindinput="onAccountInput" maxlength="20"/>
-    </view>
-    <view class="input-item">
-      <text class="label">密码</text>
-      <input type="password" placeholder="请输入密码（至少6位）" value="{{password}}" bindinput="onPasswordInput" maxlength="20"/>
-    </view>
-    <view class="input-item">
-      <text class="label">确认密码</text>
-      <input type="password" placeholder="请再次输入密码" value="{{confirmPassword}}" bindinput="onConfirmPasswordInput" maxlength="20"/>
+    <view class="wave-divider">
+      <view class="wave wave-1"></view>
+      <view class="wave wave-2"></view>
     </view>
   </view>
 
-  <button class="register-btn {{isLoading ? 'loading' : ''}}" bindtap="onRegister">{{isLoading ? '注册中...' : '注 册'}}</button>
+  <!-- 表单区域 -->
+  <view class="form-area">
+    <view class="form-card">
 
-  <view class="bottom-section">
-    <text class="login-tip">已有账号？</text><text class="login-link" bindtap="onGoLogin">去登录</text>
+      <!-- 基本信息 -->
+      <view class="section-header">
+        <text class="section-num">01</text>
+        <text class="section-title">基本信息</text>
+      </view>
+      <view class="input-group">
+        <view class="input-item">
+          <view class="input-icon"><text>👤</text></view>
+          <view class="input-field">
+            <text class="input-label">学号</text>
+            <input class="input-control" type="text" placeholder="请输入本人学号"
+              value="{{studentNo}}" bindinput="onStudentNoInput" maxlength="20"/>
+          </view>
+        </view>
+        <view class="input-divider"></view>
+        <view class="input-item">
+          <view class="input-icon"><text>✏️</text></view>
+          <view class="input-field">
+            <text class="input-label">昵称</text>
+            <input class="input-control" type="text" placeholder="设置您的昵称"
+              value="{{username}}" bindinput="onUsernameInput" maxlength="20"/>
+          </view>
+        </view>
+        <view class="input-divider"></view>
+        <view class="input-item">
+          <view class="input-icon"><text>🔒</text></view>
+          <view class="input-field">
+            <text class="input-label">登录密码</text>
+            <input class="input-control" password placeholder="至少6位，建议混合大小写"
+              value="{{password}}" bindinput="onPasswordInput" maxlength="18"/>
+          </view>
+        </view>
+        <view class="input-divider"></view>
+        <view class="input-item">
+          <view class="input-icon"><text>🔐</text></view>
+          <view class="input-field">
+            <text class="input-label">确认密码</text>
+            <input class="input-control" password placeholder="再次输入密码"
+              value="{{confirmPassword}}" bindinput="onConfirmInput" maxlength="18"/>
+          </view>
+        </view>
+      </view>
+
+      <!-- 学校信息 -->
+      <view class="section-header" style="margin-top: 40rpx;">
+        <text class="section-num">02</text>
+        <text class="section-title">学校信息</text>
+      </view>
+      <view class="input-group">
+        <!-- 学院：点击弹出选择器 -->
+        <view class="input-item" bindtap="onCollegeTap">
+          <view class="input-icon"><text>🏛️</text></view>
+          <view class="input-field">
+            <text class="input-label">学院</text>
+            <view class="picker-value {{selectedCollege ? '' : 'placeholder'}}">
+              <text>{{selectedCollege || '请选择学院（必选）'}}</text>
+            </view>
+          </view>
+          <view class="arrow-icon">›</view>
+        </view>
+        <view class="input-divider"></view>
+        <view class="input-item">
+          <view class="input-icon"><text>📖</text></view>
+          <view class="input-field">
+            <text class="input-label">专业</text>
+            <input class="input-control" type="text" placeholder="请输入专业名称（选填）"
+              value="{{major}}" bindinput="onMajorInput" maxlength="50"/>
+          </view>
+        </view>
+        <view class="input-divider"></view>
+        <view class="input-item">
+          <view class="input-icon"><text>👥</text></view>
+          <view class="input-field">
+            <text class="input-label">班级</text>
+            <input class="input-control" type="text" placeholder="如：A2212（选填）"
+              value="{{className}}" bindinput="onClassInput" maxlength="20"/>
+          </view>
+        </view>
+        <view class="input-divider"></view>
+        <view class="input-item">
+          <view class="input-icon"><text>📱</text></view>
+          <view class="input-field">
+            <text class="input-label">手机号</text>
+            <input class="input-control" type="number" placeholder="用于联系方式（选填）"
+              value="{{phone}}" bindinput="onPhoneInput" maxlength="11"/>
+          </view>
+        </view>
+      </view>
+
+      <!-- 注册按钮 -->
+      <button class="register-btn {{isLoading ? 'loading' : ''}}"
+        bindtap="onRegister" disabled="{{isLoading}}">
+        <text wx:if="{{!isLoading}}">立 即 注 册</text>
+        <view wx:if="{{isLoading}}" class="loading-wrap">
+          <view class="loading-dot"></view>
+          <view class="loading-dot"></view>
+          <view class="loading-dot"></view>
+        </view>
+      </button>
+
+      <!-- 返回登录 -->
+      <view class="login-row">
+        <text class="login-tip">已有账号？</text>
+        <text class="login-link" bindtap="onGoLogin">立即登录</text>
+      </view>
+    </view>
   </view>
-
-  <view class="demo-tip"><text>提示：账号 test123 为已存在账号</text></view>
 </view>

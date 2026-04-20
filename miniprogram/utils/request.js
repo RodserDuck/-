@@ -73,8 +73,21 @@ function request(url, data = {}, method = 'POST', showLoading = true) {
 // ==================== 各模块 API ====================
 
 // 用户模块
-export const userLogin = (openid, username) =>
-  request('/user/login', { openid, username }, 'POST', true);
+// 学号+密码登录
+export const userLogin = (studentNo, password) =>
+  request('/user/login', { studentNo, password }, 'POST', true);
+
+// 微信登录（兼容旧接口）
+export const userWxLogin = (openid, username) =>
+  request('/user/wx-login', { openid, username }, 'POST', true);
+
+// 用户注册
+export const userRegister = (data) =>
+  request('/user/register', data, 'POST', true);
+
+// 获取学院列表
+export const getCollegeList = () =>
+  request('/college/list', {}, 'GET', false);
 
 export const getUserInfo = () =>
   request('/user/info', {}, 'GET', false);
