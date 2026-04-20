@@ -119,6 +119,15 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
+    public List<Post> getMyPosts(Long userId) {
+        LambdaQueryWrapper<Post> q = new LambdaQueryWrapper<>();
+        q.eq(Post::getUserId, userId).orderByDesc(Post::getCreateTime);
+        List<Post> posts = postMapper.selectList(q);
+        fillUserInfo(posts);
+        return posts;
+    }
+
     private void fillUserInfo(List<Post> posts) {
         if (posts == null || posts.isEmpty()) return;
         for (Post post : posts) {

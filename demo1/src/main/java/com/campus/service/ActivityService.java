@@ -14,4 +14,5 @@ public interface ActivityService {
     Activity saveActivity(Activity activity, Long userId);
     void register(Long activityId, Long userId);
     void cancelRegister(Long activityId, Long userId);
+    List<Activity> getMyActivities(Long userId);
 }

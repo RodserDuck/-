@@ -7,6 +7,8 @@ import com.campus.service.PostService;
 import com.campus.utils.ServletUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/post")
 public class PostController {
@@ -75,5 +77,13 @@ public class PostController {
         if (userId == null) return Result.fail("请先登录");
         postService.unlike(id, userId);
         return Result.ok();
+    }
+
+    /** 我的帖子列表 */
+    @GetMapping("/my")
+    public Result<List<Post>> my() {
+        Long userId = ServletUtils.getUserId();
+        if (userId == null) return Result.fail("请先登录");
+        return Result.ok(postService.getMyPosts(userId));
     }
 }

@@ -1,5 +1,5 @@
 // pages/profile/profile.js
-var { getUserInfo, getMyGoods, getMyClubs, getMyBuy, getMySell, confirmTrade, cancelTrade } = require('../../utils/request.js');
+var { getUserInfo, getMyGoods, getMyClubs, getMyBuy, getMySell, getMyPosts, getMyActivities, confirmTrade, cancelTrade } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -104,25 +104,24 @@ Page({
 
   loadMyData() {
     var self = this;
-    getMyGoods()
-      .then(function(goods) {
+    Promise.all([getMyGoods(), getMyClubs(), getMyPosts(), getMyActivities()])
+      .then(function(results) {
+        var goods = results[0] || [];
+        var clubs = results[1] || [];
+        var posts = results[2] || [];
+        var activities = results[3] || [];
         var stats = self.data.statsList;
-        stats[1].value = goods ? goods.length : 0;
+        stats[0].value = posts.length;
+        stats[1].value = goods.length;
         var menuGroups = self.data.menuGroups;
-        menuGroups[0].items[1].count = goods ? goods.length : 0;
+        menuGroups[0].items[0].count = posts.length;
+        menuGroups[0].items[1].count = goods.length;
+        menuGroups[2].items[0].count = clubs.length;
+        menuGroups[2].items[1].count = activities.length;
         self.setData({ statsList: stats, menuGroups: menuGroups });
       })
       .catch(function() {});
 
-    getMyClubs()
-      .then(function(clubs) {
-        var menuGroups = self.data.menuGroups;
-        menuGroups[2].items[0].count = clubs ? clubs.length : 0;
-        self.setData({ menuGroups: menuGroups });
-      })
-      .catch(function() {});
-
-    // 加载交易统计
     Promise.all([getMyBuy(), getMySell()])
       .then(function(results) {
         var buyList = results[0] || [];
@@ -190,7 +189,12 @@ Page({
   },
 
   showTradeSheet(e) {
-    var tab = e.currentTarget.dataset.tab || e;
+    var tab;
+    if (typeof e === 'string') {
+      tab = e;
+    } else {
+      tab = e.currentTarget.dataset.tab || 'buy';
+    }
     this.setData({ tradeTab: tab, showTradeSheet: true });
   },
 

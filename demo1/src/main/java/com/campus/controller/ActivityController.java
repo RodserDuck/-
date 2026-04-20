@@ -75,4 +75,12 @@ public class ActivityController {
         activityService.cancelRegister(id, userId);
         return Result.ok();
     }
+
+    /** 我的活动报名列表 */
+    @GetMapping("/my")
+    public Result<List<Activity>> my() {
+        Long userId = ServletUtils.getUserId();
+        if (userId == null) return Result.fail("请先登录");
+        return Result.ok(activityService.getMyActivities(userId));
+    }
 }

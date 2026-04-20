@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -112,5 +113,20 @@ public class ActivityServiceImpl implements ActivityService {
             a.setCurrentParticipants(a.getCurrentParticipants() - 1);
             activityMapper.updateById(a);
         }
+    }
+
+    @Override
+    public List<Activity> getMyActivities(Long userId) {
+        LambdaQueryWrapper<ActivityRegistration> q = new LambdaQueryWrapper<>();
+        q.eq(ActivityRegistration::getUserId, userId)
+         .eq(ActivityRegistration::getStatus, 1);
+        List<ActivityRegistration> regs = registrationMapper.selectList(q);
+        if (regs == null || regs.isEmpty()) return List.of();
+        List<Long> activityIds = regs.stream()
+            .map(ActivityRegistration::getActivityId)
+            .collect(Collectors.toList());
+        List<Activity> activities = activityMapper.selectBatchIds(activityIds);
+        activities.sort((a, b) -> b.getCreateTime().compareTo(a.getCreateTime()));
+        return activities;
     }
 }
