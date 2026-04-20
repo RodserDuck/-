@@ -6,7 +6,11 @@ Page({
     post: null,
     commentList: [],
     inputValue: '',
-    postId: null
+    postId: null,
+    replyTo: null,
+    replyToNickname: '',
+    replyPlaceholder: '写评论...',
+    keyboardHeight: 0
   },
 
   onLoad(options) {
@@ -29,13 +33,15 @@ Page({
             id: post.postId,
             avatar: post.avatar || 'https://picsum.photos/100/100?random=10',
             nickname: post.nickname || '校园用户',
+            college: post.college || '',
             content: post.content,
             images: images,
             likes: post.likeCount || 0,
             comments: post.commentCount || 0,
             time: post.createTime ? self.formatTime(post.createTime) : '',
             isLiked: false,
-            viewCount: post.viewCount || 0
+            viewCount: post.viewCount || 0,
+            category: post.category || ''
           }
         });
       })
@@ -46,17 +52,7 @@ Page({
     var self = this;
     getCommentList(postId)
       .then(function(comments) {
-        var list = (comments || []).map(function(c) {
-          return {
-            id: c.commentId,
-            avatar: c.avatar || 'https://picsum.photos/100/100?random=30',
-            nickname: c.nickname || '用户',
-            content: c.content,
-            time: c.createTime ? self.formatTime(c.createTime) : '刚刚',
-            likes: c.likeCount || 0
-          };
-        });
-        self.setData({ commentList: list });
+        self.setData({ commentList: comments || [] });
       })
       .catch(function() {});
   },
@@ -69,6 +65,7 @@ Page({
     if (diff < 60) return '刚刚';
     if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
     if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+    if (diff < 604800) return Math.floor(diff / 86400) + '天前';
     return timeStr.substring(0, 10);
   },
 
@@ -86,12 +83,30 @@ Page({
     }).catch(function() {});
   },
 
-  onShareTap() {
-    wx.showShareMenu({ withShareTicket: true });
+  // 点击回复按钮（在评论项上）
+  onReplyTap(e) {
+    var comment = e.currentTarget.dataset.comment;
+    this.setData({
+      replyTo: comment.id,
+      replyToNickname: comment.nickname,
+      replyPlaceholder: '回复 @' + comment.nickname,
+      scrollToComment: true
+    });
+    this.focusInput();
+  },
+
+  focusInput() {
+    setTimeout(() => {
+      this.setData({ focusInput: true });
+    }, 100);
   },
 
   onInput(e) {
     this.setData({ inputValue: e.detail.value });
+  },
+
+  onReplyInputFocus() {
+    this.setData({ focusInput: true });
   },
 
   onSendComment() {
@@ -101,26 +116,41 @@ Page({
     var isLoggedIn = wx.getStorageSync('isLoggedIn');
     if (!isLoggedIn) { wx.navigateTo({ url: '/pages/login/login' }); return; }
 
-    saveComment({ postId: this.data.postId, content: content })
+    var postId = this.data.postId;
+    var replyTo = this.data.replyTo;
+    var replyToNickname = this.data.replyToNickname;
+
+    var data = { postId: postId, content: content };
+    if (replyTo) {
+      data.parentId = replyTo;
+      // 找到被回复者的 userId
+      var comment = self.data.commentList.find(function(c) { return c.id === replyTo; });
+      if (comment) {
+        data.replyToUserId = comment.userId;
+      }
+    }
+
+    saveComment(data)
       .then(function() {
         wx.showToast({ title: '评论成功', icon: 'success' });
-        self.setData({ inputValue: '' });
-        self.loadComments(self.data.postId);
+        self.setData({ inputValue: '', replyTo: null, replyToNickname: '', replyPlaceholder: '写评论...' });
+        self.loadComments(postId);
       })
-      .catch(function() {
-        wx.showToast({ title: '评论失败', icon: 'none' });
+      .catch(function(err) {
+        wx.showToast({ title: err.msg || '评论失败', icon: 'none' });
       });
   },
 
-  onLikeComment(e) {
-    wx.showToast({ title: '功能开发中', icon: 'none' });
+  // 取消回复
+  onCancelReply() {
+    this.setData({ replyTo: null, replyToNickname: '', replyPlaceholder: '写评论...' });
   },
 
-  onShareAppMessage() {
-    var post = this.data.post;
-    return {
-      title: post ? post.content.substring(0, 50) + '...' : '校园动态',
-      path: '/pages/post-detail/post-detail?id=' + (post ? post.id : '')
-    };
-  }
+  // 预览图片
+  onPreviewImage(e) {
+    var src = e.currentTarget.dataset.src;
+    wx.previewImage({ urls: this.data.post.images, current: src });
+  },
+
+  onBack() { wx.navigateBack(); }
 });

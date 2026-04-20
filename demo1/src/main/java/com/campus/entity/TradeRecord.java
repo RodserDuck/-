@@ -2,23 +2,21 @@ package com.campus.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("t_post")
-public class Post {
+@TableName("t_trade_record")
+public class TradeRecord {
     @TableId(type = IdType.AUTO)
-    private Long postId;
-    private Long userId;
-    private String title;
-    private String content;
-    private String images;
-    private String category;
-    private Integer likeCount;
-    private Integer commentCount;
-    private Integer viewCount;
-    private Integer isTop;
+    private Long recordId;
+    private Long itemId;
+    private Long sellerId;
+    private Long buyerId;
+    private String itemTitle;
+    private BigDecimal price;
     private Integer status;
+    private String remark;
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
@@ -26,11 +24,13 @@ public class Post {
     @TableLogic
     private Integer deleted;
 
-    /** 以下为关联查询出来的用户信息（非数据库字段） */
+    /** 以下为关联查询字段（非数据库字段） */
     @TableField(exist = false)
-    private String avatar;
+    private String buyerName;
     @TableField(exist = false)
-    private String nickname;
+    private String buyerAvatar;
     @TableField(exist = false)
-    private String college;
+    private String sellerName;
+    @TableField(exist = false)
+    private String sellerAvatar;
 }

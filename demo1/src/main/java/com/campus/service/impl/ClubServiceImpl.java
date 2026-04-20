@@ -57,29 +57,36 @@ public class ClubServiceImpl implements ClubService {
         m.setClubId(club.getClubId());
         m.setUserId(userId);
         m.setRole(2);
+        m.setStatus(1); // 团长直接通过
         m.setJoinTime(LocalDateTime.now());
         clubMemberMapper.insert(m);
         return club;
     }
 
+    /**
+     * 申请加入社团（需要审核）
+     */
     @Override
     @Transactional
     public Club joinClub(Long userId, Long clubId) {
         LambdaQueryWrapper<ClubMember> q = new LambdaQueryWrapper<>();
         q.eq(ClubMember::getUserId, userId).eq(ClubMember::getClubId, clubId);
-        if (clubMemberMapper.selectCount(q).intValue() > 0) {
-            throw new RuntimeException("已加入该社团");
+        ClubMember existing = clubMemberMapper.selectOne(q);
+        if (existing != null) {
+            if (existing.getStatus() == 1) {
+                throw new RuntimeException("已加入该社团");
+            } else {
+                throw new RuntimeException("申请正在审核中，请等待");
+            }
         }
         ClubMember m = new ClubMember();
         m.setClubId(clubId);
         m.setUserId(userId);
         m.setRole(0);
+        m.setStatus(0); // 申请中
         m.setJoinTime(LocalDateTime.now());
         clubMemberMapper.insert(m);
-        Club club = clubMapper.selectById(clubId);
-        club.setMemberCount(club.getMemberCount() + 1);
-        clubMapper.updateById(club);
-        return club;
+        return clubMapper.selectById(clubId);
     }
 
     @Override
@@ -98,7 +105,7 @@ public class ClubServiceImpl implements ClubService {
     @Override
     public List<Club> getMyClubs(Long userId) {
         LambdaQueryWrapper<ClubMember> qm = new LambdaQueryWrapper<>();
-        qm.eq(ClubMember::getUserId, userId);
+        qm.eq(ClubMember::getUserId, userId).eq(ClubMember::getStatus, 1);
         List<ClubMember> members = clubMemberMapper.selectList(qm);
         if (members.isEmpty()) return List.of();
         List<Long> clubIds = members.stream().map(ClubMember::getClubId).toList();

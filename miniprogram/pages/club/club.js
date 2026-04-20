@@ -1,12 +1,11 @@
 // pages/club/club.js
-var { getClubList, getActivityList, getMyClubs } = require('../../utils/request.js');
+var { getClubList, getActivityList, getMyClubs, joinClub, leaveClub, getMyClubStatus } = require('../../utils/request.js');
 
 Page({
   data: {
     currentTab: 0,
     selectedCategory: 0,
     selectedActFilter: 0,
-    hasNotify: false,
     categories: [
       { id: 0, name: '全部' },
       { id: 1, name: '文艺体育' },
@@ -21,6 +20,7 @@ Page({
     filteredActivities: [],
     myClubs: [],
     myActivities: [],
+    clubStatus: {},
     userInfo: {}
   },
 
@@ -35,6 +35,7 @@ Page({
     var token = wx.getStorageSync('token');
     if (token) {
       this.loadMyClubs();
+      this.loadClubStatus();
     }
     var userInfo = wx.getStorageSync('userInfo') || {};
     this.setData({ userInfo: userInfo });
@@ -54,10 +55,8 @@ Page({
             category: c.category,
             description: c.description || '',
             hot: c.memberCount || 0,
-            followed: false,
             gradient: style.gradient,
-            badgeColor: style.badgeColor,
-            _animClass: ''
+            badgeColor: style.badgeColor
           };
         });
         self.setData({ clubs: clubData });
@@ -76,12 +75,7 @@ Page({
           var timeStr = '';
           if (a.startTime) {
             var start = a.startTime.replace('T', ' ').substring(0, 16);
-            if (a.endTime) {
-              var end = a.endTime.replace('T', ' ').substring(0, 16);
-              timeStr = start + ' ~ ' + end;
-            } else {
-              timeStr = start;
-            }
+            timeStr = start;
           }
           return {
             id: a.activityId,
@@ -91,10 +85,11 @@ Page({
             time: timeStr,
             location: a.location || '',
             participants: a.currentParticipants || 0,
+            maxParticipants: a.maxParticipants || 0,
             hot: a.viewCount || 0,
             status: statusText,
             statusClass: statusClass,
-            _animClass: ''
+            enrolled: false
           };
         });
         self.setData({ activities: actData });
@@ -109,18 +104,24 @@ Page({
       .then(function(clubs) {
         var myClubs = clubs.map(function(c) {
           var style = self.getClubStyle(c.category);
-          var roleClass = c.role === 2 ? 'owner' : c.role === 1 ? 'admin' : 'member';
-          var roleText = c.role === 2 ? '团长' : c.role === 1 ? '管理员' : '成员';
           return {
             id: c.clubId,
             name: c.name,
-            role: roleText,
-            roleClass: roleClass,
             icon: style.emoji,
             gradient: style.gradient
           };
         });
         self.setData({ myClubs: myClubs });
+      })
+      .catch(function() {});
+  },
+
+  loadClubStatus() {
+    var self = this;
+    getMyClubStatus()
+      .then(function(statusMap) {
+        self.setData({ clubStatus: statusMap || {} });
+        self.applyCategoryFilter();
       })
       .catch(function() {});
   },
@@ -133,14 +134,14 @@ Page({
       '兴趣爱好': { emoji: '🎮', gradient: 'linear-gradient(135deg, #93c5fd, #3b82f6)', badgeColor: '#3b82f6' },
       '创业实践': { emoji: '💡', gradient: 'linear-gradient(135deg, #fdba74, #f97316)', badgeColor: '#f97316' }
     };
-    var style = map[category] || { emoji: '🏠', gradient: 'linear-gradient(135deg, #c4b5fd, #8b5cf6)', badgeColor: '#8b5cf6' };
-    return style;
+    return map[category] || { emoji: '🏠', gradient: 'linear-gradient(135deg, #c4b5fd, #8b5cf6)', badgeColor: '#8b5cf6' };
   },
 
   applyCategoryFilter() {
     var cats = this.data.categories;
     var catId = this.data.selectedCategory;
     var clubs = this.data.clubs;
+    var status = this.data.clubStatus;
     var filtered;
     if (catId === 0) {
       filtered = clubs;
@@ -148,6 +149,13 @@ Page({
       var catName = cats.find(function(c) { return c.id === catId; });
       filtered = clubs.filter(function(c) { return c.category === catName.name; });
     }
+    // 附上申请状态
+    filtered = filtered.map(function(c) {
+      var s = status[c.id];
+      return Object.assign({}, c, {
+        joinStatus: s || 'none'
+      });
+    });
     this.setData({ filteredClubs: filtered });
   },
 
@@ -196,7 +204,7 @@ Page({
     }
     var clubs = this.data.clubs;
     var filtered = clubs.filter(function(c) {
-      return c.name.indexOf(keyword) > -1 || c.category.indexOf(keyword) > -1;
+      return c.name.indexOf(keyword) > -1 || (c.category && c.category.indexOf(keyword) > -1);
     });
     this.setData({ filteredClubs: filtered });
   },
@@ -217,46 +225,57 @@ Page({
       wx.navigateTo({ url: '/pages/login/login' });
       return;
     }
-    var clubs = this.data.clubs.map(function(club) {
-      if (club.id === id) {
-        return Object.assign({}, club, { followed: !club.followed });
-      }
-      return club;
-    });
-    this.setData({ clubs: clubs });
-    this.applyCategoryFilter();
-    var club = clubs.find(function(c) { return c.id === id; });
-    wx.showToast({
-      title: club.followed ? '已加入社团' : '已取消加入',
-      icon: 'success',
-      duration: 1200
-    });
-    if (club.followed) {
-      self.loadMyClubs();
+    var status = this.data.clubStatus[id];
+    if (status === 'joined') {
+      // 已加入 -> 退出
+      wx.showModal({
+        title: '退出社团',
+        content: '确定要退出该社团吗？',
+        confirmColor: '#ef4444',
+        success: function(res) {
+          if (res.confirm) {
+            leaveClub(id)
+              .then(function() {
+                wx.showToast({ title: '已退出社团', icon: 'success' });
+                delete self.data.clubStatus[id];
+                self.setData({ clubStatus: self.data.clubStatus });
+                self.loadMyClubs();
+                self.applyCategoryFilter();
+              })
+              .catch(function(err) {
+                wx.showToast({ title: err.msg || '操作失败', icon: 'none' });
+              });
+          }
+        }
+      });
+    } else if (status === 'pending') {
+      wx.showToast({ title: '申请正在审核中，请耐心等待', icon: 'none', duration: 2000 });
+    } else {
+      // 未加入 -> 申请加入
+      wx.showModal({
+        title: '申请加入',
+        content: '确定要申请加入该社团吗？',
+        confirmColor: '#3b82f6',
+        success: function(res) {
+          if (res.confirm) {
+            joinClub(id)
+              .then(function() {
+                wx.showToast({ title: '申请已提交，等待审核', icon: 'success' });
+                var st = self.data.clubStatus;
+                st[id] = 'pending';
+                self.setData({ clubStatus: st });
+                self.applyCategoryFilter();
+              })
+              .catch(function(err) {
+                wx.showToast({ title: err.msg || '申请失败', icon: 'none' });
+              });
+          }
+        }
+      });
     }
   },
 
   onJoinActivity(e) {
-    var activityId = e.currentTarget.dataset.id;
-    var token = wx.getStorageSync('token');
-    if (!token) {
-      wx.navigateTo({ url: '/pages/login/login' });
-      return;
-    }
-    var act = this.data.activities.find(function(a) { return a.id === activityId; });
-    if (act && act.statusClass === 'closed') {
-      wx.showToast({ title: '活动已结束', icon: 'none', duration: 1500 });
-      return;
-    }
-    wx.showModal({
-      title: '确认报名',
-      content: '确定要报名参加该活动吗？',
-      confirmColor: '#5b9cf6',
-      success: function(res) {
-        if (res.confirm) {
-          wx.showToast({ title: '报名成功', icon: 'success', duration: 1500 });
-        }
-      }
-    });
+    wx.navigateTo({ url: '/pages/activity-detail/activity-detail?id=' + e.currentTarget.dataset.id });
   }
 });

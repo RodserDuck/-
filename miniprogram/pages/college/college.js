@@ -3,29 +3,30 @@ var { getCollegeNoticeList } = require('../../utils/request.js');
 
 Page({
   data: {
-    collegeName: '学院广场',
-    college: '',
+    tab: 'notice',
     notices: [],
     loading: false
   },
 
   onLoad(options) {
-    // 根据 URL 参数决定跳转哪个 tab
     var tab = options && options.tab;
-    if (tab === 'notice') {
-      // 来自校园广场的"校园公告"入口，不传 college 参数，展示全部通知
-    }
-    this.refreshCollege();
+    this.setData({ tab: tab || 'notice' });
+    this.refresh();
   },
 
-  refreshCollege() {
-    var userInfo = wx.getStorageSync('userInfo');
-    var college = userInfo && userInfo.college ? userInfo.college : '';
-    this.setData({
-      collegeName: college || '学院广场',
-      college: college
-    });
-    this.loadNotices(college);
+  refresh() {
+    var self = this;
+    var tab = self.data.tab;
+    if (tab === 'college') {
+      var userInfo = wx.getStorageSync('userInfo');
+      var college = userInfo && userInfo.college ? userInfo.college : '';
+      self.setData({ college: college });
+      self.loadNotices(college);
+    } else {
+      // 校园通知 tab 在首页看，这里学院广场只展示学院通知
+      self.setData({ college: '' });
+      self.loadNotices('');
+    }
   },
 
   loadNotices(college) {
@@ -37,6 +38,8 @@ Page({
           return {
             id: n.noticeId,
             title: n.title,
+            content: n.content,
+            college: n.college || '',
             time: n.createTime ? n.createTime.substring(0, 10) : ''
           };
         });
@@ -47,11 +50,11 @@ Page({
       });
   },
 
-  onBack() {
-    wx.navigateBack();
-  },
+  onBack() { wx.navigateBack(); },
 
+  // 点击通知卡片 - 跳转到学院公告详情
   onViewDetail(e) {
-    wx.navigateTo({ url: '/pages/college-activity-detail/college-activity-detail?id=' + e.currentTarget.dataset.id });
+    var id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: '/pages/college-notice-detail/college-notice-detail?id=' + id });
   }
 });

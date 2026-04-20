@@ -18,7 +18,9 @@
     "pages/club-detail/club-detail",
     "pages/activity-detail/activity-detail",
     "pages/college-activity-detail/college-activity-detail",
-    "pages/lostfound-detail/lostfound-detail"
+    "pages/lostfound-detail/lostfound-detail",
+    "pages/notice-detail/notice-detail",
+    "pages/college-notice-detail/college-notice-detail"
   ],
   "window": {
     "navigationBarTextStyle": "white",

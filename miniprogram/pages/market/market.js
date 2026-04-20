@@ -1,5 +1,5 @@
 // pages/market/market.js
-var { getGoodsPage, getCategoryList, getGoodsDetail } = require('../../utils/request.js');
+var { getGoodsPage, getCategoryList, getMyGoods } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -9,6 +9,7 @@ Page({
     allGoods: [],
     leftGoods: [],
     rightGoods: [],
+    myGoods: [],
     pageNum: 1,
     hasMore: true,
     loading: false
@@ -16,14 +17,20 @@ Page({
 
   onLoad() {
     this.loadCategories();
-    this.loadGoods();
+    this.loadGoods(true);
+  },
+
+  onShow() {
+    if (this.data.currentTab === 1) {
+      this.loadMyGoods();
+    }
   },
 
   loadCategories() {
     var self = this;
     getCategoryList('goods')
       .then(function(list) {
-        var categories = [{ categoryId: 0, name: '全部', icon: '🛍️' }].concat(list.map(function(c) {
+        var categories = [{ categoryId: 0, name: '全部', icon: '🛍️' }].concat((list || []).map(function(c) {
           return { categoryId: c.categoryId, name: c.name, icon: c.icon || '📎' };
         }));
         self.setData({ categories: categories });
@@ -43,20 +50,24 @@ Page({
     getGoodsPage(pageNum, 20, categoryId)
       .then(function(page) {
         var records = (page.records || []).map(function(g) {
+          var images = [];
+          try { images = JSON.parse(g.images); } catch(e) {}
           return {
             id: g.itemId,
             title: g.title,
             price: g.price,
             originalPrice: g.originalPrice,
-            image: g.images ? (JSON.parse(g.images)[0] || 'https://picsum.photos/400/400?random=50') : 'https://picsum.photos/400/400?random=50',
+            image: images[0] || 'https://picsum.photos/400/400?random=50',
             categoryId: g.categoryId,
-            seller: g.seller || '校园用户',
-            avatar: 'https://picsum.photos/100/100?random=50',
+            seller: g.sellerName || '校园用户',
+            avatar: g.sellerAvatar || 'https://picsum.photos/100/100?random=50',
             location: g.tradeLocation || '校园内',
             time: g.createTime ? self.formatTime(g.createTime) : '',
             likes: g.favoriteCount || 0,
             liked: false,
-            status: g.status === 1 ? '在售' : g.status === 2 ? '已售' : '已下架'
+            status: g.status === 1 ? '在售' : g.status === 2 ? '已售' : '已下架',
+            statusCode: g.status,
+            views: g.viewCount || 0
           };
         });
 
@@ -76,6 +87,30 @@ Page({
       });
   },
 
+  loadMyGoods() {
+    var self = this;
+    getMyGoods()
+      .then(function(list) {
+        var goods = (list || []).map(function(g) {
+          var images = [];
+          try { images = JSON.parse(g.images); } catch(e) {}
+          return {
+            id: g.itemId,
+            title: g.title,
+            price: g.price,
+            originalPrice: g.originalPrice,
+            image: images[0] || 'https://picsum.photos/400/400?random=50',
+            status: g.status === 1 ? '在售' : g.status === 2 ? '已售' : '已下架',
+            statusCode: g.status,
+            views: g.viewCount || 0,
+            likes: g.favoriteCount || 0
+          };
+        });
+        self.setData({ myGoods: goods });
+      })
+      .catch(function() {});
+  },
+
   formatTime(timeStr) {
     if (!timeStr) return '';
     var now = new Date();
@@ -90,11 +125,12 @@ Page({
   onTabChange(e) {
     var index = parseInt(e.currentTarget.dataset.index);
     this.setData({ currentTab: index });
+    if (index === 1) this.loadMyGoods();
   },
 
   onCategoryTap(e) {
     var id = e.currentTarget.dataset.id;
-    this.setData({ currentCategory: id, allGoods: [], pageNum: 1, hasMore: true });
+    this.setData({ currentCategory: id, allGoods: [], leftGoods: [], rightGoods: [], pageNum: 1, hasMore: true });
     this.loadGoods(true);
     var cat = this.data.categories.find(function(c) { return c.categoryId === id; });
     wx.showToast({ title: '已筛选：' + (cat ? cat.name : '全部'), icon: 'none', duration: 1000 });

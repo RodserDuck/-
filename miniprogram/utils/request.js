@@ -105,6 +105,9 @@ export const getNoticeTop = () =>
 export const getNoticeDetail = (id) =>
   request(`/notice/detail/${id}`, {}, 'GET', false);
 
+export const getCollegeNoticeDetail = (id) =>
+  request(`/college-notice/detail/${id}`, {}, 'GET', false);
+
 // 学院公告
 export const getCollegeNoticeList = (pageNum = 1, pageSize = 10, college = '') => {
   let url = `/college-notice/list?pageNum=${pageNum}&pageSize=${pageSize}`;
@@ -164,6 +167,10 @@ export const leaveClub = (id) =>
 export const createClub = (data) =>
   request('/club/save', data, 'POST', true);
 
+// 社团成员申请状态查询
+export const getMyClubStatus = () =>
+  request('/club/my-status', {}, 'GET', false);
+
 // 活动
 export const getActivityList = () =>
   request('/activity/list', {}, 'GET', false);
@@ -221,3 +228,22 @@ export const updateLostFoundStatus = (id, status) =>
 // 分类
 export const getCategoryList = (type = 'goods') =>
   request(`/category/list?type=${type}`, {}, 'GET', false);
+
+// 交易记录
+export const createTrade = (itemId, remark) =>
+  request('/trade/create', { itemId, remark }, 'POST', true);
+
+export const confirmTrade = (recordId) =>
+  request(`/trade/confirm/${recordId}`, {}, 'POST', true);
+
+export const cancelTrade = (recordId) =>
+  request(`/trade/cancel/${recordId}`, {}, 'POST', true);
+
+export const getMyBuy = () =>
+  request('/trade/my-buy', {}, 'GET', false);
+
+export const getMySell = () =>
+  request('/trade/my-sell', {}, 'GET', false);
+
+export const getPendingTrade = () =>
+  request('/trade/pending', {}, 'GET', false);

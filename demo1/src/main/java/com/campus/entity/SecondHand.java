@@ -29,4 +29,12 @@ public class SecondHand {
     private LocalDateTime updateTime;
     @TableLogic
     private Integer deleted;
+
+    /** 以下为关联查询字段（非数据库字段） */
+    @TableField(exist = false)
+    private String sellerName;
+    @TableField(exist = false)
+    private String sellerAvatar;
+    @TableField(exist = false)
+    private String sellerCollege;
 }

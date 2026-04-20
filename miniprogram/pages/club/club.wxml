@@ -112,13 +112,33 @@
 
         <!-- 右侧操作区 -->
         <view class="club-action-zone">
+          <!-- 已加入 -->
           <view
-            class="join-btn {{item.followed ? 'joined' : ''}}"
+            class="join-btn joined"
+            wx:if="{{item.joinStatus === 'joined'}}"
             bindtap="onFollowClub"
             data-id="{{item.id}}"
             catchtap="onFollowClub"
           >
-            <text class="join-btn-text">{{item.followed ? '已加入' : '加入'}}</text>
+            <text class="join-btn-text">已加入</text>
+          </view>
+          <!-- 申请中 -->
+          <view
+            class="join-btn pending"
+            wx:elif="{{item.joinStatus === 'pending'}}"
+            data-id="{{item.id}}"
+          >
+            <text class="join-btn-text">审核中</text>
+          </view>
+          <!-- 未加入 -->
+          <view
+            class="join-btn"
+            wx:else
+            bindtap="onFollowClub"
+            data-id="{{item.id}}"
+            catchtap="onFollowClub"
+          >
+            <text class="join-btn-text">加入</text>
           </view>
         </view>
       </view>

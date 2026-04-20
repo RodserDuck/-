@@ -76,28 +76,14 @@
     </view>
   </view>
 
-  <!-- 通知滚动栏 -->
+  <!-- 通知滚动栏（仅保留校园通知） -->
   <view class="notice-scroll-bar" bindtap="onSchoolNoticeTap">
     <view class="notice-label">
       <text class="notice-label-icon">🔔</text>
       <text class="notice-label-text">校园通知</text>
     </view>
     <swiper class="notice-swiper" vertical autoplay circular interval="3000" display-multiple-items="1">
-      <swiper-item wx:for="{{schoolNotices}}" wx:key="id">
-        <view class="notice-swipe-item">{{item.title}}</view>
-      </swiper-item>
-    </swiper>
-    <text class="notice-more">更多 ></text>
-  </view>
-
-  <!-- 学院广场通知滚动栏 -->
-  <view class="notice-scroll-bar college-notice-bar" bindtap="onCollegeNoticeTap">
-    <view class="notice-label college-label">
-      <text class="notice-label-icon">🏛</text>
-      <text class="notice-label-text">{{userCollegeName || '学院通知'}}</text>
-    </view>
-    <swiper class="notice-swiper" vertical autoplay circular interval="3500" display-multiple-items="1">
-      <swiper-item wx:for="{{collegeNotices}}" wx:key="id">
+      <swiper-item wx:for="{{schoolNotices}}" wx:key="id" bindtap="onSchoolNoticeItemTap" data-id="{{item.id}}">
         <view class="notice-swipe-item">{{item.title}}</view>
       </swiper-item>
     </swiper>
@@ -177,7 +163,7 @@
         </view>
       </view>
 
-      <!-- 卡片底部：互动栏 -->
+      <!-- 卡片底部：互动栏（去掉分享按钮） -->
       <view class="post-footer">
         <view class="action-item" bindtap="onLikeTap" data-id="{{item.id}}">
           <text class="action-icon {{item.liked ? 'liked' : ''}}">{{item.liked ? '❤️' : '🤍'}}</text>
@@ -187,9 +173,8 @@
           <text class="action-icon">💬</text>
           <text class="action-count">{{item.comments}}</text>
         </view>
-        <view class="action-item" bindtap="onShareTap" data-id="{{item.id}}">
-          <text class="action-icon">↗️</text>
-          <text class="action-count">分享</text>
+        <view class="action-item" style="flex: 1.5; background: transparent;">
+          <text class="action-count" style="color: transparent;">浏览</text>
         </view>
       </view>
     </view>

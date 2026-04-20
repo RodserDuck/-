@@ -1,17 +1,14 @@
 // pages/square/square.js
-var { getNoticeTop, getPostList, getNoticeList, getCollegeNoticeList } = require('../../utils/request.js');
+var { getNoticeTop, getPostList, getNoticeList } = require('../../utils/request.js');
 
 Page({
   data: {
     currentBanner: 0,
     banners: [],
     schoolNotices: [],
-    collegeNotices: [],
     posts: [],
     pullLoading: false,
     currentFilter: '',
-    userCollegeName: '学院通知',
-    userCollegeId: null,
     filterOptions: [
       { label: '全部', value: '' },
       { label: '🌈 日常分享', value: '日常分享' },
@@ -27,26 +24,10 @@ Page({
     this.loadData();
   },
 
-  onShow() {
-    // 每次显示刷新用户信息
-    this.refreshUserCollege();
-  },
-
-  refreshUserCollege() {
-    var userInfo = wx.getStorageSync('userInfo');
-    if (userInfo && userInfo.college) {
-      this.setData({
-        userCollegeName: userInfo.college,
-        userCollegeId: userInfo.college || null
-      });
-    }
-  },
-
   loadData() {
     var self = this;
     Promise.all([
       self.loadSchoolNotices(),
-      self.loadCollegeNotices(),
       self.loadPosts()
     ]).catch(function(err) {
       console.error('加载数据失败', err);
@@ -79,25 +60,6 @@ Page({
           };
         });
         self.setData({ schoolNotices: schoolNotices });
-      });
-  },
-
-  loadCollegeNotices() {
-    var self = this;
-    var collegeId = self.data.userCollegeId;
-    return getCollegeNoticeList(1, 10, collegeId)
-      .then(function(page) {
-        var collegeNotices = (page.records || []).map(function(n) {
-          return {
-            id: n.noticeId,
-            title: n.title,
-            time: n.createTime ? n.createTime.substring(0, 10) : ''
-          };
-        });
-        self.setData({ collegeNotices: collegeNotices });
-      })
-      .catch(function() {
-        self.setData({ collegeNotices: [] });
       });
   },
 
@@ -144,7 +106,6 @@ Page({
   onPullDownRefresh() {
     var self = this;
     this.setData({ pullLoading: true });
-    this.refreshUserCollege();
     this.loadData()
       .finally(function() {
         wx.stopPullDownRefresh();
@@ -153,7 +114,6 @@ Page({
       });
   },
 
-  // 搜索
   onSearchInput(e) {
     var keyword = e.detail.value;
     console.log('搜索关键词:', keyword);
@@ -162,6 +122,14 @@ Page({
   // 校园公告 - 跳转到通知列表
   onSchoolNoticeTap() {
     wx.navigateTo({ url: '/pages/college/college?tab=notice' });
+  },
+
+  // 通知滚动栏中的公告项 - 跳转到详情
+  onSchoolNoticeItemTap(e) {
+    var id = e.currentTarget.dataset.id;
+    if (id) {
+      wx.navigateTo({ url: '/pages/notice-detail/notice-detail?id=' + id });
+    }
   },
 
   // 学院广场 - 跳转到学院通知
@@ -179,16 +147,20 @@ Page({
     wx.switchTab({ url: '/pages/lostfound/lostfound' });
   },
 
-  // 通知铃铛（保持兼容）
+  // 通知铃铛
   onNoticeTap() {
     this.onSchoolNoticeTap();
   },
 
-  // 轮播图点击
+  // 轮播图点击 - 跳转到公告详情
   onBannerTap(e) {
     var index = e.currentTarget.dataset.index;
     var banner = this.data.banners[index];
-    wx.showToast({ title: banner.title, icon: 'none', duration: 2000 });
+    if (banner && banner.id) {
+      wx.navigateTo({ url: '/pages/notice-detail/notice-detail?id=' + banner.id });
+    } else {
+      wx.showToast({ title: banner.title, icon: 'none', duration: 2000 });
+    }
   },
 
   // 动态筛选
@@ -198,7 +170,7 @@ Page({
     this.loadPosts(filter);
   },
 
-  // 点击帖子
+  // 点击帖子 - 跳转到详情
   onPostTap(e) {
     var postId = e.currentTarget.dataset.id;
     wx.navigateTo({ url: '/pages/post-detail/post-detail?id=' + postId });
@@ -220,15 +192,10 @@ Page({
     this.setData({ posts: posts });
   },
 
-  // 评论
+  // 评论 - 跳转到详情页
   onCommentTap(e) {
     var postId = e.currentTarget.dataset.id;
     wx.navigateTo({ url: '/pages/post-detail/post-detail?id=' + postId });
-  },
-
-  // 分享
-  onShareTap(e) {
-    wx.showShareMenu({ withShareTicket: true });
   },
 
   // 发布帖子

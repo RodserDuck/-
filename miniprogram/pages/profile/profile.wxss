@@ -367,3 +367,182 @@
   font-size: 20rpx;
   color: #c0d0e8;
 }
+
+/* ===================== 交易记录弹窗 ===================== */
+.trade-sheet-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+}
+
+.trade-sheet {
+  width: 100%;
+  height: 75vh;
+  background: #f0f6ff;
+  border-radius: 32rpx 32rpx 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.trade-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 32rpx 24rpx;
+  border-bottom: 1rpx solid #e8f2ff;
+  flex-shrink: 0;
+}
+
+.trade-sheet-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+
+.trade-sheet-close {
+  width: 60rpx;
+  height: 60rpx;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  color: #9ca3af;
+  line-height: 1;
+}
+
+/* 交易标签 */
+.trade-tabs {
+  display: flex;
+  padding: 0 32rpx;
+  gap: 24rpx;
+  margin-bottom: 16rpx;
+  flex-shrink: 0;
+}
+
+.trade-tab {
+  flex: 1;
+  padding: 16rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #9ca3af;
+  border-bottom: 4rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.trade-tab.active {
+  color: #5b9cf6;
+  font-weight: 700;
+  border-bottom-color: #5b9cf6;
+}
+
+/* 交易列表 */
+.trade-list {
+  flex: 1;
+  padding: 0 28rpx 28rpx;
+}
+
+.empty-trade {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 80rpx 0;
+}
+
+.empty-emoji { font-size: 80rpx; opacity: 0.3; }
+.empty-text { font-size: 28rpx; color: #9ca3af; }
+
+.trade-record-item {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-top: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(91, 156, 246, 0.06);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.record-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1e3a5f;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record-status {
+  border-radius: 100rpx;
+  padding: 4rpx 16rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+}
+
+.record-status.pending { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706; }
+.record-status.done { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669; }
+.record-status.canceled { background: #f3f4f6; color: #9ca3af; }
+
+.record-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+
+.record-price {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+.record-time {
+  font-size: 22rpx;
+  color: #9ca3af;
+}
+
+.record-seller, .record-remark {
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-bottom: 4rpx;
+}
+
+.record-tip {
+  font-size: 22rpx;
+  color: #f59e0b;
+  background: #fef9ec;
+  border-radius: 10rpx;
+  padding: 8rpx 12rpx;
+  margin-top: 8rpx;
+}
+
+/* 售出待处理红点 */
+.trade-badge {
+  background: #ef4444;
+  border-radius: 100rpx;
+  min-width: 36rpx;
+  height: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8rpx;
+}
+
+.badge-num {
+  font-size: 20rpx;
+  color: #fff;
+  font-weight: 700;
+}

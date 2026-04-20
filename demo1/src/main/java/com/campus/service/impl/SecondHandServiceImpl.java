@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.SecondHand;
+import com.campus.entity.User;
 import com.campus.mapper.SecondHandMapper;
+import com.campus.mapper.UserMapper;
 import com.campus.service.SecondHandService;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,11 @@ import java.util.List;
 public class SecondHandServiceImpl implements SecondHandService {
 
     private final SecondHandMapper secondHandMapper;
+    private final UserMapper userMapper;
 
-    public SecondHandServiceImpl(SecondHandMapper secondHandMapper) {
+    public SecondHandServiceImpl(SecondHandMapper secondHandMapper, UserMapper userMapper) {
         this.secondHandMapper = secondHandMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -41,7 +45,16 @@ public class SecondHandServiceImpl implements SecondHandService {
 
     @Override
     public SecondHand getById(Long id) {
-        return secondHandMapper.selectById(id);
+        SecondHand goods = secondHandMapper.selectById(id);
+        if (goods != null) {
+            User seller = userMapper.selectById(goods.getUserId());
+            if (seller != null) {
+                goods.setSellerName(seller.getUsername());
+                goods.setSellerAvatar(seller.getAvatar());
+                goods.setSellerCollege(seller.getCollege());
+            }
+        }
+        return goods;
     }
 
     @Override
@@ -61,7 +74,7 @@ public class SecondHandServiceImpl implements SecondHandService {
         goods.setStatus(1);
         goods.setCreateTime(LocalDateTime.now());
         secondHandMapper.insert(goods);
-        return goods;
+        return getById(goods.getItemId());
     }
 
     @Override
@@ -75,10 +88,18 @@ public class SecondHandServiceImpl implements SecondHandService {
 
     @Override
     public List<SecondHand> getMyGoods(Long userId) {
-        return secondHandMapper.selectList(
+        List<SecondHand> list = secondHandMapper.selectList(
             new LambdaQueryWrapper<SecondHand>()
                 .eq(SecondHand::getUserId, userId)
                 .orderByDesc(SecondHand::getCreateTime)
         );
+        for (SecondHand g : list) {
+            User seller = userMapper.selectById(g.getUserId());
+            if (seller != null) {
+                g.setSellerName(seller.getUsername());
+                g.setSellerAvatar(seller.getAvatar());
+            }
+        }
+        return list;
     }
 }

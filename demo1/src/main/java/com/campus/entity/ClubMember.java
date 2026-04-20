@@ -14,6 +14,7 @@ public class ClubMember {
     private Integer role;
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime joinTime;
+    private Integer status;  // 0-申请中 1-已加入
     @TableLogic
     private Integer deleted;
 }

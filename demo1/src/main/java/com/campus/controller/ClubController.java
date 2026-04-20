@@ -3,20 +3,27 @@ package com.campus.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.campus.common.Result;
 import com.campus.entity.Club;
+import com.campus.entity.ClubMember;
+import com.campus.mapper.ClubMemberMapper;
 import com.campus.service.ClubService;
 import com.campus.utils.ServletUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/club")
 public class ClubController {
 
     private final ClubService clubService;
+    private final ClubMemberMapper clubMemberMapper;
 
-    public ClubController(ClubService clubService) {
+    public ClubController(ClubService clubService, ClubMemberMapper clubMemberMapper) {
         this.clubService = clubService;
+        this.clubMemberMapper = clubMemberMapper;
     }
 
     /** 社团列表 */
@@ -48,7 +55,7 @@ public class ClubController {
         return Result.ok(clubService.saveClub(club, userId));
     }
 
-    /** 加入社团 */
+    /** 申请加入社团 */
     @PostMapping("/join/{id}")
     public Result<Club> join(@PathVariable Long id) {
         Long userId = ServletUtils.getUserId();
@@ -75,5 +82,21 @@ public class ClubController {
         Long userId = ServletUtils.getUserId();
         if (userId == null) return Result.fail("请先登录");
         return Result.ok(clubService.getMyClubs(userId));
+    }
+
+    /** 获取用户社团状态（用于列表页判断是否已加入/申请中） */
+    @GetMapping("/my-status")
+    public Result<Map<Long, String>> myStatus() {
+        Long userId = ServletUtils.getUserId();
+        if (userId == null) return Result.fail("请先登录");
+        List<ClubMember> members = clubMemberMapper.selectList(
+            new LambdaQueryWrapper<ClubMember>()
+                .eq(ClubMember::getUserId, userId)
+        );
+        Map<Long, String> statusMap = members.stream().collect(Collectors.toMap(
+            ClubMember::getClubId,
+            m -> m.getStatus() == 1 ? "joined" : "pending"
+        ));
+        return Result.ok(statusMap);
     }
 }

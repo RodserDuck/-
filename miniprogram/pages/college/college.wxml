@@ -5,7 +5,7 @@
     <view class="nav-back" bindtap="onBack">
       <text class="back-icon">‹</text>
     </view>
-    <text class="nav-title">{{collegeName || '学院广场'}}</text>
+    <text class="nav-title">{{tab === 'college' ? '学院公告' : '学院广场'}}</text>
     <view class="nav-placeholder"></view>
   </view>
 
@@ -13,14 +13,33 @@
   <view class="notice-list">
     <view class="empty-state" wx:if="{{notices.length === 0 && !loading}}">
       <text class="empty-icon">🏛</text>
-      <text class="empty-text">暂无学院公告</text>
+      <text class="empty-text">暂无{{tab === 'college' ? '学院公告' : '学院公告'}}</text>
     </view>
-    <view class="notice-card" wx:for="{{notices}}" wx:key="id" bindtap="onViewDetail" data-id="{{item.id}}">
+
+    <view
+      class="notice-card"
+      wx:for="{{notices}}"
+      wx:key="id"
+      bindtap="onViewDetail"
+      data-id="{{item.id}}"
+    >
       <view class="notice-header">
-        <text class="notice-tag">学院</text>
+        <text class="notice-tag" wx:if="{{item.college}}">{{item.college}}</text>
+        <text class="notice-tag default-tag" wx:if="{{!item.college}}">学院公告</text>
         <text class="notice-time">{{item.time}}</text>
       </view>
       <text class="notice-title">{{item.title}}</text>
+      <text class="notice-preview" wx:if="{{item.content}}">{{item.content}}</text>
     </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <view class="loading-dots">
+      <view class="dot"></view>
+      <view class="dot"></view>
+      <view class="dot"></view>
+    </view>
+    <text class="loading-text">加载中...</text>
   </view>
 </view>

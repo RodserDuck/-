@@ -363,6 +363,11 @@ page {
   border: 1rpx solid #e5e7eb;
 }
 
+.join-btn.pending {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 4rpx 14rpx rgba(251, 191, 36, 0.3);
+}
+
 .join-btn-text {
   font-size: 24rpx;
   color: #fff;
@@ -371,6 +376,10 @@ page {
 
 .join-btn.joined .join-btn-text {
   color: #9ca3af;
+}
+
+.join-btn.pending .join-btn-text {
+  color: #fff;
 }
 
 /* ===================== 活动筛选 ===================== */

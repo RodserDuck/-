@@ -4,13 +4,9 @@
   <view class="profile-header">
     <view class="header-bg"></view>
     <view class="header-content">
-      <!-- 用户信息 -->
       <view class="user-info-section">
         <view class="user-avatar-wrap">
           <image class="user-avatar" src="{{userInfo.avatar}}" mode="aspectFill"/>
-          <view class="avatar-level">
-            <text class="level-text">Lv.3</text>
-          </view>
         </view>
         <view class="user-text-info">
           <view class="user-name-row">
@@ -19,7 +15,7 @@
               <text class="identity-text">{{userInfo.identity === 'student' ? '学生' : userInfo.identity === 'teacher' ? '教师' : '管理员'}}</text>
             </view>
           </view>
-          <text class="user-account">账号: {{userInfo.account}}</text>
+          <text class="user-account" wx:if="{{userInfo.account}}">账号: {{userInfo.account}}</text>
           <text class="user-motto">让校园生活更便捷 ✨</text>
         </view>
         <view class="edit-btn" bindtap="onEditProfile">
@@ -70,7 +66,9 @@
             <text class="menu-sub" wx:if="{{menuItem.sub}}">{{menuItem.sub}}</text>
           </view>
           <view class="menu-right">
-            <text class="menu-count" wx:if="{{menuItem.count > 0}}">{{menuItem.count}}</text>
+            <view class="trade-badge" wx:if="{{menuItem.id === 10 && tradeStats.pendingCount > 0}}">
+              <text class="badge-num">{{tradeStats.pendingCount}}</text>
+            </view>
             <text class="menu-arrow">›</text>
           </view>
         </view>
@@ -90,5 +88,79 @@
   <view class="footer-info">
     <text class="footer-text">校园生活服务平台 v2.0</text>
     <text class="footer-sub">九江学院 · 计算机与大数据科学学院</text>
+  </view>
+
+  <!-- 交易记录弹窗 -->
+  <view class="trade-sheet-mask" wx:if="{{showTradeSheet}}" bindtap="closeTradeSheet">
+    <view class="trade-sheet" catchtap="">
+      <view class="trade-sheet-header">
+        <text class="trade-sheet-title">{{tradeTab === 'buy' ? '我的购买' : '我的售出'}}</text>
+        <view class="trade-sheet-close" bindtap="closeTradeSheet">
+          <text>×</text>
+        </view>
+      </view>
+
+      <!-- 切换标签 -->
+      <view class="trade-tabs">
+        <view class="trade-tab {{tradeTab === 'buy' ? 'active' : ''}}" bindtap="showTradeSheet" data-tab="buy">
+          <text>购买记录</text>
+        </view>
+        <view class="trade-tab {{tradeTab === 'sell' ? 'active' : ''}}" bindtap="showTradeSheet" data-tab="sell">
+          <text>售出记录</text>
+        </view>
+      </view>
+
+      <!-- 购买列表 -->
+      <scroll-view class="trade-list" scroll-y wx:if="{{tradeTab === 'buy'}}">
+        <view class="empty-trade" wx:if="{{buyList.length === 0}}">
+          <text class="empty-emoji">🛒</text>
+          <text class="empty-text">还没有购买记录</text>
+        </view>
+        <view class="trade-record-item" wx:for="{{buyList}}" wx:key="id">
+          <view class="record-header">
+            <text class="record-title">{{item.itemTitle}}</text>
+            <view class="record-status {{item.status === 1 ? 'done' : item.status === 2 ? 'canceled' : 'pending'}}">
+              <text>{{item.status === 0 ? '待确认' : item.status === 1 ? '已完成' : '已取消'}}</text>
+            </view>
+          </view>
+          <view class="record-info">
+            <text class="record-price">¥{{item.price}}</text>
+            <text class="record-time">{{item.createTime}}</text>
+          </view>
+          <view class="record-seller" wx:if="{{item.sellerName}}">
+            <text>卖家：{{item.sellerName}}</text>
+          </view>
+          <view class="record-remark" wx:if="{{item.remark}}">
+            <text>留言：{{item.remark}}</text>
+          </view>
+        </view>
+      </scroll-view>
+
+      <!-- 售出列表 -->
+      <scroll-view class="trade-list" scroll-y wx:if="{{tradeTab === 'sell'}}">
+        <view class="empty-trade" wx:if="{{sellList.length === 0}}">
+          <text class="empty-emoji">💰</text>
+          <text class="empty-text">还没有售出记录</text>
+        </view>
+        <view class="trade-record-item" wx:for="{{sellList}}" wx:key="id">
+          <view class="record-header">
+            <text class="record-title">{{item.itemTitle}}</text>
+            <view class="record-status {{item.status === 1 ? 'done' : item.status === 2 ? 'canceled' : 'pending'}}">
+              <text>{{item.status === 0 ? '待确认' : item.status === 1 ? '已完成' : '已取消'}}</text>
+            </view>
+          </view>
+          <view class="record-info">
+            <text class="record-price">¥{{item.price}}</text>
+            <text class="record-time">{{item.createTime}}</text>
+          </view>
+          <view class="record-seller" wx:if="{{item.buyerName}}">
+            <text>买家：{{item.buyerName}}</text>
+          </view>
+          <view class="record-tip" wx:if="{{item.status === 0}}">
+            <text>请与买家线下交易后，在商品详情页确认完成</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
   </view>
 </view>

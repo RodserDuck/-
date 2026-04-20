@@ -33,11 +33,11 @@
     <scroll-view class="category-scroll" scroll-x enhanced show-scrollbar="false">
       <view class="category-list">
         <view
-          class="category-chip {{currentCategory === item.id ? 'active' : ''}}"
+          class="category-chip {{currentCategory === item.categoryId ? 'active' : ''}}"
           wx:for="{{categories}}"
-          wx:key="id"
+          wx:key="categoryId"
           bindtap="onCategoryTap"
-          data-id="{{item.id}}"
+          data-id="{{item.categoryId}}"
         >
           <text class="chip-icon">{{item.icon}}</text>
           <text class="chip-text">{{item.name}}</text>
@@ -47,10 +47,9 @@
 
     <!-- 商品瀑布流 -->
     <view class="goods-waterfall">
-      <!-- 左列 -->
       <view class="waterfall-col">
         <view
-          class="goods-card {{index % 2 === 1 ? 'right-card' : ''}}"
+          class="goods-card"
           wx:for="{{leftGoods}}"
           wx:key="id"
           bindtap="onGoodsTap"
@@ -58,7 +57,7 @@
         >
           <view class="goods-img-wrap">
             <image class="goods-img" src="{{item.image}}" mode="aspectFill"/>
-            <view class="goods-status-tag" wx:if="{{item.status === '已售'}}">
+            <view class="goods-status-tag" wx:if="{{item.statusCode === 2}}">
               <text class="status-text">已售</text>
             </view>
           </view>
@@ -82,7 +81,6 @@
           </view>
         </view>
       </view>
-      <!-- 右列 -->
       <view class="waterfall-col">
         <view
           class="goods-card"
@@ -93,7 +91,7 @@
         >
           <view class="goods-img-wrap">
             <image class="goods-img" src="{{item.image}}" mode="aspectFill"/>
-            <view class="goods-status-tag" wx:if="{{item.status === '已售'}}">
+            <view class="goods-status-tag" wx:if="{{item.statusCode === 2}}">
               <text class="status-text">已售</text>
             </view>
           </view>
@@ -123,7 +121,7 @@
   <!-- ==================== 我的发布 ==================== -->
   <view class="tab-content" wx:if="{{currentTab === 1}}">
     <view class="my-goods-list">
-      <view class="my-goods-card" wx:for="{{myGoods}}" wx:key="id">
+      <view class="my-goods-card" wx:for="{{myGoods}}" wx:key="id" bindtap="onGoodsTap" data-id="{{item.id}}">
         <view class="my-goods-top">
           <view class="my-goods-img-wrap">
             <image class="my-goods-img" src="{{item.image}}" mode="aspectFill"/>
@@ -132,28 +130,14 @@
             <text class="my-goods-title">{{item.title}}</text>
             <view class="my-goods-price-row">
               <text class="my-goods-price">¥{{item.price}}</text>
-              <view class="my-goods-status {{item.status === '在售' ? 'onsale' : 'sold'}}">
+              <view class="my-goods-status {{item.statusCode === 1 ? 'onsale' : 'sold'}}">
                 <text class="my-status-text">{{item.status}}</text>
               </view>
             </view>
             <view class="my-goods-meta">
-              <text class="my-meta-item">👁 {{item.views}} 浏览</text>
-              <text class="my-meta-item">❤️ {{item.likes}} 收藏</text>
+              <text class="my-meta-item">👁 {{item.views || 0}} 浏览</text>
+              <text class="my-meta-item">❤️ {{item.likes || 0}} 收藏</text>
             </view>
-          </view>
-        </view>
-        <view class="my-goods-actions">
-          <view class="action-chip" bindtap="onEditGoods" data-id="{{item.id}}">
-            <text class="chip-icon-text">✏️</text>
-            <text class="chip-btn-text">编辑</text>
-          </view>
-          <view class="action-chip danger" bindtap="onOffShelf" data-id="{{item.id}}">
-            <text class="chip-icon-text">⬇️</text>
-            <text class="chip-btn-text">{{item.status === '在售' ? '下架' : '上架'}}</text>
-          </view>
-          <view class="action-chip danger" bindtap="onDeleteGoods" data-id="{{item.id}}">
-            <text class="chip-icon-text">🗑</text>
-            <text class="chip-btn-text">删除</text>
           </view>
         </view>
       </view>

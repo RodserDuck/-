@@ -5,23 +5,29 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.Post;
 import com.campus.entity.PostLike;
+import com.campus.entity.User;
 import com.campus.mapper.PostLikeMapper;
 import com.campus.mapper.PostMapper;
+import com.campus.mapper.UserMapper;
 import com.campus.service.PostService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
     private final PostLikeMapper postLikeMapper;
+    private final UserMapper userMapper;
 
-    public PostServiceImpl(PostMapper postMapper, PostLikeMapper postLikeMapper) {
+    public PostServiceImpl(PostMapper postMapper, PostLikeMapper postLikeMapper,
+                           UserMapper userMapper) {
         this.postMapper = postMapper;
         this.postLikeMapper = postLikeMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -32,12 +38,24 @@ public class PostServiceImpl implements PostService {
         if (category != null && !category.isEmpty()) q.eq(Post::getCategory, category);
         if (keyword != null && !keyword.isEmpty()) q.like(Post::getContent, keyword);
         q.orderByDesc(Post::getIsTop).orderByDesc(Post::getCreateTime);
-        return postMapper.selectPage(page, q);
+        IPage<Post> result = postMapper.selectPage(page, q);
+        // 填充用户头像和昵称
+        fillUserInfo(result.getRecords());
+        return result;
     }
 
     @Override
     public Post getById(Long id) {
-        return postMapper.selectById(id);
+        Post post = postMapper.selectById(id);
+        if (post != null) {
+            User user = userMapper.selectById(post.getUserId());
+            if (user != null) {
+                post.setAvatar(user.getAvatar());
+                post.setNickname(user.getUsername());
+                post.setCollege(user.getCollege());
+            }
+        }
+        return post;
     }
 
     @Override
@@ -58,7 +76,7 @@ public class PostServiceImpl implements PostService {
         post.setStatus(1);
         post.setCreateTime(LocalDateTime.now());
         postMapper.insert(post);
-        return post;
+        return getById(post.getPostId());
     }
 
     @Override
@@ -98,6 +116,18 @@ public class PostServiceImpl implements PostService {
         if (p != null && p.getLikeCount() > 0) {
             p.setLikeCount(p.getLikeCount() - 1);
             postMapper.updateById(p);
+        }
+    }
+
+    private void fillUserInfo(List<Post> posts) {
+        if (posts == null || posts.isEmpty()) return;
+        for (Post post : posts) {
+            User user = userMapper.selectById(post.getUserId());
+            if (user != null) {
+                post.setAvatar(user.getAvatar());
+                post.setNickname(user.getUsername());
+                post.setCollege(user.getCollege());
+            }
         }
     }
 }

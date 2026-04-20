@@ -1,47 +1,94 @@
 <!-- pages/activity-detail/activity-detail.wxml -->
-<view class="container">
-  <image class="activity-banner" src="{{activity.image}}" mode="aspectFill"/>
+<view class="detail-page" wx:if="{{activity}}">
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="onBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="nav-title">活动详情</text>
+    <view class="nav-placeholder"></view>
+  </view>
 
-  <view class="info-section">
-    <text class="activity-title">{{activity.title}}</text>
-    <text class="activity-club">{{activity.club}}</text>
-    
-    <view class="info-list">
-      <view class="info-item">
-        <text class="icon">📅</text>
-        <text class="label">活动时间：</text>
-        <text class="value">{{activity.time}}</text>
-      </view>
-      <view class="info-item">
-        <text class="icon">📍</text>
-        <text class="label">活动地点：</text>
-        <text class="value">{{activity.location}}</text>
-      </view>
-      <view class="info-item">
-        <text class="icon">👥</text>
-        <text class="label">报名人数：</text>
-        <text class="value">{{activity.participants}}/{{activity.maxParticipants}}人</text>
+  <scroll-view class="main-scroll" scroll-y>
+    <!-- 封面图 -->
+    <view class="cover-section">
+      <image
+        class="cover-image"
+        src="{{activity.coverImage || 'https://picsum.photos/750/400?random=31'}}"
+        mode="aspectFill"
+      />
+      <view class="cover-overlay">
+        <view class="status-badge {{activity.statusClass}}">
+          <text>{{activity.status}}</text>
+        </view>
       </view>
     </view>
 
-    <view class="status-badge {{activity.status === '报名中' ? 'open' : 'closed'}}">{{activity.status}}</view>
-  </view>
+    <!-- 基本信息 -->
+    <view class="info-card">
+      <text class="act-title">{{activity.title}}</text>
+      <view class="org-row">
+        <text class="org-icon">🏘️</text>
+        <text class="org-name">{{activity.club}}</text>
+      </view>
 
-  <view class="section">
-    <view class="section-title">活动详情</view>
-    <text class="content-text">{{activity.description}}</text>
-  </view>
+      <view class="info-grid">
+        <view class="info-cell">
+          <text class="cell-icon">📅</text>
+          <view class="cell-content">
+            <text class="cell-label">活动时间</text>
+            <text class="cell-value">{{activity.time}}</text>
+          </view>
+        </view>
+        <view class="info-cell">
+          <text class="cell-icon">📍</text>
+          <view class="cell-content">
+            <text class="cell-label">活动地点</text>
+            <text class="cell-value">{{activity.location}}</text>
+          </view>
+        </view>
+        <view class="info-cell">
+          <text class="cell-icon">👥</text>
+          <view class="cell-content">
+            <text class="cell-label">报名人数</text>
+            <text class="cell-value">{{activity.participants}}/{{activity.maxParticipants || '不限'}} 人</text>
+          </view>
+        </view>
+        <view class="info-cell" wx:if="{{activity.contact}}">
+          <text class="cell-icon">📞</text>
+          <view class="cell-content">
+            <text class="cell-label">联系方式</text>
+            <text class="cell-value">{{activity.contact}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
 
-  <view class="section">
-    <view class="section-title">参与要求</view>
-    <text class="content-text" style="white-space: pre-line;">{{activity.requirements}}</text>
-  </view>
+    <!-- 活动详情 -->
+    <view class="section-card">
+      <view class="section-title-row">
+        <view class="section-bar"></view>
+        <text class="section-title-text">活动详情</text>
+      </view>
+      <text class="section-content">{{activity.description}}</text>
+    </view>
 
+    <!-- 底部占位 -->
+    <view class="bottom-space"></view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
   <view class="bottom-bar">
-    <view class="join-btn {{activity.isJoined ? 'joined' : ''}} {{activity.status !== '报名中' ? 'disabled' : ''}}" bindtap="onJoinActivity">
-      <text wx:if="{{activity.isJoined}}">已报名</text>
-      <text wx:elif="{{activity.status !== '报名中'}}">{{activity.status}}</text>
-      <text wx:else>立即报名</text>
+    <view class="view-stat">
+      <text class="view-icon">👁️</text>
+      <text class="view-num">{{activity.viewCount || 0}}</text>
     </view>
+    <button
+      class="register-btn {{activity.statusClass === 'closed' ? 'disabled' : ''}} {{isRegistered ? 'registered' : ''}}"
+      bindtap="onRegisterTap"
+      disabled="{{activity.statusClass === 'closed'}}"
+    >
+      {{isRegistered ? '✓ 已报名' : activity.statusClass === 'closed' ? '已结束' : '立即报名'}}
+    </button>
   </view>
 </view>

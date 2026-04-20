@@ -1,0 +1,63 @@
+<!-- pages/notice-detail/notice-detail.wxml -->
+<view class="notice-page">
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="onBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="nav-title">通知详情</text>
+    <view class="nav-placeholder"></view>
+  </view>
+
+  <view class="notice-content" wx:if="{{!loading && notice}}">
+    <!-- 标签 + 时间 -->
+    <view class="notice-meta">
+      <view class="type-tag">
+        <text class="type-tag-text">{{notice.typeName}}</text>
+      </view>
+      <text class="notice-time">{{notice.createTime}}</text>
+    </view>
+
+    <!-- 标题 -->
+    <view class="notice-title-wrap">
+      <text class="notice-title">{{notice.title}}</text>
+    </view>
+
+    <!-- 分隔线 -->
+    <view class="divider"></view>
+
+    <!-- 正文内容 -->
+    <view class="notice-body">
+      <text class="notice-text">{{notice.content}}</text>
+    </view>
+
+    <!-- 图片 -->
+    <view class="notice-images" wx:if="{{notice.images.length > 0}}">
+      <image
+        wx:for="{{notice.images}}"
+        wx:key="*this"
+        src="{{item}}"
+        mode="widthFix"
+        class="notice-img"
+        bindtap="onPreviewImage"
+        data-src="{{item}}"
+        lazy-load
+      />
+    </view>
+
+    <!-- 浏览量 -->
+    <view class="notice-footer">
+      <text class="view-count">👁 {{notice.viewCount}} 次浏览</text>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-dots">
+      <view class="dot"></view>
+      <view class="dot"></view>
+      <view class="dot"></view>
+    </view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

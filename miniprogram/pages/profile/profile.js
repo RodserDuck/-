@@ -1,5 +1,5 @@
 // pages/profile/profile.js
-var { getUserInfo, getMyGoods, getMyClubs } = require('../../utils/request.js');
+var { getUserInfo, getMyGoods, getMyClubs, getMyBuy, getMySell } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -21,6 +21,11 @@ Page({
       { id: 3, icon: '🔍', name: '寻物启事', bgColor: 'rgba(52, 211, 153, 0.12)' },
       { id: 4, icon: '💬', name: '联系客服', bgColor: 'rgba(167, 139, 250, 0.12)' }
     ],
+    tradeTab: 'buy',
+    buyList: [],
+    sellList: [],
+    tradeStats: { buyCount: 0, sellCount: 0, pendingCount: 0 },
+    showTradeSheet: false,
     menuGroups: [
       {
         title: '我的内容',
@@ -28,6 +33,13 @@ Page({
           { id: 1, icon: '📝', name: '我的帖子', count: 0, iconBg: 'rgba(91, 156, 246, 0.12)', sub: '管理发布的内容' },
           { id: 2, icon: '⭐', name: '我的收藏', count: 0, iconBg: 'rgba(251, 146, 60, 0.12)', sub: '收藏的文章和商品' },
           { id: 3, icon: '📦', name: '我的闲置', count: 0, iconBg: 'rgba(52, 211, 153, 0.12)', sub: '发布和管理的商品' }
+        ]
+      },
+      {
+        title: '我的交易',
+        items: [
+          { id: 9, icon: '🛒', name: '我的购买', count: 0, iconBg: 'rgba(245, 158, 11, 0.12)', sub: '购买记录与交易状态' },
+          { id: 10, icon: '💰', name: '我的售出', count: 0, iconBg: 'rgba(34, 197, 94, 0.12)', sub: '售出记录与收款确认' }
         ]
       },
       {
@@ -40,9 +52,8 @@ Page({
       {
         title: '其他',
         items: [
-          { id: 6, icon: '🔔', name: '消息通知', count: 3, iconBg: 'rgba(248, 113, 113, 0.12)', sub: '评论、点赞通知' },
-          { id: 7, icon: '⚙️', name: '设置', count: 0, iconBg: 'rgba(156, 163, 175, 0.12)', sub: '账号与隐私设置' },
-          { id: 8, icon: '📞', name: '联系客服', count: 0, iconBg: 'rgba(96, 165, 250, 0.12)', sub: '问题反馈与帮助' }
+          { id: 6, icon: '🔔', name: '消息通知', count: 0, iconBg: 'rgba(248, 113, 113, 0.12)', sub: '评论、点赞通知' },
+          { id: 7, icon: '⚙️', name: '设置', count: 0, iconBg: 'rgba(156, 163, 175, 0.12)', sub: '账号与隐私设置' }
         ]
       }
     ]
@@ -77,7 +88,6 @@ Page({
         }
       });
     }
-    // 从后端拉取最新信息
     getUserInfo()
       .then(function(user) {
         wx.setStorageSync('userInfo', user);
@@ -100,15 +110,40 @@ Page({
       .then(function(goods) {
         var stats = self.data.statsList;
         stats[2].value = goods ? goods.length : 0;
-        self.setData({ statsList: stats });
+        var menuGroups = self.data.menuGroups;
+        menuGroups[0].items[2].count = goods ? goods.length : 0;
+        self.setData({ statsList: stats, menuGroups: menuGroups });
       })
       .catch(function() {});
 
     getMyClubs()
       .then(function(clubs) {
         var menuGroups = self.data.menuGroups;
-        menuGroups[1].items[0].count = clubs ? clubs.length : 0;
+        menuGroups[2].items[0].count = clubs ? clubs.length : 0;
         self.setData({ menuGroups: menuGroups });
+      })
+      .catch(function() {});
+
+    // 加载交易统计
+    Promise.all([getMyBuy(), getMySell()])
+      .then(function(results) {
+        var buyList = results[0] || [];
+        var sellList = results[1] || [];
+        var pendingCount = sellList.filter(function(r) { return r.status === 0; }).length;
+        var tradeStats = {
+          buyCount: buyList.length,
+          sellCount: sellList.length,
+          pendingCount: pendingCount
+        };
+        var menuGroups = self.data.menuGroups;
+        menuGroups[1].items[0].count = buyList.length;
+        menuGroups[1].items[1].count = sellList.length;
+        self.setData({
+          buyList: buyList,
+          sellList: sellList,
+          tradeStats: tradeStats,
+          menuGroups: menuGroups
+        });
       })
       .catch(function() {});
   },
@@ -134,12 +169,27 @@ Page({
 
   onMenuTap(e) {
     var id = e.currentTarget.dataset.id;
-    var menuMap = {
-      1: '我的帖子', 2: '我的收藏', 3: '我的闲置',
-      4: '我的社团', 5: '我的活动', 6: '消息通知',
-      7: '设置', 8: '联系客服'
-    };
-    wx.showToast({ title: menuMap[id] || '功能开发中', icon: 'none' });
+    if (id === 9) {
+      this.showTradeSheet('buy');
+    } else if (id === 10) {
+      this.showTradeSheet('sell');
+    } else {
+      var menuMap = {
+        1: '我的帖子', 2: '我的收藏', 3: '我的闲置',
+        4: '我的社团', 5: '我的活动', 6: '消息通知',
+        7: '设置'
+      };
+      wx.showToast({ title: menuMap[id] || '功能开发中', icon: 'none' });
+    }
+  },
+
+  showTradeSheet(e) {
+    var tab = e.currentTarget.dataset.tab || e;
+    this.setData({ tradeTab: tab, showTradeSheet: true });
+  },
+
+  closeTradeSheet() {
+    this.setData({ showTradeSheet: false });
   },
 
   onLogout() {
