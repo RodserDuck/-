@@ -91,21 +91,21 @@
   </view>
 
   <!-- 交易记录弹窗 -->
-  <view class="trade-sheet-mask" wx:if="{{showTradeSheet}}" bindtap="closeTradeSheet">
-    <view class="trade-sheet" catchtap="">
+  <view class="trade-sheet-mask" wx:if="{{tradeSheetVisible}}" bindtap="closeTradeSheet">
+    <view class="trade-sheet" catchtap="noop">
       <view class="trade-sheet-header">
         <text class="trade-sheet-title">{{tradeTab === 'buy' ? '我的购买' : '我的售出'}}</text>
-        <view class="trade-sheet-close" bindtap="closeTradeSheet">
+        <view class="trade-sheet-close" catchtap="closeTradeSheet">
           <text>×</text>
         </view>
       </view>
 
       <!-- 切换标签 -->
       <view class="trade-tabs">
-        <view class="trade-tab {{tradeTab === 'buy' ? 'active' : ''}}" bindtap="showTradeSheet" data-tab="buy">
+        <view class="trade-tab {{tradeTab === 'buy' ? 'active' : ''}}" catchtap="openTradeSheet" data-tab="buy">
           <text>购买记录</text>
         </view>
-        <view class="trade-tab {{tradeTab === 'sell' ? 'active' : ''}}" bindtap="showTradeSheet" data-tab="sell">
+        <view class="trade-tab {{tradeTab === 'sell' ? 'active' : ''}}" catchtap="openTradeSheet" data-tab="sell">
           <text>售出记录</text>
         </view>
       </view>

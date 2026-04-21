@@ -1,4 +1,23 @@
 <view class="search-page">
+  <!-- 顶部：胶囊搜索（可输入 + 右侧黑色搜索钮触发） -->
+  <view class="search-sticky">
+    <view class="capsule-search">
+      <input
+        class="capsule-search__input"
+        type="text"
+        value="{{inputValue}}"
+        placeholder="按标题或内容搜索"
+        placeholder-class="capsule-search__ph"
+        bindinput="onInput"
+        bindconfirm="onConfirm"
+        confirm-type="search"
+      />
+      <view class="capsule-search__btn" catchtap="onConfirm">
+        <icon type="search" size="18" color="#ffffff" />
+      </view>
+    </view>
+  </view>
+
   <view class="scope-tabs">
     <view
       wx:for="{{scopes}}"
@@ -11,23 +30,6 @@
     </view>
   </view>
 
-  <view class="search-bar-wrap">
-    <view class="search-bar">
-      <text class="search-icon">🔍</text>
-      <input
-        class="search-input"
-        type="text"
-        value="{{inputValue}}"
-        placeholder="按标题或内容搜索"
-        placeholder-class="search-placeholder"
-        bindinput="onInput"
-        bindconfirm="onConfirm"
-        confirm-type="search"
-      />
-      <view class="search-btn" bindtap="onConfirm">搜索</view>
-    </view>
-  </view>
-
   <view class="loading-box" wx:if="{{loading}}">
     <text class="loading-text">搜索中...</text>
   </view>
@@ -36,7 +38,13 @@
     <text class="empty-text">{{emptyHint}}</text>
   </view>
 
-  <scroll-view class="result-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{!loading && results.length}}">
+  <scroll-view
+    class="result-scroll"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    wx:elif="{{!loading && results.length}}"
+  >
     <view
       class="result-card"
       wx:for="{{results}}"
@@ -52,7 +60,7 @@
     <view class="bottom-space"></view>
   </scroll-view>
 
-  <view class="hint-box" wx:if="{{!loading && !keyword}}">
-    <text class="hint-text">切换上方分类并输入关键词，支持标题与内容检索</text>
+  <view class="hint-box" wx:elif="{{!loading && !keyword}}">
+    <text class="hint-text">选择分类后输入关键词，点击右侧图标搜索</text>
   </view>
 </view>

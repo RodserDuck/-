@@ -1,6 +1,21 @@
 // pages/my-posts/my-posts.js
 var { getMyPosts, deletePost, resolveMediaUrl } = require('../../utils/request.js');
 
+function buildPostCard(p) {
+  var title = (p.title && String(p.title).trim()) ? String(p.title).trim() : '';
+  var content = p.content || '';
+  var snippet = content;
+  if (title && content.indexOf(title) === 0) {
+    snippet = content.substring(title.length).replace(/^\s+/, '');
+  }
+  if (!title) {
+    snippet = content.length > 120 ? content.substring(0, 120) + '...' : content;
+  } else if (snippet.length > 120) {
+    snippet = snippet.substring(0, 120) + '...';
+  }
+  return { title: title, snippet: snippet };
+}
+
 Page({
   data: {
     posts: [],
@@ -24,11 +39,13 @@ Page({
         var posts = (list || []).map(function(p) {
           var images = [];
           try { images = JSON.parse(p.images || '[]'); } catch(e) {}
+          var card = buildPostCard(p);
           return {
             id: p.postId,
             avatar: p.avatar ? resolveMediaUrl(p.avatar) : 'https://picsum.photos/100/100?random=10',
             nickname: p.nickname || '校园用户',
-            content: p.content || '',
+            title: card.title,
+            snippet: card.snippet,
             images: images.map(function(u) { return resolveMediaUrl(u); }),
             likes: p.likeCount || 0,
             comments: p.commentCount || 0,

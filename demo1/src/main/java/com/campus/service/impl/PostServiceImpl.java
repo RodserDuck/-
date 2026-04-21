@@ -78,9 +78,35 @@ public class PostServiceImpl implements PostService {
         post.setViewCount(0);
         post.setStatus(1);
         post.setCreateTime(LocalDateTime.now());
+        normalizeTitle(post);
         postMapper.insert(post);
         return getById(post.getPostId());
     }
+
+    /** 标题：去空白、限长；若仍为空则从正文截取前若干字作为标题（兼容仅发图） */
+    private void normalizeTitle(Post post) {
+        String t = post.getTitle();
+        if (t != null) {
+            t = t.trim();
+            if (t.isEmpty()) {
+                t = null;
+            }
+        }
+        if (t == null) {
+            String c = post.getContent();
+            if (c != null && !c.trim().isEmpty()) {
+                c = c.trim();
+                t = c.length() <= 80 ? c : c.substring(0, 77) + "...";
+            } else {
+                t = "分享";
+            }
+        }
+        if (t.length() > 200) {
+            t = t.substring(0, 200);
+        }
+        post.setTitle(t);
+    }
+
 
     @Override
     public void delete(Long postId, Long userId) {

@@ -12,8 +12,7 @@ Page({
     myGoods: [],
     pageNum: 1,
     hasMore: true,
-    loading: false,
-    searchKeyword: ''
+    loading: false
   },
 
   onLoad(options) {
@@ -52,7 +51,7 @@ Page({
     var categoryId = self.data.currentCategory === 0 ? '' : self.data.currentCategory;
 
     self.setData({ loading: true });
-    getGoodsPage(pageNum, 20, categoryId, self.data.searchKeyword || '')
+    getGoodsPage(pageNum, 20, categoryId, '')
       .then(function(page) {
         var records = (page.records || []).map(function(g) {
           var images = [];
@@ -136,23 +135,8 @@ Page({
     wx.showToast({ title: '已筛选：' + (cat ? cat.name : '全部'), icon: 'none', duration: 1000 });
   },
 
-  onSearchInput(e) {
-    this.setData({ searchKeyword: e.detail.value });
-  },
-
-  onSearchConfirm(e) {
-    var kw = (e.detail.value || '').trim();
-    this.setData({
-      searchKeyword: kw,
-      allGoods: [],
-      leftGoods: [],
-      rightGoods: [],
-      pageNum: 1,
-      hasMore: true
-    });
-    if (this.data.currentTab === 0) {
-      this.loadGoods(true);
-    }
+  onOpenSearch() {
+    wx.navigateTo({ url: '/pages/search/search?scope=goods' });
   },
 
   onGoodsTap(e) {

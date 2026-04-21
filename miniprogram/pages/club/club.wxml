@@ -13,15 +13,11 @@
       </view>
     </view>
     <view class="search-row">
-      <view class="search-bar">
-        <text class="search-icon-text">🔍</text>
-        <input
-          class="search-input"
-          type="text"
-          placeholder="搜索社团或活动"
-          placeholder-class="search-placeholder"
-          bindconfirm="onSearch"
-        />
+      <view class="capsule-search capsule-search--fake" bindtap="onOpenSearch">
+        <text class="capsule-search__placeholder">搜索社团名称或简介...</text>
+        <view class="capsule-search__btn" catchtap="onOpenSearch">
+          <icon type="search" size="18" color="#ffffff" />
+        </view>
       </view>
     </view>
   </view>

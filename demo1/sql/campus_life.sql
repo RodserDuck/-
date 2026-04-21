@@ -172,10 +172,10 @@ CREATE TABLE `t_post` (
   KEY `idx_post_user`(`user_id`),
   KEY `idx_post_create_time`(`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='帖子表';
-INSERT INTO `t_post` VALUES (1, 1, NULL, '今天天气超级好，傍晚在校园里随手拍了几张！夕阳下的图书馆真的太美了，有没有人一起去拍照呀~', '["https://picsum.photos/600/600?random=20","https://picsum.photos/600/600?random=21"]', '校园', 328, 56, 512, 1, 1, NOW(), NOW(), 0);
-INSERT INTO `t_post` VALUES (2, 2, NULL, '分享一份期末复习资料，涵盖高数、线代、概率论全套笔记，整理了两个月，亲测有效！', '["https://picsum.photos/600/600?random=23"]', '学习', 512, 89, 768, 0, 1, NOW(), NOW(), 0);
-INSERT INTO `t_post` VALUES (3, 1, NULL, '强烈推荐食堂三楼新开的麻辣烫！味道一绝，价格也很实惠，人均20元吃到撑，周末约起来~', NULL, '生活', 256, 42, 320, 0, 1, NOW(), NOW(), 0);
-INSERT INTO `t_post` VALUES (4, 3, NULL, '校园十大歌手大赛初赛圆满结束！恭喜晋级的30位选手，复赛将于4月20日在大学生活动中心举行，敬请期待！', NULL, '活动', 189, 34, 445, 0, 1, NOW(), NOW(), 0);
+INSERT INTO `t_post` VALUES (1, 1, '夕阳下的图书馆太美了', '今天天气超级好，傍晚在校园里随手拍了几张！夕阳下的图书馆真的太美了，有没有人一起去拍照呀~', '["https://picsum.photos/600/600?random=20","https://picsum.photos/600/600?random=21"]', '校园', 328, 56, 512, 1, 1, NOW(), NOW(), 0);
+INSERT INTO `t_post` VALUES (2, 2, '期末复习资料分享（高数线代概率）', '分享一份期末复习资料，涵盖高数、线代、概率论全套笔记，整理了两个月，亲测有效！', '["https://picsum.photos/600/600?random=23"]', '学习', 512, 89, 768, 0, 1, NOW(), NOW(), 0);
+INSERT INTO `t_post` VALUES (3, 1, '食堂三楼麻辣烫推荐', '强烈推荐食堂三楼新开的麻辣烫！味道一绝，价格也很实惠，人均20元吃到撑，周末约起来~', NULL, '生活', 256, 42, 320, 0, 1, NOW(), NOW(), 0);
+INSERT INTO `t_post` VALUES (4, 3, '校园十大歌手大赛复赛预告', '校园十大歌手大赛初赛圆满结束！恭喜晋级的30位选手，复赛将于4月20日在大学生活动中心举行，敬请期待！', NULL, '活动', 189, 34, 445, 0, 1, NOW(), NOW(), 0);
 
 -- ------------------------------
 -- 6. 帖子点赞表

@@ -3,6 +3,7 @@ var { publishPost, uploadImageFiles } = require('../../utils/request.js');
 
 Page({
   data: {
+    title: '',
     content: '',
     images: [],
     maxImages: 9,
@@ -23,6 +24,10 @@ Page({
     wx.setNavigationBarTitle({
       title: '发布帖子'
     });
+  },
+
+  onTitleInput(e) {
+    this.setData({ title: e.detail.value });
   },
 
   onContentInput(e) {
@@ -57,8 +62,13 @@ Page({
   onPublish() {
     var self = this;
     if (self.data.isSubmitting) return;
+    var titleTrim = (self.data.title || '').trim();
+    if (!titleTrim) {
+      wx.showToast({ title: '请填写标题', icon: 'none' });
+      return;
+    }
     if (!self.data.content.trim() && self.data.images.length === 0) {
-      wx.showToast({ title: '请输入内容或上传图片', icon: 'none' }); return;
+      wx.showToast({ title: '请输入正文或上传图片', icon: 'none' }); return;
     }
     self.setData({ isSubmitting: true });
     wx.showLoading({ title: '发布中...', mask: true });
@@ -70,6 +80,7 @@ Page({
     uploadPromise
       .then(function(urls) {
         return publishPost({
+          title: titleTrim,
           content: self.data.content,
           images: urls.length ? JSON.stringify(urls) : '[]',
           category: self.data.currentCategory

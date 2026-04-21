@@ -18,7 +18,8 @@
           <text class="delete-icon">🗑️</text>
         </view>
       </view>
-      <text class="post-content">{{item.content}}</text>
+      <text class="post-title-my" wx:if="{{item.title}}">{{item.title}}</text>
+      <text class="post-content" wx:if="{{item.snippet}}">{{item.snippet}}</text>
       <view class="post-images" wx:if="{{item.images.length > 0}}">
         <image
           class="post-image"

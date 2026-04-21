@@ -24,7 +24,8 @@ Page({
     buyList: [],
     sellList: [],
     tradeStats: { buyCount: 0, sellCount: 0, pendingCount: 0 },
-    showTradeSheet: false,
+    /** 与 Page 方法禁止同名，否则 bindtap 无法正确切换 Tab */
+    tradeSheetVisible: false,
     menuGroups: [
       {
         title: '我的内容',
@@ -167,9 +168,9 @@ Page({
   onMenuTap(e) {
     var id = e.currentTarget.dataset.id;
     if (id === 9) {
-      this.showTradeSheet('buy');
+      this.openTradeSheet('buy');
     } else if (id === 10) {
-      this.showTradeSheet('sell');
+      this.openTradeSheet('sell');
     } else {
       var pageMap = {
         1: '/pages/my-posts/my-posts',
@@ -188,19 +189,22 @@ Page({
     }
   },
 
-  showTradeSheet(e) {
+  openTradeSheet(e) {
     var tab;
     if (typeof e === 'string') {
       tab = e;
     } else {
-      tab = e.currentTarget.dataset.tab || 'buy';
+      tab = (e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.tab) || 'buy';
     }
-    this.setData({ tradeTab: tab, showTradeSheet: true });
+    this.setData({ tradeTab: tab, tradeSheetVisible: true });
   },
 
   closeTradeSheet() {
-    this.setData({ showTradeSheet: false });
+    this.setData({ tradeSheetVisible: false });
   },
+
+  /** 阻止点击弹层内容区冒泡到 mask 导致误关闭 */
+  noop() {},
 
   onBuyerConfirm(e) {
     var self = this;

@@ -71,33 +71,7 @@ page {
 }
 
 .search-row {
-  padding-bottom: 6rpx;
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 50rpx;
-  height: 80rpx;
-  padding: 0 28rpx;
-  box-shadow: 0 4rpx 16rpx rgba(30, 58, 95, 0.08);
-}
-
-.search-icon-text {
-  font-size: 30rpx;
-  margin-right: 12rpx;
-  opacity: 0.45;
-}
-
-.search-input {
-  flex: 1;
-  font-size: 28rpx;
-  color: #1e3a5f;
-}
-
-.search-placeholder {
-  color: #b0c8e8;
+  padding: 0 28rpx 6rpx;
 }
 
 /* ===================== Tab标签栏 ===================== */

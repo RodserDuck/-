@@ -18,6 +18,8 @@ page { background: #f0f6ff; }
 .post-delete { padding: 8rpx; flex-shrink: 0; }
 .delete-icon { font-size: 32rpx; opacity: 0.5; }
 
+.post-title-my { font-size: 30rpx; font-weight: 700; color: #1e3a5f; line-height: 1.5; }
+
 .post-content { font-size: 28rpx; color: #374151; line-height: 1.8; }
 
 .post-images { display: flex; flex-wrap: wrap; gap: 8rpx; }

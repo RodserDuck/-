@@ -21,8 +21,12 @@
         </view>
       </view>
 
-      <!-- 帖子内容 -->
-      <view class="post-content">
+      <view class="post-title-wrap" wx:if="{{post.title}}">
+        <text class="post-title-text">{{post.title}}</text>
+      </view>
+
+      <!-- 帖子正文（若标题与正文开头重复已在逻辑中去掉） -->
+      <view class="post-content" wx:if="{{post.content}}">
         <text class="content-text">{{post.content}}</text>
       </view>
 

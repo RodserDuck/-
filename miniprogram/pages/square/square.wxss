@@ -19,31 +19,15 @@
   right: 0;
 }
 
-.search-bar {
+.square-search-row {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 50rpx;
-  height: 84rpx;
-  padding: 0 8rpx 0 32rpx;
-  box-shadow: 0 4rpx 16rpx rgba(91, 156, 246, 0.12);
+  gap: 16rpx;
 }
 
-.search-icon {
-  font-size: 32rpx;
-  margin-right: 16rpx;
-  opacity: 0.5;
-}
-
-.search-input {
+.square-search-row .capsule-search {
   flex: 1;
-  font-size: 28rpx;
-  color: #1e3a5f;
-  padding: 0;
-}
-
-.search-placeholder {
-  color: #b0c8e8;
+  min-width: 0;
 }
 
 .notice-bell {
@@ -395,6 +379,15 @@
 /* 卡片内容 */
 .post-body {
   padding: 20rpx 24rpx;
+}
+
+.post-title-line {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1e3a5f;
+  line-height: 1.45;
+  margin-bottom: 12rpx;
 }
 
 .post-content {

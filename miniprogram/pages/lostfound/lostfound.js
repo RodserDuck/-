@@ -17,7 +17,6 @@ function lostFoundThumb(raw) {
 Page({
   data: {
     currentTab: 0,
-    searchKeyword: '',
     lostItems: [],
     foundItems: []
   },
@@ -28,7 +27,7 @@ Page({
 
   loadData() {
     var self = this;
-    getLostFoundList(1, 50, '', (self.data.searchKeyword || '').trim())
+    getLostFoundList(1, 50, '', '')
       .then(function(page) {
         var records = page.records || [];
         var lost = [];
@@ -89,14 +88,8 @@ Page({
     });
   },
 
-  onSearchInput(e) {
-    this.setData({ searchKeyword: e.detail.value });
-  },
-
-  onSearchConfirm(e) {
-    var kw = (e.detail.value || '').trim();
-    this.setData({ searchKeyword: kw });
-    this.loadData();
+  onOpenSearch() {
+    wx.navigateTo({ url: '/pages/search/search?scope=lost' });
   },
 
   onFilterTap() {

@@ -57,7 +57,8 @@ Page({
     var kw = (self.data.inputValue || '').trim();
     self.setData({ keyword: kw, loading: true, results: [], emptyHint: '' });
     if (!kw) {
-      self.setData({ loading: false, emptyHint: '', results: [] });
+      wx.showToast({ title: '请输入关键词', icon: 'none' });
+      self.setData({ loading: false, emptyHint: '', results: [], keyword: '' });
       return;
     }
     var scope = self.data.scope;

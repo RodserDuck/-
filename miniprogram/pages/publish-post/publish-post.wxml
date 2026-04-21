@@ -18,6 +18,20 @@
     </scroll-view>
   </view>
 
+  <!-- 标题 -->
+  <view class="title-section">
+    <text class="title-label">标题</text>
+    <input
+      class="title-input"
+      type="text"
+      maxlength="200"
+      placeholder="好的标题更容易被看到（必填）"
+      placeholder-class="title-placeholder"
+      value="{{title}}"
+      bindinput="onTitleInput"
+    />
+  </view>
+
   <!-- 内容输入 -->
   <textarea
     class="content-input"

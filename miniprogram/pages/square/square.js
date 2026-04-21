@@ -1,6 +1,22 @@
 // pages/square/square.js
 var { getNoticeTop, getPostList, getNoticeList, resolveMediaUrl } = require('../../utils/request.js');
 
+/** 列表摘要：有标题时正文去掉与标题重复的前缀，避免 SQL 回填后与正文重复两行 */
+function buildPostCard(p) {
+  var title = (p.title && String(p.title).trim()) ? String(p.title).trim() : '';
+  var content = p.content || '';
+  var snippet = content;
+  if (title && content.indexOf(title) === 0) {
+    snippet = content.substring(title.length).replace(/^\s+/, '');
+  }
+  if (!title) {
+    snippet = content.length > 140 ? content.substring(0, 140) + '...' : content;
+  } else if (snippet.length > 140) {
+    snippet = snippet.substring(0, 140) + '...';
+  }
+  return { title: title, snippet: snippet };
+}
+
 Page({
   data: {
     currentBanner: 0,
@@ -73,11 +89,13 @@ Page({
           if (p.images) {
             try { images = JSON.parse(p.images); } catch(e) {}
           }
+          var card = buildPostCard(p);
           return {
             id: p.postId,
             avatar: p.avatar ? resolveMediaUrl(p.avatar) : 'https://picsum.photos/200/200?random=10',
             nickname: p.nickname || '校园用户',
-            content: p.content,
+            title: card.title,
+            snippet: card.snippet,
             images: images.map(function(u) { return resolveMediaUrl(u); }),
             likes: p.likeCount || 0,
             comments: p.commentCount || 0,
@@ -114,16 +132,9 @@ Page({
       });
   },
 
-  onSearchInput(e) {
-    var keyword = e.detail.value;
-    console.log('搜索关键词:', keyword);
-  },
-
-  /** 键盘搜索：进入统一搜索页（校园广场帖子） */
-  onSearchConfirm(e) {
-    var k = (e.detail.value || '').trim();
-    var q = k ? '&keyword=' + encodeURIComponent(k) : '';
-    wx.navigateTo({ url: '/pages/search/search?scope=post' + q });
+  /** 进入搜索详情页（校园广场） */
+  onOpenSearch() {
+    wx.navigateTo({ url: '/pages/search/search?scope=post' });
   },
 
   // 校园公告 - 跳转到通知列表

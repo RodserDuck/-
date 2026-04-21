@@ -51,13 +51,20 @@ Page({
         var images = rawList
           .map(function (u) { return resolveMediaUrl(u); })
           .filter(function (u) { return u && String(u).length > 0; });
+        var rawTitle = (post.title && String(post.title).trim()) ? String(post.title).trim() : '';
+        var rawContent = post.content || '';
+        var body = rawContent;
+        if (rawTitle && rawContent.indexOf(rawTitle) === 0) {
+          body = rawContent.substring(rawTitle.length).replace(/^\s+/, '');
+        }
         self.setData({
           post: {
             id: post.postId,
             avatar: post.avatar ? resolveMediaUrl(post.avatar) : 'https://picsum.photos/100/100?random=10',
             nickname: post.nickname || '校园用户',
             college: post.college || '',
-            content: post.content,
+            title: rawTitle,
+            content: body,
             images: images,
             likes: post.likeCount || 0,
             comments: post.commentCount || 0,

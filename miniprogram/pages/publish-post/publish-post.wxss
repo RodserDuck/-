@@ -64,6 +64,34 @@ page {
   font-weight: 600;
 }
 
+/* 标题 */
+.title-section {
+  background: #fff;
+  padding: 24rpx 30rpx;
+  margin-top: 2rpx;
+}
+
+.title-label {
+  display: block;
+  font-size: 28rpx;
+  color: #9ca3af;
+  font-weight: 500;
+  margin-bottom: 16rpx;
+}
+
+.title-input {
+  width: 100%;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1e3a5f;
+  line-height: 1.5;
+}
+
+.title-placeholder {
+  color: #c4c4c4;
+  font-weight: 400;
+}
+
 /* 内容输入 */
 .content-input {
   width: 100%;

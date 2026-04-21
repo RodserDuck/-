@@ -1,19 +1,14 @@
 <!-- pages/market/market.wxml -->
 <view class="market-page">
-  <!-- 顶部搜索栏 -->
+  <!-- 顶部：点击进入搜索详情页 -->
   <view class="top-search">
-    <view class="search-bar">
-      <view class="search-icon">🔍</view>
-      <input
-        class="search-input"
-        type="text"
-        placeholder="搜索闲置标题或描述..."
-        placeholder-class="search-placeholder"
-        value="{{searchKeyword}}"
-        bindinput="onSearchInput"
-        bindconfirm="onSearchConfirm"
-        confirm-type="search"
-      />
+    <view class="market-search-row">
+      <view class="capsule-search capsule-search--fake" bindtap="onOpenSearch">
+        <text class="capsule-search__placeholder">搜索闲置标题或描述...</text>
+        <view class="capsule-search__btn" catchtap="onOpenSearch">
+          <icon type="search" size="18" color="#ffffff" />
+        </view>
+      </view>
       <view class="publish-btn" bindtap="onPublishTap">
         <text class="publish-text">+ 发布</text>
       </view>

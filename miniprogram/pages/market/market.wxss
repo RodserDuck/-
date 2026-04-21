@@ -8,39 +8,23 @@
 }
 
 /* ===================== 顶部搜索栏 ===================== */
+.market-search-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.market-search-row .capsule-search {
+  flex: 1;
+  min-width: 0;
+}
+
 .top-search {
   background: linear-gradient(160deg, #fb923c 0%, #fdba74 50%, #fed7aa 100%);
   padding: 20rpx 28rpx 28rpx;
   position: sticky;
   top: 0;
   z-index: 200;
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.search-icon {
-  font-size: 32rpx;
-  opacity: 0.6;
-  flex-shrink: 0;
-}
-
-.search-input {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 50rpx;
-  height: 80rpx;
-  padding: 0 32rpx;
-  font-size: 28rpx;
-  color: #1e3a5f;
-  box-shadow: var(--shadow-sm);
-}
-
-.search-placeholder {
-  color: #c0d4ee;
 }
 
 .publish-btn {

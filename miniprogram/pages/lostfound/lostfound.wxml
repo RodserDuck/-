@@ -9,20 +9,15 @@
     </view>
   </view>
 
-  <!-- 搜索栏 -->
+  <!-- 搜索栏：进入搜索详情页 -->
   <view class="search-section">
-    <view class="search-bar">
-      <view class="search-icon">🔍</view>
-      <input
-        class="search-input"
-        type="text"
-        placeholder="搜索标题或物品说明..."
-        placeholder-class="search-placeholder"
-        value="{{searchKeyword}}"
-        bindinput="onSearchInput"
-        bindconfirm="onSearchConfirm"
-        confirm-type="search"
-      />
+    <view class="lostfound-search-row">
+      <view class="capsule-search capsule-search--fake" bindtap="onOpenSearch">
+        <text class="capsule-search__placeholder">搜索标题或物品说明...</text>
+        <view class="capsule-search__btn" catchtap="onOpenSearch">
+          <icon type="search" size="18" color="#ffffff" />
+        </view>
+      </view>
       <view class="filter-btn" bindtap="onFilterTap">
         <text class="filter-icon">🔽</text>
       </view>

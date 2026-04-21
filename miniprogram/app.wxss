@@ -321,6 +321,57 @@ view, text, image, navigator, button, input, textarea {
   animation: fadeInUp var(--duration-slow) ease-out;
 }
 
+/* ===================== 胶囊搜索条（白底深色描边 + 右侧黑色搜索钮） ===================== */
+.capsule-search {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 88rpx;
+  padding: 8rpx 10rpx 8rpx 28rpx;
+  box-sizing: border-box;
+  background: #fff;
+  border: 2rpx solid #262626;
+  border-radius: 999rpx;
+}
+
+.capsule-search__input {
+  flex: 1;
+  min-height: 72rpx;
+  font-size: 28rpx;
+  color: #171717;
+}
+
+.capsule-search__ph {
+  color: #a3a3a3;
+}
+
+.capsule-search__placeholder {
+  flex: 1;
+  font-size: 28rpx;
+  color: #a3a3a3;
+  line-height: 72rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.capsule-search__btn {
+  flex-shrink: 0;
+  width: 72rpx;
+  height: 72rpx;
+  margin-left: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0a;
+  border-radius: 999rpx;
+  padding: 0;
+}
+
+.capsule-search__btn:active {
+  opacity: 0.88;
+}
+
 /* ===================== 滚动条 ===================== */
 ::-webkit-scrollbar {
   display: none;

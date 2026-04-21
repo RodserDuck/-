@@ -1,5 +1,5 @@
 // pages/club/club.js
-var { getClubList, getClubPage, getActivityList, getMyClubs, joinClub, leaveClub, getMyClubStatus } = require('../../utils/request.js');
+var { getClubList, getActivityList, getMyClubs, joinClub, leaveClub, getMyClubStatus } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -196,44 +196,8 @@ Page({
     wx.showToast({ title: '暂无新通知', icon: 'none', duration: 1500 });
   },
 
-  onSearch(e) {
-    var keyword = (e.detail.value || '').trim();
-    var self = this;
-    if (!keyword) {
-      this.applyCategoryFilter();
-      return;
-    }
-    var cats = this.data.categories;
-    var catId = this.data.selectedCategory;
-    var catName = '';
-    if (catId !== 0) {
-      var cn = cats.find(function(c) { return c.id === catId; });
-      catName = cn ? cn.name : '';
-    }
-    getClubPage(1, 80, catName, keyword)
-      .then(function(page) {
-        var status = self.data.clubStatus;
-        var records = page.records || [];
-        var filtered = records.map(function(c) {
-          var style = self.getClubStyle(c.category);
-          return {
-            id: c.clubId,
-            name: c.name,
-            icon: style.emoji,
-            members: c.memberCount || 0,
-            category: c.category,
-            description: c.description || '',
-            hot: c.memberCount || 0,
-            gradient: style.gradient,
-            badgeColor: style.badgeColor,
-            joinStatus: status[c.clubId] || 'none'
-          };
-        });
-        self.setData({ filteredClubs: filtered });
-      })
-      .catch(function() {
-        wx.showToast({ title: '搜索失败', icon: 'none' });
-      });
+  onOpenSearch() {
+    wx.navigateTo({ url: '/pages/search/search?scope=club' });
   },
 
   onClubTap(e) {

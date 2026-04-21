@@ -9,21 +9,13 @@
     <view class="nav-placeholder"></view>
   </view>
 
-  <view class="college-search">
-    <view class="college-search-inner">
-      <text class="search-ico">🔍</text>
-      <input
-        class="college-search-input"
-        type="text"
-        placeholder="搜索公告标题或正文..."
-        placeholder-class="college-search-ph"
-        value="{{searchKeyword}}"
-        bindinput="onSearchInput"
-        bindconfirm="onSearchConfirm"
-        confirm-type="search"
-      />
+  <view class="college-search-wrap">
+    <view class="capsule-search capsule-search--fake" bindtap="onOpenSearch">
+      <text class="capsule-search__placeholder">搜索学院公告标题或正文...</text>
+      <view class="capsule-search__btn" catchtap="onOpenSearch">
+        <icon type="search" size="18" color="#ffffff" />
+      </view>
     </view>
-    <view class="college-search-more" bindtap="goGlobalSearch">全站搜</view>
   </view>
 
   <!-- 通知列表 -->

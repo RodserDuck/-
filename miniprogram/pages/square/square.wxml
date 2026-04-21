@@ -1,18 +1,14 @@
 <!-- pages/square/square.wxml -->
 <view class="square-page">
-  <!-- 顶部搜索栏 -->
+  <!-- 顶部：点击整条进入搜索详情页 -->
   <view class="top-search">
-    <view class="search-bar">
-      <view class="search-icon">🔍</view>
-      <input
-        class="search-input"
-        type="text"
-        placeholder="搜索校园动态、公告..."
-        placeholder-class="search-placeholder"
-        bindinput="onSearchInput"
-        bindconfirm="onSearchConfirm"
-        confirm-type="search"
-      />
+    <view class="square-search-row">
+      <view class="capsule-search capsule-search--fake" bindtap="onOpenSearch">
+        <text class="capsule-search__placeholder">搜索校园动态、公告...</text>
+        <view class="capsule-search__btn" catchtap="onOpenSearch">
+          <icon type="search" size="18" color="#ffffff" />
+        </view>
+      </view>
       <view class="notice-bell" bindtap="onNoticeTap">
         <text class="bell-icon">🔔</text>
         <view class="bell-dot"></view>
@@ -146,7 +142,8 @@
 
       <!-- 卡片内容 -->
       <view class="post-body">
-        <text class="post-content">{{item.content}}</text>
+        <text class="post-title-line" wx:if="{{item.title}}">{{item.title}}</text>
+        <text class="post-content" wx:if="{{item.snippet}}">{{item.snippet}}</text>
         <!-- 图片网格 -->
         <view class="post-images" wx:if="{{item.images.length > 0}}">
           <view
