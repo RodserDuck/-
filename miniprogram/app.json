@@ -4,6 +4,7 @@
     "pages/register/register",
     "pages/logs/logs",
     "pages/square/square",
+    "pages/search/search",
     "pages/college/college",
     "pages/club/club",
     "pages/market/market",
@@ -43,36 +44,34 @@
       {
         "pagePath": "pages/square/square",
         "text": "校园广场",
-        "iconPath": "images/tab_square.png",
-        "selectedIconPath": "images/tab_square_sel.png"
+        "iconPath": "images/icon_square.png",
+        "selectedIconPath": "images/icon_square.png"
       },
       {
         "pagePath": "pages/club/club",
         "text": "社团活动",
-        "iconPath": "images/tab_club.png",
-        "selectedIconPath": "images/tab_club_sel.png"
+        "iconPath": "images/icon_club.png",
+        "selectedIconPath": "images/icon_club.png"
       },
       {
         "pagePath": "pages/market/market",
         "text": "二手市场",
-        "iconPath": "images/tab_market.png",
-        "selectedIconPath": "images/tab_market_sel.png"
+        "iconPath": "images/icon_market.png",
+        "selectedIconPath": "images/icon_market.png"
       },
       {
         "pagePath": "pages/lostfound/lostfound",
         "text": "失物招领",
-        "iconPath": "images/tab_lost.png",
-        "selectedIconPath": "images/tab_lost_sel.png"
+        "iconPath": "images/icon_lost.png",
+        "selectedIconPath": "images/icon_lost.png"
       },
       {
         "pagePath": "pages/profile/profile",
         "text": "我的",
-        "iconPath": "images/tab_profile.png",
-        "selectedIconPath": "images/tab_profile_sel.png"
+        "iconPath": "images/icon_profile.png",
+        "selectedIconPath": "images/icon_profile.png"
       }
     ]
   },
-  "style": "v2",
-  "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents"
+  "style": "v2"
 }

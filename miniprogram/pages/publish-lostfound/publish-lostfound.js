@@ -1,5 +1,5 @@
 // pages/publish-lostfound/publish-lostfound.js
-var { saveLostFound } = require('../../utils/request.js');
+var { saveLostFound, uploadImageFiles } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -64,16 +64,23 @@ Page({
     self.setData({ isSubmitting: true });
     wx.showLoading({ title: '发布中...', mask: true });
 
-    saveLostFound({
-      type: d.publishType === 'lost' ? 1 : 2,
-      title: d.title,
-      itemName: d.itemName,
-      location: d.location,
-      lostTime: d.date,
-      description: d.description,
-      contact: d.contact,
-      itemImage: d.images.length > 0 ? d.images[0] : ''
-    })
+    var uploadPromise = d.images.length
+      ? uploadImageFiles(d.images, 'lostfound')
+      : Promise.resolve([]);
+
+    uploadPromise
+      .then(function(urls) {
+        return saveLostFound({
+          type: d.publishType === 'lost' ? 1 : 2,
+          title: d.title,
+          itemName: d.itemName,
+          location: d.location,
+          lostTime: d.date,
+          description: d.description,
+          contact: d.contact,
+          itemImage: urls.length ? JSON.stringify(urls) : ''
+        });
+      })
       .then(function() {
         wx.hideLoading();
         wx.showToast({ title: '发布成功', icon: 'success', duration: 1500 });

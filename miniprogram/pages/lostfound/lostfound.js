@@ -1,9 +1,23 @@
 // pages/lostfound/lostfound.js
-var { getLostFoundList } = require('../../utils/request.js');
+var { getLostFoundList, resolveMediaUrl } = require('../../utils/request.js');
+
+function lostFoundThumb(raw) {
+  if (!raw) return '';
+  var s = String(raw).trim();
+  if (s.charAt(0) === '[') {
+    try {
+      var arr = JSON.parse(s);
+      if (arr && arr[0]) return resolveMediaUrl(arr[0]);
+    } catch (e) {}
+    return '';
+  }
+  return resolveMediaUrl(s);
+}
 
 Page({
   data: {
     currentTab: 0,
+    searchKeyword: '',
     lostItems: [],
     foundItems: []
   },
@@ -14,7 +28,7 @@ Page({
 
   loadData() {
     var self = this;
-    getLostFoundList(1, 50, '')
+    getLostFoundList(1, 50, '', (self.data.searchKeyword || '').trim())
       .then(function(page) {
         var records = page.records || [];
         var lost = [];
@@ -25,7 +39,7 @@ Page({
             title: item.title,
             itemName: item.itemName,
             type: item.type === 1 ? 'lost' : 'found',
-            image: item.itemImage || '',
+            image: lostFoundThumb(item.itemImage),
             location: item.location || '',
             time: item.lostTime ? item.lostTime.replace('T', ' ').substring(0, 16) : '',
             contact: item.contact || '',
@@ -76,7 +90,13 @@ Page({
   },
 
   onSearchInput(e) {
-    console.log('搜索关键词:', e.detail.value);
+    this.setData({ searchKeyword: e.detail.value });
+  },
+
+  onSearchConfirm(e) {
+    var kw = (e.detail.value || '').trim();
+    this.setData({ searchKeyword: kw });
+    this.loadData();
   },
 
   onFilterTap() {

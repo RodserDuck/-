@@ -1,5 +1,5 @@
 // pages/club/club.js
-var { getClubList, getActivityList, getMyClubs, joinClub, leaveClub, getMyClubStatus } = require('../../utils/request.js');
+var { getClubList, getClubPage, getActivityList, getMyClubs, joinClub, leaveClub, getMyClubStatus } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -198,15 +198,42 @@ Page({
 
   onSearch(e) {
     var keyword = (e.detail.value || '').trim();
+    var self = this;
     if (!keyword) {
       this.applyCategoryFilter();
       return;
     }
-    var clubs = this.data.clubs;
-    var filtered = clubs.filter(function(c) {
-      return c.name.indexOf(keyword) > -1 || (c.category && c.category.indexOf(keyword) > -1);
-    });
-    this.setData({ filteredClubs: filtered });
+    var cats = this.data.categories;
+    var catId = this.data.selectedCategory;
+    var catName = '';
+    if (catId !== 0) {
+      var cn = cats.find(function(c) { return c.id === catId; });
+      catName = cn ? cn.name : '';
+    }
+    getClubPage(1, 80, catName, keyword)
+      .then(function(page) {
+        var status = self.data.clubStatus;
+        var records = page.records || [];
+        var filtered = records.map(function(c) {
+          var style = self.getClubStyle(c.category);
+          return {
+            id: c.clubId,
+            name: c.name,
+            icon: style.emoji,
+            members: c.memberCount || 0,
+            category: c.category,
+            description: c.description || '',
+            hot: c.memberCount || 0,
+            gradient: style.gradient,
+            badgeColor: style.badgeColor,
+            joinStatus: status[c.clubId] || 'none'
+          };
+        });
+        self.setData({ filteredClubs: filtered });
+      })
+      .catch(function() {
+        wx.showToast({ title: '搜索失败', icon: 'none' });
+      });
   },
 
   onClubTap(e) {

@@ -46,6 +46,49 @@ page {
 
 .nav-placeholder { width: 60rpx; }
 
+.college-search {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 0 24rpx 20rpx;
+  margin-top: -8rpx;
+}
+
+.college-search-inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 999rpx;
+  padding: 16rpx 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.12);
+}
+
+.search-ico {
+  margin-right: 12rpx;
+  font-size: 28rpx;
+}
+
+.college-search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #334155;
+}
+
+.college-search-ph {
+  color: #94a3b8;
+}
+
+.college-search-more {
+  font-size: 24rpx;
+  color: #5b9cf6;
+  background: rgba(91, 156, 246, 0.15);
+  padding: 12rpx 20rpx;
+  border-radius: 999rpx;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
 /* 通知列表 */
 .notice-list {
   padding: 24rpx 28rpx;

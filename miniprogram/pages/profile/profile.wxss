@@ -200,10 +200,15 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  padding: 14rpx;
+  box-sizing: border-box;
 }
 
-.action-icon {
-  font-size: 40rpx;
+.action-icon-img {
+  width: 44rpx;
+  height: 44rpx;
+  display: block;
+  flex-shrink: 0;
 }
 
 .action-name {

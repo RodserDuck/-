@@ -1,5 +1,5 @@
 // pages/goods-detail/goods-detail.js
-var { getGoodsDetail, createTrade, confirmTrade, cancelTrade, getMySell, getPendingTrade, getMyBuy } = require('../../utils/request.js');
+var { getGoodsDetail, createTrade, confirmTrade, cancelTrade, getMySell, getPendingTrade, getMyBuy, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -35,6 +35,7 @@ Page({
         if (g.images) {
           try { images = JSON.parse(g.images); } catch(e) {}
         }
+        images = images.map(function(u) { return resolveMediaUrl(u); });
         self.setData({
           goods: {
             id: g.itemId,
@@ -48,7 +49,7 @@ Page({
             seller: {
               id: g.userId,
               nickname: g.sellerName || '校园用户',
-              avatar: g.sellerAvatar || 'https://picsum.photos/100/100?random=50',
+              avatar: g.sellerAvatar ? resolveMediaUrl(g.sellerAvatar) : 'https://picsum.photos/100/100?random=50',
               college: g.sellerCollege || ''
             },
             contact: g.contact || '',
@@ -241,5 +242,4 @@ Page({
     wx.previewImage({ urls: this.data.goods.images, current: src });
   },
 
-  onBack() { wx.navigateBack(); }
 });

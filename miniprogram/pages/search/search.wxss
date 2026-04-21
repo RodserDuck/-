@@ -1,0 +1,124 @@
+.search-page {
+  min-height: 100vh;
+  background: #f0f6ff;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.scope-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding: 24rpx;
+  padding-top: calc(16rpx + env(safe-area-inset-top));
+  background: #fff;
+  box-shadow: 0 4rpx 20rpx rgba(91, 156, 246, 0.08);
+}
+
+.scope-tab {
+  padding: 12rpx 28rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  color: #64748b;
+  background: #f1f5f9;
+}
+
+.scope-tab.active {
+  color: #fff;
+  background: linear-gradient(135deg, #5b9cf6, #6366f1);
+  font-weight: 600;
+}
+
+.search-bar-wrap {
+  padding: 24rpx;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 999rpx;
+  padding: 16rpx 24rpx;
+  box-shadow: 0 4rpx 24rpx rgba(91, 156, 246, 0.12);
+}
+
+.search-icon {
+  margin-right: 12rpx;
+  font-size: 32rpx;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1e293b;
+}
+
+.search-placeholder {
+  color: #94a3b8;
+}
+
+.search-btn {
+  padding: 12rpx 28rpx;
+  font-size: 26rpx;
+  color: #fff;
+  background: #5b9cf6;
+  border-radius: 999rpx;
+  font-weight: 600;
+}
+
+.loading-box,
+.empty-box,
+.hint-box {
+  padding: 80rpx 48rpx;
+  text-align: center;
+}
+
+.loading-text,
+.empty-text,
+.hint-text {
+  font-size: 28rpx;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.result-scroll {
+  height: calc(100vh - 320rpx);
+  padding: 0 24rpx;
+}
+
+.result-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(15, 23, 42, 0.06);
+}
+
+.result-tag {
+  display: inline-block;
+  font-size: 22rpx;
+  color: #5b9cf6;
+  background: rgba(91, 156, 246, 0.12);
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  margin-bottom: 12rpx;
+}
+
+.result-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+.result-desc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.bottom-space {
+  height: 48rpx;
+}

@@ -39,11 +39,15 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public IPage<Club> page(int pageNum, int pageSize, String category) {
+    public IPage<Club> page(int pageNum, int pageSize, String category, String keyword) {
         Page<Club> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Club> q = new LambdaQueryWrapper<>();
         q.eq(Club::getStatus, 1);
         if (category != null && !category.isEmpty()) q.eq(Club::getCategory, category);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(Club::getName, k).or().like(Club::getDescription, k));
+        }
         q.orderByDesc(Club::getMemberCount);
         return clubMapper.selectPage(page, q);
     }

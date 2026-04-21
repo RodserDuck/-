@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SecondHandService {
     List<SecondHand> listAll();
-    IPage<SecondHand> page(int pageNum, int pageSize, Long categoryId);
+    IPage<SecondHand> page(int pageNum, int pageSize, Long categoryId, String keyword);
     SecondHand getById(Long id);
     void incrementView(Long id);
     SecondHand save(SecondHand goods, Long userId);

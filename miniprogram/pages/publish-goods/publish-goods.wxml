@@ -1,11 +1,5 @@
-<!-- pages/publish-goods/publish-goods.wxml -->
+<!-- pages/publish-goods/publish-goods.wxml：系统导航栏 + 底部发布（与发布帖子一致） -->
 <view class="container">
-  <view class="nav-bar">
-    <text class="cancel-btn" bindtap="onCancel">取消</text>
-    <text class="nav-title">发布闲置</text>
-    <text class="publish-btn {{isSubmitting ? 'disabled' : ''}}" bindtap="onPublish">发布</text>
-  </view>
-
   <view class="image-section">
     <text class="section-label">商品图片 <text class="required">*</text></text>
     <view class="image-grid">
@@ -49,14 +43,14 @@
       <view class="form-item half" bindtap="onCategoryTap">
         <text class="label">分类 <text class="required">*</text></text>
         <view class="picker-value">
-          <text>{{category || '请选择'}}</text>
+          <text>{{categoryName}}</text>
           <text class="arrow">></text>
         </view>
       </view>
       <view class="form-item half" bindtap="onConditionTap">
         <text class="label">成色</text>
         <view class="picker-value">
-          <text>{{condition}}</text>
+          <text>{{conditionName}}</text>
           <text class="arrow">></text>
         </view>
       </view>
@@ -77,5 +71,17 @@
       bindinput="onDescriptionInput"
       maxlength="500"
     />
+  </view>
+
+  <view class="bottom-space"></view>
+
+  <view class="bottom-publish-bar">
+    <view
+      class="publish-btn-full {{isSubmitting ? 'disabled' : ''}}"
+      bindtap="onPublish"
+    >
+      <text class="btn-icon">📦</text>
+      <text class="btn-text">发布闲置</text>
+    </view>
   </view>
 </view>

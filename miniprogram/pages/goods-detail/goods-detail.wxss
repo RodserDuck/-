@@ -8,26 +8,10 @@ page { background: #f0f6ff; }
   flex-direction: column;
 }
 
-/* 顶部导航 */
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(135deg, #5b9cf6 0%, #7dd3fc 100%);
-  padding: 20rpx 30rpx;
-  padding-top: calc(20rpx + env(safe-area-inset-top));
-  position: sticky;
-  top: 0;
-  z-index: 200;
-}
-.nav-back { width: 60rpx; height: 60rpx; display: flex; align-items: center; justify-content: center; }
-.back-icon { font-size: 52rpx; color: #fff; font-weight: bold; line-height: 1; }
-.nav-title { font-size: 34rpx; font-weight: 700; color: #fff; flex: 1; text-align: center; }
-.nav-placeholder { width: 60rpx; }
-
 /* 主内容滚动 */
 .main-scroll {
   flex: 1;
+  min-height: 0;
   padding-bottom: 140rpx;
 }
 

@@ -1,5 +1,5 @@
 // pages/publish-goods/publish-goods.js
-var { publishGoods, getCategoryList } = require('../../utils/request.js');
+var { publishGoods, getCategoryList, uploadImageFiles } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -91,17 +91,20 @@ Page({
     self.setData({ isSubmitting: true });
     wx.showLoading({ title: '发布中...', mask: true });
 
-    publishGoods({
-      title: self.data.title,
-      price: parseFloat(self.data.price),
-      originalPrice: self.data.originalPrice ? parseFloat(self.data.originalPrice) : null,
-      description: self.data.description,
-      images: JSON.stringify(self.data.images),
-      categoryId: self.data.categoryId,
-      conditionLevel: self.data.conditionLevel,
-      tradeLocation: self.data.location,
-      contact: self.data.contact
-    })
+    uploadImageFiles(self.data.images, 'goods')
+      .then(function(urls) {
+        return publishGoods({
+          title: self.data.title,
+          price: parseFloat(self.data.price),
+          originalPrice: self.data.originalPrice ? parseFloat(self.data.originalPrice) : null,
+          description: self.data.description,
+          images: JSON.stringify(urls),
+          categoryId: self.data.categoryId,
+          conditionLevel: self.data.conditionLevel,
+          tradeLocation: self.data.location,
+          contact: self.data.contact
+        });
+      })
       .then(function(res) {
         wx.hideLoading();
         wx.showToast({ title: '发布成功', icon: 'success', duration: 1500 });
@@ -114,5 +117,4 @@ Page({
       });
   },
 
-  onCancel() { wx.navigateBack(); }
 });

@@ -1,0 +1,58 @@
+<view class="search-page">
+  <view class="scope-tabs">
+    <view
+      wx:for="{{scopes}}"
+      wx:key="key"
+      class="scope-tab {{scope === item.key ? 'active' : ''}}"
+      bindtap="onScopeTap"
+      data-key="{{item.key}}"
+    >
+      <text>{{item.label}}</text>
+    </view>
+  </view>
+
+  <view class="search-bar-wrap">
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        type="text"
+        value="{{inputValue}}"
+        placeholder="按标题或内容搜索"
+        placeholder-class="search-placeholder"
+        bindinput="onInput"
+        bindconfirm="onConfirm"
+        confirm-type="search"
+      />
+      <view class="search-btn" bindtap="onConfirm">搜索</view>
+    </view>
+  </view>
+
+  <view class="loading-box" wx:if="{{loading}}">
+    <text class="loading-text">搜索中...</text>
+  </view>
+
+  <view class="empty-box" wx:elif="{{!loading && keyword && emptyHint}}">
+    <text class="empty-text">{{emptyHint}}</text>
+  </view>
+
+  <scroll-view class="result-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{!loading && results.length}}">
+    <view
+      class="result-card"
+      wx:for="{{results}}"
+      wx:key="uid"
+      bindtap="onResultTap"
+      data-type="{{item.resultType}}"
+      data-id="{{item.id}}"
+    >
+      <view class="result-tag">{{item.tag}}</view>
+      <text class="result-title">{{item.title}}</text>
+      <text class="result-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
+    </view>
+    <view class="bottom-space"></view>
+  </scroll-view>
+
+  <view class="hint-box" wx:if="{{!loading && !keyword}}">
+    <text class="hint-text">切换上方分类并输入关键词，支持标题与内容检索</text>
+  </view>
+</view>

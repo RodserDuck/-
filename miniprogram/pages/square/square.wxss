@@ -175,6 +175,24 @@
   margin-bottom: 12rpx;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
   transition: transform 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  padding: 18rpx;
+}
+
+.quick-icon--notice {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+}
+
+.quick-icon--college {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+
+.quick-icon--market {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+}
+
+.quick-icon--lost {
+  background: linear-gradient(135deg, #fae8ff, #f5d0fe);
 }
 
 .quick-icon:active {
@@ -182,8 +200,11 @@
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
 }
 
-.quick-icon-text {
-  font-size: 48rpx;
+.quick-icon-img {
+  width: 52rpx;
+  height: 52rpx;
+  display: block;
+  flex-shrink: 0;
 }
 
 .quick-name {

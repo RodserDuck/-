@@ -1,14 +1,5 @@
-<!-- pages/post-detail/post-detail.wxml -->
+<!-- pages/post-detail/post-detail.wxml（标题栏使用系统 navigationBar，避免重复） -->
 <view class="detail-page">
-  <!-- 顶部导航 -->
-  <view class="nav-bar">
-    <view class="nav-back" bindtap="onBack">
-      <text class="back-icon">‹</text>
-    </view>
-    <text class="nav-title">帖子详情</text>
-    <view class="nav-placeholder"></view>
-  </view>
-
   <!-- 主内容滚动区域 -->
   <scroll-view class="main-scroll" scroll-y>
     <!-- 帖子区域 -->
@@ -36,19 +27,19 @@
       </view>
 
       <!-- 图片 -->
-      <view class="post-images" wx:if="{{post.images.length > 0}}">
+      <view class="post-images" wx:if="{{post.images && post.images.length > 0}}">
         <view
           class="image-wrap {{post.images.length === 1 ? 'single' : ''}}"
           wx:for="{{post.images}}"
-          wx:key="*this"
+          wx:for-index="imgIdx"
+          wx:key="imgIdx"
         >
           <image
             class="post-img"
             src="{{item}}"
-            mode="aspectFill"
+            mode="{{post.images.length === 1 ? 'widthFix' : 'aspectFill'}}"
             bindtap="onPreviewImage"
             data-src="{{item}}"
-            lazy-load
           />
         </view>
       </view>
@@ -82,7 +73,7 @@
     <view class="comment-section">
       <view class="comment-section-header">
         <view class="section-title-bar"></view>
-        <text class="section-title-text">评论 ({{post.comments}})</text>
+        <text class="section-title-text">评论 ({{post ? post.comments : 0}})</text>
       </view>
 
       <!-- 无评论空状态 -->

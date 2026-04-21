@@ -22,8 +22,9 @@ public class LostFoundController {
     public Result<IPage<LostFound>> list(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(required = false) Integer type) {
-        return Result.ok(lostFoundService.page(pageNum, pageSize, type));
+            @RequestParam(required = false) Integer type,
+            @RequestParam(required = false) String keyword) {
+        return Result.ok(lostFoundService.page(pageNum, pageSize, type, keyword));
     }
 
     /** 详情 */

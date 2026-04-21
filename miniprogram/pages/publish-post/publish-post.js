@@ -1,5 +1,5 @@
 // pages/publish-post/publish-post.js
-var { publishPost } = require('../../utils/request.js');
+var { publishPost, uploadImageFiles } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -63,11 +63,18 @@ Page({
     self.setData({ isSubmitting: true });
     wx.showLoading({ title: '发布中...', mask: true });
 
-    publishPost({
-      content: self.data.content,
-      images: JSON.stringify(self.data.images),
-      category: self.data.currentCategory
-    })
+    var uploadPromise = self.data.images.length
+      ? uploadImageFiles(self.data.images, 'post')
+      : Promise.resolve([]);
+
+    uploadPromise
+      .then(function(urls) {
+        return publishPost({
+          content: self.data.content,
+          images: urls.length ? JSON.stringify(urls) : '[]',
+          category: self.data.currentCategory
+        });
+      })
       .then(function(res) {
         wx.hideLoading();
         wx.showToast({ title: '发布成功', icon: 'success', duration: 1500 });

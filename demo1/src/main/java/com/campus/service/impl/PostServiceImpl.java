@@ -36,7 +36,10 @@ public class PostServiceImpl implements PostService {
         LambdaQueryWrapper<Post> q = new LambdaQueryWrapper<>();
         q.eq(Post::getStatus, 1);
         if (category != null && !category.isEmpty()) q.eq(Post::getCategory, category);
-        if (keyword != null && !keyword.isEmpty()) q.like(Post::getContent, keyword);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(Post::getTitle, k).or().like(Post::getContent, k));
+        }
         q.orderByDesc(Post::getIsTop).orderByDesc(Post::getCreateTime);
         IPage<Post> result = postMapper.selectPage(page, q);
         // 填充用户头像和昵称

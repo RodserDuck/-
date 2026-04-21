@@ -1,5 +1,7 @@
 HELP.md
 target/
+# 本地上传的图片（user/goods/post 等子目录）
+uploads/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

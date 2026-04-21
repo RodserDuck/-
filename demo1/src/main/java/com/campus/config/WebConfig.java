@@ -8,6 +8,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -15,6 +16,18 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
+
+    @Autowired
+    private UploadProperties uploadProperties;
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String location = uploadProperties.resolvedRoot().toUri().toASCIIString();
+        if (!location.endsWith("/")) {
+            location += "/";
+        }
+        registry.addResourceHandler("/uploads/**").addResourceLocations(location);
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -27,16 +40,19 @@ public class WebConfig implements WebMvcConfigurer {
                         "/notice/list",
                         "/college-notice/list",
                         "/club/list",
+                        "/club/page",
                         "/club/detail",
                         "/activity/list",
                         "/activity/detail",
                         "/second-hand/list",
+                        "/second-hand/page",
                         "/second-hand/detail",
                         "/lost-found/list",
                         "/lost-found/detail",
                         "/post/list",
                         "/post/detail",
-                        "/category/list"
+                        "/category/list",
+                        "/uploads/**"
                 );
     }
 

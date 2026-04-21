@@ -3,7 +3,7 @@
   <!-- 用户信息 -->
   <view class="user-card" wx:if="{{userInfo}}">
     <view class="user-avatar-wrap">
-      <image class="user-avatar" src="{{userInfo.avatar || 'https://picsum.photos/200/200?random=99'}}" mode="aspectFill"/>
+      <image class="user-avatar" src="{{userInfo.avatarDisplay || userInfo.avatar || 'https://picsum.photos/200/200?random=99'}}" mode="aspectFill" bindtap="onChangeAvatar"/>
     </view>
     <view class="user-info">
       <text class="user-nickname">{{userInfo.username || userInfo.nickname || '校园用户'}}</text>

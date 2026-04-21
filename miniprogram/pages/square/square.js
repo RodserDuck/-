@@ -1,5 +1,5 @@
 // pages/square/square.js
-var { getNoticeTop, getPostList, getNoticeList } = require('../../utils/request.js');
+var { getNoticeTop, getPostList, getNoticeList, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -75,10 +75,10 @@ Page({
           }
           return {
             id: p.postId,
-            avatar: p.avatar || 'https://picsum.photos/200/200?random=10',
+            avatar: p.avatar ? resolveMediaUrl(p.avatar) : 'https://picsum.photos/200/200?random=10',
             nickname: p.nickname || '校园用户',
             content: p.content,
-            images: images,
+            images: images.map(function(u) { return resolveMediaUrl(u); }),
             likes: p.likeCount || 0,
             comments: p.commentCount || 0,
             time: self.formatTime(p.createTime),
@@ -117,6 +117,13 @@ Page({
   onSearchInput(e) {
     var keyword = e.detail.value;
     console.log('搜索关键词:', keyword);
+  },
+
+  /** 键盘搜索：进入统一搜索页（校园广场帖子） */
+  onSearchConfirm(e) {
+    var k = (e.detail.value || '').trim();
+    var q = k ? '&keyword=' + encodeURIComponent(k) : '';
+    wx.navigateTo({ url: '/pages/search/search?scope=post' + q });
   },
 
   // 校园公告 - 跳转到通知列表

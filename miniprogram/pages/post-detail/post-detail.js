@@ -1,5 +1,28 @@
 // pages/post-detail/post-detail.js
-var { getPostDetail, getCommentList, saveComment, likePost, unlikePost } = require('../../utils/request.js');
+var { getPostDetail, getCommentList, saveComment, likePost, unlikePost, resolveMediaUrl } = require('../../utils/request.js');
+
+/** 解析帖子 images：支持 JSON 数组字符串、单一路径、或接口已解成数组 */
+function parsePostImages(raw) {
+  if (raw == null || raw === '') return [];
+  if (Array.isArray(raw)) {
+    return raw
+      .map(function (x) { return x == null ? '' : String(x).trim(); })
+      .filter(function (x) { return x.length > 0; });
+  }
+  var s = String(raw).trim();
+  if (!s) return [];
+  if (s.charAt(0) === '[') {
+    try {
+      var arr = JSON.parse(s);
+      return Array.isArray(arr)
+        ? arr.map(function (x) { return String(x).trim(); }).filter(Boolean)
+        : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  return [s];
+}
 
 Page({
   data: {
@@ -24,14 +47,14 @@ Page({
     var self = this;
     getPostDetail(postId)
       .then(function(post) {
-        var images = [];
-        if (post.images) {
-          try { images = JSON.parse(post.images); } catch(e) {}
-        }
+        var rawList = parsePostImages(post.images);
+        var images = rawList
+          .map(function (u) { return resolveMediaUrl(u); })
+          .filter(function (u) { return u && String(u).length > 0; });
         self.setData({
           post: {
             id: post.postId,
-            avatar: post.avatar || 'https://picsum.photos/100/100?random=10',
+            avatar: post.avatar ? resolveMediaUrl(post.avatar) : 'https://picsum.photos/100/100?random=10',
             nickname: post.nickname || '校园用户',
             college: post.college || '',
             content: post.content,
@@ -52,7 +75,28 @@ Page({
     var self = this;
     getCommentList(postId)
       .then(function(comments) {
-        self.setData({ commentList: comments || [] });
+        var list = (comments || []).map(function(c) {
+          return {
+            id: c.commentId,
+            userId: c.userId,
+            nickname: c.nickname || '校园用户',
+            avatar: c.avatar ? resolveMediaUrl(c.avatar) : 'https://picsum.photos/100/100?random=30',
+            content: c.content,
+            time: c.createTime ? self.formatTime(c.createTime) : '',
+            replies: (c.replies || []).map(function(r) {
+              return {
+                id: r.commentId,
+                userId: r.userId,
+                nickname: r.nickname || '用户',
+                avatar: r.avatar ? resolveMediaUrl(r.avatar) : 'https://picsum.photos/100/100?random=31',
+                content: r.content,
+                time: r.createTime ? self.formatTime(r.createTime) : '',
+                replyToNickname: r.replyToNickname || ''
+              };
+            })
+          };
+        });
+        self.setData({ commentList: list });
       })
       .catch(function() {});
   },
@@ -152,5 +196,4 @@ Page({
     wx.previewImage({ urls: this.data.post.images, current: src });
   },
 
-  onBack() { wx.navigateBack(); }
 });

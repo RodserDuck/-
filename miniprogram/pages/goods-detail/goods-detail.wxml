@@ -1,14 +1,5 @@
-<!-- pages/goods-detail/goods-detail.wxml -->
+<!-- pages/goods-detail/goods-detail.wxml（标题栏使用系统 navigationBar，避免重复） -->
 <view class="detail-page">
-  <!-- 顶部导航 -->
-  <view class="nav-bar">
-    <view class="nav-back" bindtap="onBack">
-      <text class="back-icon">‹</text>
-    </view>
-    <text class="nav-title">商品详情</text>
-    <view class="nav-placeholder"></view>
-  </view>
-
   <scroll-view class="main-scroll" scroll-y wx:if="{{goods}}">
     <!-- 图片轮播 -->
     <view class="image-section">

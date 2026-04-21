@@ -37,8 +37,9 @@ public class ClubController {
     public Result<IPage<Club>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(required = false) String category) {
-        return Result.ok(clubService.page(pageNum, pageSize, category));
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String keyword) {
+        return Result.ok(clubService.page(pageNum, pageSize, category, keyword));
     }
 
     /** 社团详情 */

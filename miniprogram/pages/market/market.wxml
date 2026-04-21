@@ -7,9 +7,12 @@
       <input
         class="search-input"
         type="text"
-        placeholder="搜索闲置好物..."
+        placeholder="搜索闲置标题或描述..."
         placeholder-class="search-placeholder"
+        value="{{searchKeyword}}"
         bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
       />
       <view class="publish-btn" bindtap="onPublishTap">
         <text class="publish-text">+ 发布</text>

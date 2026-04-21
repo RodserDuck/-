@@ -37,7 +37,7 @@
   <view class="quick-actions">
     <view class="action-card" wx:for="{{quickActions}}" wx:key="id" bindtap="onQuickAction" data-id="{{item.id}}">
       <view class="action-icon-wrap" style="background: {{item.bgColor}}">
-        <text class="action-icon">{{item.icon}}</text>
+        <image class="action-icon-img" src="{{item.iconSrc}}" mode="aspectFit"/>
       </view>
       <text class="action-name">{{item.name}}</text>
     </view>

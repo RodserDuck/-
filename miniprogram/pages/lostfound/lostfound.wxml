@@ -16,9 +16,12 @@
       <input
         class="search-input"
         type="text"
-        placeholder="搜索失物、招领信息..."
+        placeholder="搜索标题或物品说明..."
         placeholder-class="search-placeholder"
+        value="{{searchKeyword}}"
         bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
       />
       <view class="filter-btn" bindtap="onFilterTap">
         <text class="filter-icon">🔽</text>

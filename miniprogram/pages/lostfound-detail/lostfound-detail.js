@@ -1,5 +1,5 @@
 // pages/lostfound-detail/lostfound-detail.js
-var { getLostFoundDetail } = require('../../utils/request.js');
+var { getLostFoundDetail, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -15,8 +15,36 @@ Page({
   loadItem(id) {
     var self = this;
     getLostFoundDetail(id)
-      .then(function(item) {
-        self.setData({ item: item });
+      .then(function(raw) {
+        var imgs = [];
+        if (raw.itemImage) {
+          var s = String(raw.itemImage).trim();
+          if (s.charAt(0) === '[') {
+            try { imgs = JSON.parse(s).map(function(u) { return resolveMediaUrl(u); }); } catch (e) {}
+          } else {
+            imgs = [resolveMediaUrl(s)];
+          }
+        }
+        var statusText = raw.status === 1
+          ? (raw.type === 1 ? '寻找中' : '待认领')
+          : raw.status === 2 ? (raw.type === 1 ? '已找到' : '已归还') : '已关闭';
+        self.setData({
+          item: {
+            title: raw.title,
+            type: raw.type === 1 ? 'lost' : 'found',
+            image: imgs[0] || '',
+            images: imgs,
+            location: raw.location || '',
+            time: raw.lostTime ? String(raw.lostTime).replace('T', ' ').substring(0, 16) : '',
+            description: raw.description || '',
+            contact: raw.contact || '',
+            status: statusText,
+            publisher: {
+              avatar: '',
+              nickname: ''
+            }
+          }
+        });
       })
       .catch(function() {});
   },

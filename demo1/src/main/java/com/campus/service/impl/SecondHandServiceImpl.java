@@ -34,11 +34,15 @@ public class SecondHandServiceImpl implements SecondHandService {
     }
 
     @Override
-    public IPage<SecondHand> page(int pageNum, int pageSize, Long categoryId) {
+    public IPage<SecondHand> page(int pageNum, int pageSize, Long categoryId, String keyword) {
         Page<SecondHand> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<SecondHand> q = new LambdaQueryWrapper<>();
         q.eq(SecondHand::getStatus, 1);
         if (categoryId != null) q.eq(SecondHand::getCategoryId, categoryId);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(SecondHand::getTitle, k).or().like(SecondHand::getDescription, k));
+        }
         q.orderByDesc(SecondHand::getCreateTime);
         return secondHandMapper.selectPage(page, q);
     }

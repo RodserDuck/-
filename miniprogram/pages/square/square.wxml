@@ -10,6 +10,8 @@
         placeholder="搜索校园动态、公告..."
         placeholder-class="search-placeholder"
         bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
       />
       <view class="notice-bell" bindtap="onNoticeTap">
         <text class="bell-icon">🔔</text>
@@ -46,30 +48,30 @@
     </swiper>
   </view>
 
-  <!-- 快捷入口 -->
+  <!-- 快捷入口（使用本地 PNG，避免部分机型 Emoji 不显示） -->
   <view class="quick-entry-section">
     <view class="quick-grid">
       <view class="quick-item" bindtap="onSchoolNoticeTap">
-        <view class="quick-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a)">
-          <text class="quick-icon-text">📢</text>
+        <view class="quick-icon quick-icon--notice">
+          <image class="quick-icon-img" src="/images/icon_notice.png" mode="aspectFit"/>
         </view>
         <text class="quick-name">校园公告</text>
       </view>
       <view class="quick-item" bindtap="onCollegeNoticeTap">
-        <view class="quick-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe)">
-          <text class="quick-icon-text">🏛</text>
+        <view class="quick-icon quick-icon--college">
+          <image class="quick-icon-img" src="/images/icon_college.png" mode="aspectFit"/>
         </view>
         <text class="quick-name">学院广场</text>
       </view>
       <view class="quick-item" bindtap="onMarketTap">
-        <view class="quick-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0)">
-          <text class="quick-icon-text">🛒</text>
+        <view class="quick-icon quick-icon--market">
+          <image class="quick-icon-img" src="/images/icon_market.png" mode="aspectFit"/>
         </view>
         <text class="quick-name">二手交易</text>
       </view>
       <view class="quick-item" bindtap="onLostFoundTap">
-        <view class="quick-icon" style="background: linear-gradient(135deg, #fae8ff, #f5d0fe)">
-          <text class="quick-icon-text">🔍</text>
+        <view class="quick-icon quick-icon--lost">
+          <image class="quick-icon-img" src="/images/icon_lost.png" mode="aspectFit"/>
         </view>
         <text class="quick-name">失物招领</text>
       </view>

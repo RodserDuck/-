@@ -19,11 +19,18 @@ public class LostFoundServiceImpl implements LostFoundService {
     }
 
     @Override
-    public IPage<LostFound> page(int pageNum, int pageSize, Integer type) {
+    public IPage<LostFound> page(int pageNum, int pageSize, Integer type, String keyword) {
         Page<LostFound> page = new Page<>(pageNum, pageSize);
         var q = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<LostFound>();
         if (type != null) q.eq(LostFound::getType, type);
-        q.eq(LostFound::getStatus, 1).orderByDesc(LostFound::getCreateTime);
+        q.eq(LostFound::getStatus, 1);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(LostFound::getTitle, k)
+                .or().like(LostFound::getItemName, k)
+                .or().like(LostFound::getDescription, k));
+        }
+        q.orderByDesc(LostFound::getCreateTime);
         return lostFoundMapper.selectPage(page, q);
     }
 

@@ -1,5 +1,5 @@
 // pages/settings/settings.js
-var { updateUser, getUserInfo } = require('../../utils/request.js');
+var { updateUser, getUserInfo, uploadImageFile, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -17,6 +17,11 @@ Page({
     var self = this;
     getUserInfo()
       .then(function(user) {
+        if (user.avatar) {
+          user.avatarDisplay = resolveMediaUrl(user.avatar);
+        } else {
+          user.avatarDisplay = 'https://picsum.photos/200/200?random=99';
+        }
         self.setData({
           userInfo: user,
           editNickname: user.username || user.nickname || '',
@@ -24,6 +29,35 @@ Page({
         });
       })
       .catch(function() {});
+  },
+
+  onChangeAvatar() {
+    var self = this;
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: function(res) {
+        var path = res.tempFiles[0].tempFilePath;
+        wx.showLoading({ title: '上传中...', mask: true });
+        uploadImageFile(path, 'user')
+          .then(function(url) {
+            return updateUser({ avatar: url });
+          })
+          .then(function(user) {
+            wx.hideLoading();
+            wx.showToast({ title: '头像已更新', icon: 'success' });
+            var cached = wx.getStorageSync('userInfo') || {};
+            if (user && user.avatar) cached.avatar = user.avatar;
+            wx.setStorageSync('userInfo', cached);
+            self.loadUserInfo();
+          })
+          .catch(function() {
+            wx.hideLoading();
+            wx.showToast({ title: '上传失败', icon: 'none' });
+          });
+      }
+    });
   },
 
   onEditProfile() {

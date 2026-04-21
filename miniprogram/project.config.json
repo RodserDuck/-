@@ -4,7 +4,7 @@
     "postcss": true,
     "minified": true,
     "uglifyFileName": false,
-    "enhance": true,
+    "enhance": false,
     "packNpmRelationList": [],
     "babelSetting": {
       "ignore": [],
@@ -19,7 +19,7 @@
   "packNpmRelationList": [
     {
       "packageJsonPath": "./package.json",
-      "miniprogramNpmDistDir": "./miniprogram"
+      "miniprogramNpmDistDir": "."
     }
   ],
   "packOptions": {

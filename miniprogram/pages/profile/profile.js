@@ -1,5 +1,5 @@
 // pages/profile/profile.js
-var { getUserInfo, getMyGoods, getMyClubs, getMyBuy, getMySell, getMyPosts, getMyActivities, confirmTrade, cancelTrade } = require('../../utils/request.js');
+var { getUserInfo, getMyGoods, getMyClubs, getMyBuy, getMySell, getMyPosts, getMyActivities, confirmTrade, cancelTrade, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -15,10 +15,10 @@ Page({
       { id: 4, value: 0, label: '寻物' }
     ],
     quickActions: [
-      { id: 1, icon: '✏️', name: '发布帖子', bgColor: 'rgba(91, 156, 246, 0.12)' },
-      { id: 2, icon: '📷', name: '发布闲置', bgColor: 'rgba(251, 146, 60, 0.12)' },
-      { id: 3, icon: '🔍', name: '寻物启事', bgColor: 'rgba(52, 211, 153, 0.12)' },
-      { id: 4, icon: '💬', name: '联系客服', bgColor: 'rgba(167, 139, 250, 0.12)' }
+      { id: 1, iconSrc: '/images/icon_square.png', name: '发布帖子', bgColor: 'rgba(91, 156, 246, 0.12)' },
+      { id: 2, iconSrc: '/images/icon_market.png', name: '发布闲置', bgColor: 'rgba(251, 146, 60, 0.12)' },
+      { id: 3, iconSrc: '/images/icon_lost.png', name: '寻物启事', bgColor: 'rgba(52, 211, 153, 0.12)' },
+      { id: 4, iconSrc: '/images/icon_comment.png', name: '联系客服', bgColor: 'rgba(167, 139, 250, 0.12)' }
     ],
     tradeTab: 'buy',
     buyList: [],
@@ -79,7 +79,7 @@ Page({
     if (cached) {
       self.setData({
         userInfo: {
-          avatar: cached.avatar || 'https://picsum.photos/200/200?random=99',
+          avatar: cached.avatar ? resolveMediaUrl(cached.avatar) : 'https://picsum.photos/200/200?random=99',
           nickname: cached.username || cached.nickname || '校园用户',
           account: cached.account || cached.studentNo || '',
           identity: 'student'
@@ -91,7 +91,7 @@ Page({
         wx.setStorageSync('userInfo', user);
         self.setData({
           userInfo: {
-            avatar: user.avatar || 'https://picsum.photos/200/200?random=99',
+            avatar: user.avatar ? resolveMediaUrl(user.avatar) : 'https://picsum.photos/200/200?random=99',
             nickname: user.username || '校园用户',
             account: user.studentNo || user.phone || '',
             identity: 'student',

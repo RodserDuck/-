@@ -1,5 +1,5 @@
 // pages/my-posts/my-posts.js
-var { getMyPosts, deletePost } = require('../../utils/request.js');
+var { getMyPosts, deletePost, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -26,10 +26,10 @@ Page({
           try { images = JSON.parse(p.images || '[]'); } catch(e) {}
           return {
             id: p.postId,
-            avatar: p.avatar || 'https://picsum.photos/100/100?random=10',
+            avatar: p.avatar ? resolveMediaUrl(p.avatar) : 'https://picsum.photos/100/100?random=10',
             nickname: p.nickname || '校园用户',
             content: p.content || '',
-            images: images,
+            images: images.map(function(u) { return resolveMediaUrl(u); }),
             likes: p.likeCount || 0,
             comments: p.commentCount || 0,
             time: p.createTime ? self.formatTime(p.createTime) : '',

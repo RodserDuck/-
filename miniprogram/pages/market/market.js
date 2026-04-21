@@ -1,5 +1,5 @@
 // pages/market/market.js
-var { getGoodsPage, getCategoryList, getMyGoods } = require('../../utils/request.js');
+var { getGoodsPage, getCategoryList, getMyGoods, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -12,7 +12,8 @@ Page({
     myGoods: [],
     pageNum: 1,
     hasMore: true,
-    loading: false
+    loading: false,
+    searchKeyword: ''
   },
 
   onLoad(options) {
@@ -51,7 +52,7 @@ Page({
     var categoryId = self.data.currentCategory === 0 ? '' : self.data.currentCategory;
 
     self.setData({ loading: true });
-    getGoodsPage(pageNum, 20, categoryId)
+    getGoodsPage(pageNum, 20, categoryId, self.data.searchKeyword || '')
       .then(function(page) {
         var records = (page.records || []).map(function(g) {
           var images = [];
@@ -61,10 +62,10 @@ Page({
             title: g.title,
             price: g.price,
             originalPrice: g.originalPrice,
-            image: images[0] || 'https://picsum.photos/400/400?random=50',
+            image: images[0] ? resolveMediaUrl(images[0]) : 'https://picsum.photos/400/400?random=50',
             categoryId: g.categoryId,
             seller: g.sellerName || '校园用户',
-            avatar: g.sellerAvatar || 'https://picsum.photos/100/100?random=50',
+            avatar: g.sellerAvatar ? resolveMediaUrl(g.sellerAvatar) : 'https://picsum.photos/100/100?random=50',
             location: g.tradeLocation || '校园内',
             time: g.createTime ? self.formatTime(g.createTime) : '',
             views: g.viewCount || 0
@@ -99,7 +100,7 @@ Page({
             title: g.title,
             price: g.price,
             originalPrice: g.originalPrice,
-            image: images[0] || 'https://picsum.photos/200/200?random=60',
+            image: images[0] ? resolveMediaUrl(images[0]) : 'https://picsum.photos/200/200?random=60',
             status: g.status === 1 ? '在售' : g.status === 2 ? '已售' : '已下架',
             statusCode: g.status,
             views: g.viewCount || 0
@@ -136,7 +137,22 @@ Page({
   },
 
   onSearchInput(e) {
-    console.log('搜索关键词:', e.detail.value);
+    this.setData({ searchKeyword: e.detail.value });
+  },
+
+  onSearchConfirm(e) {
+    var kw = (e.detail.value || '').trim();
+    this.setData({
+      searchKeyword: kw,
+      allGoods: [],
+      leftGoods: [],
+      rightGoods: [],
+      pageNum: 1,
+      hasMore: true
+    });
+    if (this.data.currentTab === 0) {
+      this.loadGoods(true);
+    }
   },
 
   onGoodsTap(e) {

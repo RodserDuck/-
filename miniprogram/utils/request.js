@@ -8,6 +8,68 @@
 const BASE_URL = 'http://localhost:8080/api';
 
 /**
+ * 将后端返回的相对路径转为可访问的完整 URL（/uploads/...）
+ * 已是 http(s) 的保持不变，兼容旧外链
+ */
+function resolveMediaUrl(path) {
+  if (path === null || path === undefined) return '';
+  const p = String(path).trim();
+  if (!p) return '';
+  if (p.startsWith('http://') || p.startsWith('https://')) return p;
+  const rel = p.startsWith('/') ? p : `/${p}`;
+  return BASE_URL + rel;
+}
+
+/**
+ * 上传单张图片到服务器（category: user | goods | post | lostfound | club | activity | notice）
+ */
+function uploadImageFile(filePath, category) {
+  return new Promise((resolve, reject) => {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      reject(new Error('未登录'));
+      return;
+    }
+    wx.uploadFile({
+      url: `${BASE_URL}/upload`,
+      filePath,
+      name: 'file',
+      formData: { category: String(category) },
+      header: { Authorization: `Bearer ${token}` },
+      success(res) {
+        if (res.statusCode !== 200) {
+          wx.showToast({ title: '上传失败', icon: 'none' });
+          reject(res);
+          return;
+        }
+        try {
+          const result = JSON.parse(res.data);
+          if (result.code === 200 && result.data && result.data.url) {
+            resolve(result.data.url);
+          } else {
+            wx.showToast({ title: result.msg || '上传失败', icon: 'none' });
+            reject(result);
+          }
+        } catch (e) {
+          reject(e);
+        }
+      },
+      fail(err) {
+        wx.showToast({ title: '网络错误', icon: 'none' });
+        reject(err);
+      }
+    });
+  });
+}
+
+/** 并行上传多张，返回相对路径数组 */
+function uploadImageFiles(filePaths, category) {
+  if (!filePaths || filePaths.length === 0) return Promise.resolve([]);
+  return Promise.all(filePaths.map((fp) => uploadImageFile(fp, category)));
+}
+
+/**
  * 发起请求
  * @param {string} url     接口路径（自动拼接 BASE_URL）
  * @param {object} data    POST 请求体
@@ -74,184 +136,256 @@ function request(url, data = {}, method = 'POST', showLoading = true) {
 
 // 用户模块
 // 学号+密码登录
-export const userLogin = (studentNo, password) =>
+const userLogin = (studentNo, password) =>
   request('/user/login', { studentNo, password }, 'POST', true);
 
 // 微信登录（兼容旧接口）
-export const userWxLogin = (openid, username) =>
+const userWxLogin = (openid, username) =>
   request('/user/wx-login', { openid, username }, 'POST', true);
 
 // 用户注册
-export const userRegister = (data) =>
+const userRegister = (data) =>
   request('/user/register', data, 'POST', true);
 
 // 获取学院列表
-export const getCollegeList = () =>
+const getCollegeList = () =>
   request('/college/list', {}, 'GET', false);
 
-export const getUserInfo = () =>
+const getUserInfo = () =>
   request('/user/info', {}, 'GET', false);
 
-export const updateUser = (data) =>
+const updateUser = (data) =>
   request('/user/update', data, 'PUT', true);
 
 // 通知公告
-export const getNoticeList = (pageNum = 1, pageSize = 10) =>
+const getNoticeList = (pageNum = 1, pageSize = 10) =>
   request(`/notice/list?pageNum=${pageNum}&pageSize=${pageSize}`, {}, 'GET', false);
 
-export const getNoticeTop = () =>
+const getNoticeTop = () =>
   request('/notice/top', {}, 'GET', false);
 
-export const getNoticeDetail = (id) =>
+const getNoticeDetail = (id) =>
   request(`/notice/detail/${id}`, {}, 'GET', false);
 
-export const getCollegeNoticeDetail = (id) =>
+const getCollegeNoticeDetail = (id) =>
   request(`/college-notice/detail/${id}`, {}, 'GET', false);
 
 // 学院公告
-export const getCollegeNoticeList = (pageNum = 1, pageSize = 10, college = '') => {
+const getCollegeNoticeList = (pageNum = 1, pageSize = 10, college = '', keyword = '') => {
   let url = `/college-notice/list?pageNum=${pageNum}&pageSize=${pageSize}`;
   if (college) url += `&college=${encodeURIComponent(college)}`;
+  if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
   return request(url, {}, 'GET', false);
 };
 
 // 帖子
-export const getPostList = (pageNum = 1, pageSize = 10, category = '', keyword = '') => {
+const getPostList = (pageNum = 1, pageSize = 10, category = '', keyword = '') => {
   let url = `/post/list?pageNum=${pageNum}&pageSize=${pageSize}`;
   if (category) url += `&category=${encodeURIComponent(category)}`;
   if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
   return request(url, {}, 'GET', false);
 };
 
-export const getPostDetail = (id) =>
+const getPostDetail = (id) =>
   request(`/post/detail/${id}`, {}, 'GET', false);
 
-export const publishPost = (data) =>
+const publishPost = (data) =>
   request('/post/publish', data, 'POST', true);
 
-export const deletePost = (id) =>
+const deletePost = (id) =>
   request(`/post/${id}`, {}, 'DELETE', true);
 
-export const likePost = (id) =>
+const likePost = (id) =>
   request(`/post/like/${id}`, {}, 'POST', true);
 
-export const unlikePost = (id) =>
+const unlikePost = (id) =>
   request(`/post/unlike/${id}`, {}, 'POST', true);
 
 // 评论
-export const getCommentList = (postId) =>
+const getCommentList = (postId) =>
   request(`/comment/list/${postId}`, {}, 'GET', false);
 
-export const saveComment = (data) =>
+const saveComment = (data) =>
   request('/comment/save', data, 'POST', true);
 
-export const deleteComment = (id) =>
+const deleteComment = (id) =>
   request(`/comment/${id}`, {}, 'DELETE', true);
 
 // 社团
-export const getClubList = () =>
+const getClubList = () =>
   request('/club/list', {}, 'GET', false);
 
-export const getClubDetail = (id) =>
+/** 社团分页：category 可选，keyword 按社团名称/简介搜索 */
+const getClubPage = (pageNum = 1, pageSize = 20, category = '', keyword = '') => {
+  let url = `/club/page?pageNum=${pageNum}&pageSize=${pageSize}`;
+  if (category) url += `&category=${encodeURIComponent(category)}`;
+  if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+  return request(url, {}, 'GET', false);
+};
+
+const getClubDetail = (id) =>
   request(`/club/detail/${id}`, {}, 'GET', false);
 
-export const getMyClubs = () =>
+const getMyClubs = () =>
   request('/club/my', {}, 'GET', false);
 
-export const joinClub = (id) =>
+const joinClub = (id) =>
   request(`/club/join/${id}`, {}, 'POST', true);
 
-export const leaveClub = (id) =>
+const leaveClub = (id) =>
   request(`/club/leave/${id}`, {}, 'POST', true);
 
-export const createClub = (data) =>
+const createClub = (data) =>
   request('/club/save', data, 'POST', true);
 
 // 社团成员申请状态查询
-export const getMyClubStatus = () =>
+const getMyClubStatus = () =>
   request('/club/my-status', {}, 'GET', false);
 
 // 活动
-export const getActivityList = () =>
+const getActivityList = () =>
   request('/activity/list', {}, 'GET', false);
 
-export const getActivityDetail = (id) =>
+const getActivityDetail = (id) =>
   request(`/activity/detail/${id}`, {}, 'GET', false);
 
-export const getClubActivities = (clubId) =>
+const getClubActivities = (clubId) =>
   request(`/activity/club/${clubId}`, {}, 'GET', false);
 
-export const registerActivity = (id) =>
+const registerActivity = (id) =>
   request(`/activity/register/${id}`, {}, 'POST', true);
 
-export const cancelActivity = (id) =>
+const cancelActivity = (id) =>
   request(`/activity/cancel/${id}`, {}, 'POST', true);
 
 // 二手商品
-export const getGoodsList = () =>
+const getGoodsList = () =>
   request('/second-hand/list', {}, 'GET', false);
 
-export const getGoodsPage = (pageNum = 1, pageSize = 20, categoryId = '') => {
+const getGoodsPage = (pageNum = 1, pageSize = 20, categoryId = '', keyword = '') => {
   let url = `/second-hand/page?pageNum=${pageNum}&pageSize=${pageSize}`;
   if (categoryId) url += `&categoryId=${categoryId}`;
+  if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
   return request(url, {}, 'GET', false);
 };
 
-export const getGoodsDetail = (id) =>
+const getGoodsDetail = (id) =>
   request(`/second-hand/detail/${id}`, {}, 'GET', false);
 
-export const publishGoods = (data) =>
+const publishGoods = (data) =>
   request('/second-hand/publish', data, 'POST', true);
 
-export const deleteGoods = (id) =>
+const deleteGoods = (id) =>
   request(`/second-hand/${id}`, {}, 'DELETE', true);
 
-export const getMyGoods = () =>
+const getMyGoods = () =>
   request('/second-hand/my', {}, 'GET', false);
 
 // 失物招领
-export const getLostFoundList = (pageNum = 1, pageSize = 10, type = '') => {
+const getLostFoundList = (pageNum = 1, pageSize = 10, type = '', keyword = '') => {
   let url = `/lost-found/list?pageNum=${pageNum}&pageSize=${pageSize}`;
   if (type) url += `&type=${type}`;
+  if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
   return request(url, {}, 'GET', false);
 };
 
-export const getLostFoundDetail = (id) =>
+const getLostFoundDetail = (id) =>
   request(`/lost-found/detail/${id}`, {}, 'GET', false);
 
-export const saveLostFound = (data) =>
+const saveLostFound = (data) =>
   request('/lost-found/save', data, 'POST', true);
 
-export const updateLostFoundStatus = (id, status) =>
+const updateLostFoundStatus = (id, status) =>
   request(`/lost-found/status/${id}?status=${status}`, {}, 'PUT', true);
 
 // 分类
-export const getCategoryList = (type = 'goods') =>
+const getCategoryList = (type = 'goods') =>
   request(`/category/list?type=${type}`, {}, 'GET', false);
 
 // 交易记录
-export const createTrade = (itemId, remark) =>
+const createTrade = (itemId, remark) =>
   request('/trade/create', { itemId, remark }, 'POST', true);
 
-export const confirmTrade = (recordId) =>
+const confirmTrade = (recordId) =>
   request(`/trade/confirm/${recordId}`, {}, 'POST', true);
 
-export const cancelTrade = (recordId) =>
+const cancelTrade = (recordId) =>
   request(`/trade/cancel/${recordId}`, {}, 'POST', true);
 
-export const getMyBuy = () =>
+const getMyBuy = () =>
   request('/trade/my-buy', {}, 'GET', false);
 
-export const getMySell = () =>
+const getMySell = () =>
   request('/trade/my-sell', {}, 'GET', false);
 
-export const getPendingTrade = () =>
+const getPendingTrade = () =>
   request('/trade/pending', {}, 'GET', false);
 
 // 我的帖子
-export const getMyPosts = () =>
+const getMyPosts = () =>
   request('/post/my', {}, 'GET', false);
 
 // 我的活动报名
-export const getMyActivities = () =>
+const getMyActivities = () =>
   request('/activity/my', {}, 'GET', false);
+
+// 微信小程序环境普遍使用 require，需导出 CommonJS（仅用 export 时 require 得到空对象）
+module.exports = {
+  BASE_URL,
+  resolveMediaUrl,
+  uploadImageFile,
+  uploadImageFiles,
+  request,
+  userLogin,
+  userWxLogin,
+  userRegister,
+  getCollegeList,
+  getUserInfo,
+  updateUser,
+  getNoticeList,
+  getNoticeTop,
+  getNoticeDetail,
+  getCollegeNoticeDetail,
+  getCollegeNoticeList,
+  getPostList,
+  getPostDetail,
+  publishPost,
+  deletePost,
+  likePost,
+  unlikePost,
+  getCommentList,
+  saveComment,
+  deleteComment,
+  getClubList,
+  getClubPage,
+  getClubDetail,
+  getMyClubs,
+  joinClub,
+  leaveClub,
+  createClub,
+  getMyClubStatus,
+  getActivityList,
+  getActivityDetail,
+  getClubActivities,
+  registerActivity,
+  cancelActivity,
+  getGoodsList,
+  getGoodsPage,
+  getGoodsDetail,
+  publishGoods,
+  deleteGoods,
+  getMyGoods,
+  getLostFoundList,
+  getLostFoundDetail,
+  saveLostFound,
+  updateLostFoundStatus,
+  getCategoryList,
+  createTrade,
+  confirmTrade,
+  cancelTrade,
+  getMyBuy,
+  getMySell,
+  getPendingTrade,
+  getMyPosts,
+  getMyActivities
+};

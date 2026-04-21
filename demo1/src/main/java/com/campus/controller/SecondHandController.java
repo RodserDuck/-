@@ -30,8 +30,9 @@ public class SecondHandController {
     public Result<IPage<SecondHand>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
-            @RequestParam(required = false) Long categoryId) {
-        return Result.ok(secondHandService.page(pageNum, pageSize, categoryId));
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String keyword) {
+        return Result.ok(secondHandService.page(pageNum, pageSize, categoryId, keyword));
     }
 
     /** 商品详情 */
