@@ -3,10 +3,11 @@
     <div class="toolbar">
       <div>
         <h1 class="title">活动</h1>
-        <p class="sub">社团活动列表（只读，<code>t_activity</code>）</p>
+        <p class="sub">社团活动列表（可新增/编辑/删除，<code>t_activity</code>）</p>
       </div>
       <div class="toolbar-row">
         <el-input v-model="keyword" placeholder="标题/描述" clearable style="width: 220px" @keyup.enter="onSearch" />
+        <el-button type="primary" plain @click="onCreate">新增活动</el-button>
         <el-button type="primary" @click="onSearch">查询</el-button>
       </div>
     </div>
@@ -33,6 +34,12 @@
         <el-table-column label="详情" width="80" align="center">
           <template #default="{ row }">
             <el-button type="primary" link @click="onDetail(row)">查看</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="管理" width="170" align="center" fixed="right">
+          <template #default="{ row }">
+            <el-button type="primary" link @click="onEdit(row)">编辑</el-button>
+            <el-button type="danger" link @click="onDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,12 +70,62 @@
         <el-descriptions-item label="描述">{{ detail.description || '—' }}</el-descriptions-item>
       </el-descriptions>
     </el-drawer>
+
+    <el-dialog v-model="editVisible" :title="editForm.activityId ? '编辑活动' : '新增活动'" width="680px">
+      <el-form :model="editForm" label-width="100px">
+        <el-form-item label="标题">
+          <el-input v-model="editForm.title" placeholder="活动标题" />
+        </el-form-item>
+        <el-form-item label="社团ID">
+          <el-input v-model.number="editForm.clubId" placeholder="所属社团 club_id" />
+        </el-form-item>
+        <el-form-item label="封面图">
+          <el-input v-model="editForm.coverImage" placeholder="如：/uploads/activity/activity_1.jpg" />
+        </el-form-item>
+        <el-form-item label="地点">
+          <el-input v-model="editForm.location" />
+        </el-form-item>
+        <el-form-item label="开始时间">
+          <el-input v-model="editForm.startTime" placeholder="YYYY-MM-DD HH:mm:ss 或 2026-04-21T10:00:00" />
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <el-input v-model="editForm.endTime" placeholder="YYYY-MM-DD HH:mm:ss 或 2026-04-21T12:00:00" />
+        </el-form-item>
+        <el-form-item label="人数上限">
+          <el-input v-model.number="editForm.maxParticipants" />
+        </el-form-item>
+        <el-form-item label="社团外上限">
+          <el-input v-model.number="editForm.outsiderLimit" placeholder="0=不限制" />
+        </el-form-item>
+        <el-form-item label="联系人">
+          <el-input v-model="editForm.contact" />
+        </el-form-item>
+        <el-form-item label="主办方">
+          <el-input v-model="editForm.organizer" />
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="editForm.status" style="width: 160px">
+            <el-option label="草稿" :value="0" />
+            <el-option label="进行中" :value="1" />
+            <el-option label="结束" :value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="editForm.description" type="textarea" :rows="4" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="editVisible = false">取消</el-button>
+        <el-button type="primary" :loading="saving" @click="onSave">保存</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onActivated } from 'vue'
-import { fetchActivityList, fetchActivityDetail } from '@/api/activity'
+import { ElMessageBox, ElMessage } from 'element-plus'
+import { fetchActivityList, fetchActivityDetail, createActivity, updateActivity, deleteActivity } from '@/api/activity'
 
 const loading = ref(false)
 const rows = ref([])
@@ -78,6 +135,9 @@ const pageSize = ref(10)
 const keyword = ref('')
 const detailVisible = ref(false)
 const detail = ref(null)
+const editVisible = ref(false)
+const saving = ref(false)
+const editForm = ref({})
 
 function formatTime(t) {
   if (!t) return '—'
@@ -113,6 +173,68 @@ function onSearch() {
 async function onDetail(row) {
   detail.value = await fetchActivityDetail(row.activityId)
   detailVisible.value = true
+}
+
+function onCreate() {
+  editForm.value = {
+    clubId: null,
+    title: '',
+    description: '',
+    coverImage: '',
+    maxParticipants: 0,
+    currentParticipants: 0,
+    outsiderLimit: 0,
+    location: '',
+    startTime: '',
+    endTime: '',
+    contact: '',
+    organizer: '',
+    status: 1
+  }
+  editVisible.value = true
+}
+
+async function onEdit(row) {
+  const d = await fetchActivityDetail(row.activityId)
+  editForm.value = { ...d }
+  editVisible.value = true
+}
+
+async function onSave() {
+  saving.value = true
+  try {
+    const form = { ...editForm.value }
+    if (typeof form.startTime === 'string' && form.startTime.includes(' ') && !form.startTime.includes('T')) {
+      form.startTime = form.startTime.replace(' ', 'T')
+    }
+    if (typeof form.endTime === 'string' && form.endTime.includes(' ') && !form.endTime.includes('T')) {
+      form.endTime = form.endTime.replace(' ', 'T')
+    }
+    if (form.activityId) {
+      await updateActivity(form)
+      ElMessage.success('已保存')
+    } else {
+      await createActivity(form)
+      ElMessage.success('已创建')
+    }
+    editVisible.value = false
+    load()
+  } finally {
+    saving.value = false
+  }
+}
+
+function onDelete(row) {
+  ElMessageBox.confirm(`确定删除活动「${row.title}」？`, '删除活动', {
+    type: 'warning',
+    confirmButtonClass: 'el-button--danger'
+  })
+    .then(async () => {
+      await deleteActivity(row.activityId)
+      ElMessage.success('已删除')
+      load()
+    })
+    .catch(() => {})
 }
 
 onMounted(load)

@@ -35,4 +35,38 @@ public class AdminActivityController {
         if (a == null) return Result.fail("活动不存在");
         return Result.ok(a);
     }
+
+    /** 新增活动（管理员） */
+    @PostMapping("/save")
+    public Result<Activity> save(@RequestBody Activity activity) {
+        adminAuthHelper.requireAdminId();
+        try {
+            return Result.ok(activityService.adminSave(activity));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 修改活动（管理员） */
+    @PutMapping("/update")
+    public Result<Activity> update(@RequestBody Activity activity) {
+        adminAuthHelper.requireAdminId();
+        try {
+            return Result.ok(activityService.adminUpdate(activity));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 删除活动（管理员） */
+    @DeleteMapping("/{id}")
+    public Result<Void> delete(@PathVariable Long id) {
+        adminAuthHelper.requireAdminId();
+        try {
+            activityService.adminDelete(id);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
 }

@@ -51,7 +51,11 @@ public class ActivityController {
     public Result<Activity> save(@RequestBody Activity activity) {
         Long userId = ServletUtils.getUserId();
         if (userId == null) return Result.fail("请先登录");
-        return Result.ok(activityService.saveActivity(activity, userId));
+        try {
+            return Result.ok(activityService.saveActivity(activity, userId));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
     }
 
     /** 报名活动 */

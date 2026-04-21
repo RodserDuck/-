@@ -30,6 +30,7 @@
     "pages/notifications/notifications",
     "pages/settings/settings",
     "pages/change-password/change-password"
+    ,"pages/club-leader/club-leader"
   ],
   "window": {
     "navigationBarTextStyle": "white",

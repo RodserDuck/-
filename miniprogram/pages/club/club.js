@@ -1,5 +1,5 @@
 // pages/club/club.js
-var { getClubList, getActivityList, getMyClubs, joinClub, leaveClub, getMyClubStatus } = require('../../utils/request.js');
+var { getClubList, getActivityList, getMyClubs, joinClub, leaveClub, getMyClubStatus, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -81,7 +81,7 @@ Page({
             id: a.activityId,
             title: a.title || '校园活动',
             club: a.organizer || '',
-            image: a.coverImage || 'https://picsum.photos/400/400?random=30',
+            image: a.coverImage ? resolveMediaUrl(a.coverImage) : 'https://picsum.photos/400/400?random=30',
             time: timeStr,
             location: a.location || '',
             participants: a.currentParticipants || 0,

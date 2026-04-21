@@ -31,3 +31,17 @@ export function approveClubApplication(memberId) {
 export function rejectClubApplication(memberId) {
   return http.put(`/admin/club/application/${memberId}/reject`)
 }
+
+export function createClub(data) {
+  return http.post('/admin/club/save', data)
+}
+
+export function updateClub(data) {
+  return http.put('/admin/club/update', data)
+}
+
+export function fetchClubMembers(clubId, keyword) {
+  return http.get(`/admin/club/members/${clubId}`, {
+    params: { keyword: keyword || undefined }
+  })
+}

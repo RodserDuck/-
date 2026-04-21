@@ -74,6 +74,38 @@
         <el-descriptions-item label="评论">{{ detail.commentCount ?? 0 }}</el-descriptions-item>
         <el-descriptions-item label="内容">{{ detail.content || '—' }}</el-descriptions-item>
       </el-descriptions>
+
+      <el-divider content-position="left">评论管理</el-divider>
+      <div class="comment-toolbar">
+        <el-input v-model="commentKeyword" placeholder="评论内容关键词" clearable style="width: 200px" @keyup.enter="loadComments" />
+        <el-input v-model="commentUserKeyword" placeholder="评论者昵称/学号/手机号" clearable style="width: 220px" @keyup.enter="loadComments" />
+        <el-button type="primary" @click="loadComments">查询</el-button>
+      </div>
+
+      <el-table v-loading="commentLoading" :data="commentRows" stripe style="width: 100%">
+        <el-table-column prop="commentId" label="ID" width="72" />
+        <el-table-column prop="nickname" label="评论者" width="110" show-overflow-tooltip />
+        <el-table-column prop="content" label="内容" min-width="220" show-overflow-tooltip />
+        <el-table-column prop="createTime" label="时间" width="170">
+          <template #default="{ row }">{{ formatTime(row.createTime) }}</template>
+        </el-table-column>
+        <el-table-column label="操作" width="80" align="center">
+          <template #default="{ row }">
+            <el-button type="danger" link @click="onDeleteComment(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pager" v-if="commentTotal">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :total="commentTotal"
+          :page-size="commentPageSize"
+          :current-page="commentPageNum"
+          @current-change="onCommentPage"
+        />
+      </div>
     </el-drawer>
   </div>
 </template>
@@ -82,6 +114,7 @@
 import { ref, onMounted, onActivated } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { fetchPostList, deletePost, fetchPostDetail } from '@/api/post'
+import { fetchCommentList, deleteComment } from '@/api/comment'
 
 const loading = ref(false)
 const rows = ref([])
@@ -93,6 +126,14 @@ const keyword = ref('')
 const userKeyword = ref('')
 const detailVisible = ref(false)
 const detail = ref(null)
+
+const commentLoading = ref(false)
+const commentRows = ref([])
+const commentTotal = ref(0)
+const commentPageNum = ref(1)
+const commentPageSize = ref(10)
+const commentKeyword = ref('')
+const commentUserKeyword = ref('')
 
 function formatTime(t) {
   if (!t) return '—'
@@ -142,6 +183,47 @@ function onDelete(row) {
 async function onDetail(row) {
   detail.value = await fetchPostDetail(row.postId)
   detailVisible.value = true
+  commentPageNum.value = 1
+  commentKeyword.value = ''
+  commentUserKeyword.value = ''
+  loadComments()
+}
+
+async function loadComments() {
+  if (!detail.value?.postId) return
+  commentLoading.value = true
+  try {
+    const page = await fetchCommentList(
+      commentPageNum.value,
+      commentPageSize.value,
+      detail.value.postId,
+      commentKeyword.value?.trim() || undefined,
+      commentUserKeyword.value?.trim() || undefined
+    )
+    commentRows.value = page.records || []
+    commentTotal.value = page.total || 0
+  } finally {
+    commentLoading.value = false
+  }
+}
+
+function onCommentPage(p) {
+  commentPageNum.value = p
+  loadComments()
+}
+
+function onDeleteComment(row) {
+  ElMessageBox.confirm('确定删除该评论？（将同时删除其子评论）', '删除评论', {
+    type: 'warning',
+    confirmButtonClass: 'el-button--danger'
+  })
+    .then(async () => {
+      await deleteComment(row.commentId)
+      ElMessage.success('已删除')
+      loadComments()
+      load()
+    })
+    .catch(() => {})
 }
 
 onMounted(load)
@@ -199,5 +281,13 @@ onActivated(load)
   display: flex;
   justify-content: flex-end;
   padding-top: 16px;
+}
+
+.comment-toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 10px;
+  flex-wrap: wrap;
 }
 </style>

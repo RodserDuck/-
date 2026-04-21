@@ -96,8 +96,30 @@ page { background: #f0f6ff; }
   border-top: 1rpx solid #f3f4f6; box-shadow: 0 -4rpx 16rpx rgba(0,0,0,0.06);
   z-index: 200;
 }
+.bottom-bar {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
+}
+
+.manage-btn {
+  flex: 1;
+  padding: 24rpx 0;
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  border: 1rpx solid #c7d2fe;
+}
+
+.manage-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #4338ca;
+}
 .join-btn {
-  width: 100%; padding: 24rpx 0; border-radius: 50rpx;
+  flex: 1; padding: 24rpx 0; border-radius: 50rpx;
   display: flex; align-items: center; justify-content: center;
 }
 .join-btn {

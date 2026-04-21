@@ -278,6 +278,7 @@ CREATE TABLE `t_activity` (
   `cover_image`       VARCHAR(500) DEFAULT NULL COMMENT '封面图',
   `max_participants`  INT DEFAULT 0 COMMENT '人数上限（0=无限制）',
   `current_participants` INT DEFAULT 0 COMMENT '当前报名人数',
+  `outsider_limit`    INT DEFAULT 0 COMMENT '社团外参与者人数上限（0=不限制）',
   `location`          VARCHAR(200) DEFAULT NULL COMMENT '活动地点',
   `start_time`        DATETIME DEFAULT NULL COMMENT '开始时间',
   `end_time`          DATETIME DEFAULT NULL COMMENT '结束时间',
@@ -291,10 +292,10 @@ CREATE TABLE `t_activity` (
   PRIMARY KEY (`activity_id`),
   KEY `idx_activity_club`(`club_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='社团活动表';
-INSERT INTO `t_activity` VALUES (1, 1, '春季摄影大赛作品征集', '用镜头捕捉校园春色，奖项丰厚，欢迎投稿！', 'https://picsum.photos/800/400?random=40', 100, 45, '线上投稿', '2026-04-01 00:00:00', '2026-04-30 23:59:59', '微信：photo_contest', '摄影协会', 320, 1, NOW(), NOW(), 0);
-INSERT INTO `t_activity` VALUES (2, 2, '校园街舞快闪活动', '在图书馆广场进行街舞快闪表演，展示青春活力！', 'https://picsum.photos/800/400?random=41', 30, 18, '图书馆广场', '2026-04-15 18:00:00', '2026-04-15 20:00:00', '微信：dance_club', '街舞社', 186, 1, NOW(), NOW(), 0);
-INSERT INTO `t_activity` VALUES (3, 3, '敬老院志愿服务', '组织志愿者前往敬老院献爱心，陪伴老人聊天、帮忙打扫', 'https://picsum.photos/800/400?random=42', 20, 12, '阳光敬老院', '2026-04-20 09:00:00', '2026-04-20 17:00:00', '微信：volunteer2026', '志愿者协会', 145, 1, NOW(), NOW(), 0);
-INSERT INTO `t_activity` VALUES (4, 4, 'AI创新挑战赛', '基于大模型的创新应用开发比赛，万元奖金等你来拿！', 'https://picsum.photos/800/400?random=43', 50, 28, '计算机楼报告厅', '2026-04-25 09:00:00', '2026-04-26 18:00:00', '微信：robot2026', '机器人协会', 432, 1, NOW(), NOW(), 0);
+INSERT INTO `t_activity` VALUES (1, 1, '春季摄影大赛作品征集', '用镜头捕捉校园春色，奖项丰厚，欢迎投稿！', 'https://picsum.photos/800/400?random=40', 100, 45, 0, '线上投稿', '2026-04-01 00:00:00', '2026-04-30 23:59:59', '微信：photo_contest', '摄影协会', 320, 1, NOW(), NOW(), 0);
+INSERT INTO `t_activity` VALUES (2, 2, '校园街舞快闪活动', '在图书馆广场进行街舞快闪表演，展示青春活力！', 'https://picsum.photos/800/400?random=41', 30, 18, 10, '图书馆广场', '2026-04-15 18:00:00', '2026-04-15 20:00:00', '微信：dance_club', '街舞社', 186, 1, NOW(), NOW(), 0);
+INSERT INTO `t_activity` VALUES (3, 3, '敬老院志愿服务', '组织志愿者前往敬老院献爱心，陪伴老人聊天、帮忙打扫', 'https://picsum.photos/800/400?random=42', 20, 12, 5, '阳光敬老院', '2026-04-20 09:00:00', '2026-04-20 17:00:00', '微信：volunteer2026', '志愿者协会', 145, 1, NOW(), NOW(), 0);
+INSERT INTO `t_activity` VALUES (4, 4, 'AI创新挑战赛', '基于大模型的创新应用开发比赛，万元奖金等你来拿！', 'https://picsum.photos/800/400?random=43', 50, 28, 20, '计算机楼报告厅', '2026-04-25 09:00:00', '2026-04-26 18:00:00', '微信：robot2026', '机器人协会', 432, 1, NOW(), NOW(), 0);
 
 -- ------------------------------
 -- 11. 活动报名表

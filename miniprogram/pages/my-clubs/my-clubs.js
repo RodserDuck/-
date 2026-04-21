@@ -1,5 +1,5 @@
 // pages/my-clubs/my-clubs.js
-var { getMyClubs, leaveClub } = require('../../utils/request.js');
+var { getMyClubs, leaveClub, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -25,7 +25,7 @@ Page({
           return {
             id: c.clubId,
             name: c.name || '社团名称',
-            avatar: c.avatar || 'https://picsum.photos/200/200?random=70',
+            avatar: c.avatar ? resolveMediaUrl(c.avatar) : 'https://picsum.photos/200/200?random=70',
             description: c.description || '',
             memberCount: c.memberCount || 0,
             role: c.role || '成员'

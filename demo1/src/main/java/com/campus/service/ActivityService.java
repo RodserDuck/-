@@ -17,4 +17,18 @@ public interface ActivityService {
     List<Activity> getMyActivities(Long userId);
 
     IPage<Activity> adminPage(int pageNum, int pageSize, String keyword);
+
+    Activity adminSave(Activity activity);
+
+    Activity adminUpdate(Activity activity);
+
+    void adminDelete(Long activityId);
+
+    Activity leaderSave(Activity activity, Long userId);
+
+    Activity leaderUpdate(Activity activity, Long userId);
+
+    void leaderDelete(Long activityId, Long userId);
+
+    List<Activity> leaderListByClub(Long clubId, Long userId);
 }

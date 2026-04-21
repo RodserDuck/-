@@ -1,6 +1,8 @@
 package com.campus.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.Comment;
 import com.campus.entity.Post;
 import com.campus.entity.User;
@@ -90,12 +92,64 @@ public class CommentServiceImpl implements CommentService {
         Comment c = commentMapper.selectById(commentId);
         if (c == null) throw new RuntimeException("评论不存在");
         if (!c.getUserId().equals(userId)) throw new RuntimeException("无权删除");
-        commentMapper.deleteById(commentId);
+        int affected = deleteCascade(commentId);
         Post p = postMapper.selectById(c.getPostId());
-        if (p != null && p.getCommentCount() > 0) {
-            p.setCommentCount(p.getCommentCount() - 1);
+        if (p != null && p.getCommentCount() != null && p.getCommentCount() > 0) {
+            int next = Math.max(0, p.getCommentCount() - affected);
+            p.setCommentCount(next);
             postMapper.updateById(p);
         }
+    }
+
+    @Override
+    public IPage<Comment> adminPage(int pageNum, int pageSize, Long postId, String keyword, String userKeyword) {
+        Page<Comment> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Comment> q = new LambdaQueryWrapper<>();
+        if (postId != null) q.eq(Comment::getPostId, postId);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            q.like(Comment::getContent, keyword.trim());
+        }
+
+        if (userKeyword != null && !userKeyword.trim().isEmpty()) {
+            String k = userKeyword.trim();
+            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getUserId)
+                .and(w -> w.like(User::getUsername, k)
+                    .or().like(User::getStudentNo, k)
+                    .or().like(User::getPhone, k)));
+            if (users.isEmpty()) {
+                q.eq(Comment::getCommentId, -1L);
+            } else {
+                q.in(Comment::getUserId, users.stream().map(User::getUserId).toList());
+            }
+        }
+
+        q.orderByDesc(Comment::getCreateTime);
+        IPage<Comment> result = commentMapper.selectPage(page, q);
+        fillUserInfo(result.getRecords());
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void adminDelete(Long commentId) {
+        Comment c = commentMapper.selectById(commentId);
+        if (c == null) throw new RuntimeException("评论不存在");
+        int affected = deleteCascade(commentId);
+        Post p = postMapper.selectById(c.getPostId());
+        if (p != null && p.getCommentCount() != null && p.getCommentCount() > 0) {
+            int next = Math.max(0, p.getCommentCount() - affected);
+            p.setCommentCount(next);
+            postMapper.updateById(p);
+        }
+    }
+
+    /** 删除评论及其直接子评论，返回删除条数 */
+    private int deleteCascade(Long commentId) {
+        int cnt = 0;
+        cnt += commentMapper.deleteById(commentId);
+        cnt += commentMapper.delete(new LambdaQueryWrapper<Comment>().eq(Comment::getParentId, commentId));
+        return cnt;
     }
 
     private void fillUserInfo(List<Comment> comments) {

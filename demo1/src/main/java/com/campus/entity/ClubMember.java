@@ -25,4 +25,7 @@ public class ClubMember {
     private String studentNo;
     @TableField(exist = false)
     private String phone;
+
+    @TableField(exist = false)
+    private String avatar;
 }

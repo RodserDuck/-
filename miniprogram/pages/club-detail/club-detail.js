@@ -1,12 +1,13 @@
 // pages/club-detail/club-detail.js
-var { getClubDetail, getClubActivities, joinClub, leaveClub, getMyClubStatus } = require('../../utils/request.js');
+var { getClubDetail, getClubActivities, joinClub, leaveClub, getMyClubStatus, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
     club: null,
     activities: [],
     clubId: null,
-    joinStatus: 'none'  // none | pending | joined
+    joinStatus: 'none',  // none | pending | joined
+    isLeader: false
   },
 
   onLoad(options) {
@@ -30,6 +31,12 @@ Page({
     var self = this;
     getClubDetail(id)
       .then(function(club) {
+        if (club && club.coverImage) {
+          club.coverImage = resolveMediaUrl(club.coverImage);
+        }
+        var uid = wx.getStorageSync('userId');
+        var isLeader = uid && club && club.leaderId && String(uid) === String(club.leaderId);
+        self.setData({ isLeader: !!isLeader });
         self.setData({ club: club });
       })
       .catch(function() {});
@@ -124,6 +131,12 @@ Page({
 
   onActivityTap(e) {
     wx.navigateTo({ url: '/pages/activity-detail/activity-detail?id=' + e.currentTarget.dataset.id });
+  },
+
+  onManageTap() {
+    var id = this.data.clubId;
+    if (!id) return;
+    wx.navigateTo({ url: '/pages/club-leader/club-leader?clubId=' + id });
   },
 
   onBack() { wx.navigateBack(); }

@@ -8,6 +8,8 @@ import com.campus.entity.ClubMember;
 import com.campus.service.ClubService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/club")
 public class AdminClubController {
@@ -60,5 +62,40 @@ public class AdminClubController {
         adminAuthHelper.requireAdminId();
         clubService.rejectApplication(memberId);
         return Result.ok();
+    }
+
+    /** 新增社团（管理员） */
+    @PostMapping("/save")
+    public Result<Club> save(@RequestBody Club club) {
+        adminAuthHelper.requireAdminId();
+        try {
+            return Result.ok(clubService.adminSave(club));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 修改社团（管理员） */
+    @PutMapping("/update")
+    public Result<Club> update(@RequestBody Club club) {
+        adminAuthHelper.requireAdminId();
+        try {
+            return Result.ok(clubService.adminUpdate(club));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 社团成员列表（管理员） */
+    @GetMapping("/members/{clubId}")
+    public Result<List<ClubMember>> members(
+            @PathVariable Long clubId,
+            @RequestParam(required = false) String keyword) {
+        adminAuthHelper.requireAdminId();
+        try {
+            return Result.ok(clubService.adminMemberList(clubId, keyword));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
     }
 }

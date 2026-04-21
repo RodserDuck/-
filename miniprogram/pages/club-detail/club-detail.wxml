@@ -94,6 +94,9 @@
 
   <!-- 底部操作栏 -->
   <view class="bottom-bar">
+    <view class="manage-btn" wx:if="{{isLeader}}" bindtap="onManageTap">
+      <text class="manage-text">社团管理</text>
+    </view>
     <!-- 已加入 -->
     <view class="join-btn joined" wx:if="{{joinStatus === 'joined'}}" bindtap="onJoinTap">
       <text class="join-text">✓ 已加入</text>

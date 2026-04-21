@@ -283,6 +283,25 @@ const getActivityDetail = (id) =>
 const getClubActivities = (clubId) =>
   request(`/activity/club/${clubId}`, {}, 'GET', false);
 
+// 团长能力：管理本社团活动、成员列表
+const leaderGetClubActivities = (clubId) =>
+  request(`/club/leader/activity/list/${clubId}`, {}, 'GET', false);
+
+const leaderSaveActivity = (data) =>
+  request('/club/leader/activity/save', data, 'POST', true);
+
+const leaderUpdateActivity = (data) =>
+  request('/club/leader/activity/update', data, 'PUT', true);
+
+const leaderDeleteActivity = (id) =>
+  request(`/club/leader/activity/${id}`, {}, 'DELETE', true);
+
+const leaderGetClubMembers = (clubId, keyword = '') => {
+  let url = `/club/leader/members/${clubId}`;
+  if (keyword) url += `?keyword=${encodeURIComponent(keyword)}`;
+  return request(url, {}, 'GET', false);
+};
+
 const registerActivity = (id) =>
   request(`/activity/register/${id}`, {}, 'POST', true);
 
@@ -413,6 +432,11 @@ module.exports = {
   getActivityList,
   getActivityDetail,
   getClubActivities,
+  leaderGetClubActivities,
+  leaderSaveActivity,
+  leaderUpdateActivity,
+  leaderDeleteActivity,
+  leaderGetClubMembers,
   registerActivity,
   cancelActivity,
   getGoodsList,

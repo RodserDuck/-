@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ClubServiceImpl implements ClubService {
@@ -188,6 +189,51 @@ public class ClubServiceImpl implements ClubService {
         clubMemberMapper.deleteById(memberId);
     }
 
+    @Override
+    @Transactional
+    public Club adminSave(Club club) {
+        if (club == null) throw new RuntimeException("参数错误");
+        club.setClubId(null);
+        if (club.getCreateTime() == null) club.setCreateTime(LocalDateTime.now());
+        clubMapper.insert(club);
+
+        // 若指定 leaderId，则为其补一条团长成员记录（避免后续团长管理功能无权限）
+        if (club.getLeaderId() != null) {
+            ensureLeaderMember(club.getClubId(), club.getLeaderId());
+        }
+        return club;
+    }
+
+    @Override
+    @Transactional
+    public Club adminUpdate(Club club) {
+        if (club == null || club.getClubId() == null) throw new RuntimeException("参数错误");
+        Club existing = clubMapper.selectById(club.getClubId());
+        if (existing == null) throw new RuntimeException("社团不存在");
+
+        clubMapper.updateById(club);
+
+        // leaderId 变更后，确保团长成员记录存在
+        if (club.getLeaderId() != null) {
+            ensureLeaderMember(club.getClubId(), club.getLeaderId());
+        }
+        return clubMapper.selectById(club.getClubId());
+    }
+
+    @Override
+    public List<ClubMember> adminMemberList(Long clubId, String keyword) {
+        if (clubId == null) throw new RuntimeException("clubId 不能为空");
+        return memberListInternal(clubId, keyword);
+    }
+
+    @Override
+    public List<ClubMember> leaderMemberList(Long clubId, Long userId, String keyword) {
+        if (clubId == null) throw new RuntimeException("clubId 不能为空");
+        if (userId == null) throw new RuntimeException("请先登录");
+        requireLeader(clubId, userId);
+        return memberListInternal(clubId, keyword);
+    }
+
     private void fillApplicantInfo(List<ClubMember> members) {
         if (members == null || members.isEmpty()) return;
         for (ClubMember m : members) {
@@ -196,7 +242,76 @@ public class ClubServiceImpl implements ClubService {
                 m.setUsername(u.getUsername());
                 m.setStudentNo(u.getStudentNo());
                 m.setPhone(u.getPhone());
+                m.setAvatar(u.getAvatar());
             }
         }
+    }
+
+    private void ensureLeaderMember(Long clubId, Long leaderUserId) {
+        LambdaQueryWrapper<ClubMember> q = new LambdaQueryWrapper<>();
+        q.eq(ClubMember::getClubId, clubId)
+         .eq(ClubMember::getUserId, leaderUserId);
+        ClubMember existing = clubMemberMapper.selectOne(q);
+        if (existing == null) {
+            ClubMember m = new ClubMember();
+            m.setClubId(clubId);
+            m.setUserId(leaderUserId);
+            m.setRole(2);
+            m.setStatus(1);
+            m.setJoinTime(LocalDateTime.now());
+            clubMemberMapper.insert(m);
+        } else {
+            boolean changed = false;
+            if (!Objects.equals(existing.getStatus(), 1)) {
+                existing.setStatus(1);
+                changed = true;
+            }
+            if (!Objects.equals(existing.getRole(), 2)) {
+                existing.setRole(2);
+                changed = true;
+            }
+            if (changed) {
+                clubMemberMapper.updateById(existing);
+            }
+        }
+    }
+
+    private void requireLeader(Long clubId, Long userId) {
+        Club club = clubMapper.selectById(clubId);
+        if (club != null && Objects.equals(club.getLeaderId(), userId)) return;
+        LambdaQueryWrapper<ClubMember> q = new LambdaQueryWrapper<>();
+        q.eq(ClubMember::getClubId, clubId)
+         .eq(ClubMember::getUserId, userId)
+         .eq(ClubMember::getStatus, 1)
+         .eq(ClubMember::getRole, 2);
+        if (clubMemberMapper.selectCount(q).intValue() == 0) {
+            throw new RuntimeException("仅团长可操作");
+        }
+    }
+
+    private List<ClubMember> memberListInternal(Long clubId, String keyword) {
+        LambdaQueryWrapper<ClubMember> q = new LambdaQueryWrapper<>();
+        q.eq(ClubMember::getClubId, clubId)
+         .eq(ClubMember::getStatus, 1)
+         .orderByAsc(ClubMember::getRole)
+         .orderByDesc(ClubMember::getJoinTime);
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getUserId)
+                .and(w -> w.like(User::getUsername, k)
+                    .or().like(User::getStudentNo, k)
+                    .or().like(User::getPhone, k)));
+            if (users.isEmpty()) {
+                q.eq(ClubMember::getMemberId, -1L);
+            } else {
+                q.in(ClubMember::getUserId, users.stream().map(User::getUserId).toList());
+            }
+        }
+
+        List<ClubMember> members = clubMemberMapper.selectList(q);
+        fillApplicantInfo(members);
+        return members;
     }
 }

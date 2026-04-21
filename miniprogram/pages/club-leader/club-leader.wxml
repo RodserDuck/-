@@ -1,0 +1,103 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{tab==='activity'?'active':''}}" bindtap="onTab" data-tab="activity">活动管理</view>
+    <view class="tab {{tab==='member'?'active':''}}" bindtap="onTab" data-tab="member">成员列表</view>
+  </view>
+
+  <!-- 活动管理 -->
+  <view wx:if="{{tab==='activity'}}" class="section">
+    <view class="toolbar">
+      <el-like-button class="btn" bindtap="onCreateActivity">新增活动</el-like-button>
+      <view class="hint">仅团长可见：可编辑/删除本社团活动</view>
+    </view>
+
+    <view class="card" wx:for="{{activities}}" wx:key="activityId">
+      <view class="row">
+        <view class="title">{{item.title}}</view>
+        <view class="badge badge-{{item.status}}">{{item.statusText}}</view>
+      </view>
+      <view class="meta">📍 {{item.location || '—'}} · 📅 {{item.time || '—'}}</view>
+      <view class="actions">
+        <view class="link" bindtap="onEditActivity" data-id="{{item.activityId}}">编辑</view>
+        <view class="link danger" bindtap="onDeleteActivity" data-id="{{item.activityId}}" data-title="{{item.title}}">删除</view>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{!loading && activities.length===0}}">暂无活动</view>
+  </view>
+
+  <!-- 成员列表 -->
+  <view wx:elif="{{tab==='member'}}" class="section">
+    <view class="member-search">
+      <input class="input" placeholder="昵称/学号/手机号" value="{{keyword}}" bindinput="onKeyword" bindconfirm="loadMembers" confirm-type="search" />
+      <view class="btn" bindtap="loadMembers">查询</view>
+    </view>
+
+    <view class="member" wx:for="{{members}}" wx:key="memberId">
+      <image class="avatar" src="{{item.avatar || 'https://picsum.photos/100/100?random=88'}}" mode="aspectFill" />
+      <view class="info">
+        <view class="name-row">
+          <text class="name">{{item.username || '—'}}</text>
+          <text class="role {{item.role===2?'leader':''}}">{{item.role===2?'团长':(item.role===1?'管理员':'成员')}}</text>
+        </view>
+        <text class="sub">学号：{{item.studentNo || '—'}} · 手机：{{item.phone || '—'}}</text>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{!memberLoading && members.length===0}}">暂无成员</view>
+  </view>
+
+  <!-- 编辑/新增活动弹窗 -->
+  <view class="mask" wx:if="{{editVisible}}" bindtap="onCloseEdit">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">{{edit.activityId ? '编辑活动' : '新增活动'}}</view>
+      <view class="form">
+        <view class="field">
+          <text class="label">标题</text>
+          <input class="ipt" value="{{edit.title}}" bindinput="onEditInput" data-k="title" placeholder="活动标题" />
+        </view>
+        <view class="field">
+          <text class="label">地点</text>
+          <input class="ipt" value="{{edit.location}}" bindinput="onEditInput" data-k="location" placeholder="地点" />
+        </view>
+        <view class="field">
+          <text class="label">开始</text>
+          <input class="ipt" value="{{edit.startTime}}" bindinput="onEditInput" data-k="startTime" placeholder="2026-04-27 14:00:00" />
+        </view>
+        <view class="field">
+          <text class="label">结束</text>
+          <input class="ipt" value="{{edit.endTime}}" bindinput="onEditInput" data-k="endTime" placeholder="2026-04-27 17:00:00" />
+        </view>
+        <view class="field">
+          <text class="label">人数上限</text>
+          <input class="ipt" value="{{edit.maxParticipants}}" bindinput="onEditInput" data-k="maxParticipants" type="number" />
+        </view>
+        <view class="field">
+          <text class="label">社团外上限</text>
+          <input class="ipt" value="{{edit.outsiderLimit}}" bindinput="onEditInput" data-k="outsiderLimit" type="number" placeholder="0=不限制" />
+        </view>
+        <view class="field">
+          <text class="label">联系人</text>
+          <input class="ipt" value="{{edit.contact}}" bindinput="onEditInput" data-k="contact" placeholder="微信/电话" />
+        </view>
+        <view class="field">
+          <text class="label">封面图</text>
+          <input class="ipt" value="{{edit.coverImage}}" bindinput="onEditInput" data-k="coverImage" placeholder="/uploads/activity/xxx.jpg" />
+        </view>
+        <view class="field">
+          <text class="label">状态</text>
+          <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusPick">
+            <view class="picker">{{statusOptions[statusIndex].label}}</view>
+          </picker>
+        </view>
+        <view class="field">
+          <text class="label">描述</text>
+          <textarea class="ta" value="{{edit.description}}" bindinput="onEditInput" data-k="description" placeholder="活动描述" />
+        </view>
+      </view>
+      <view class="sheet-actions">
+        <view class="btn ghost" bindtap="onCloseEdit">取消</view>
+        <view class="btn primary" bindtap="onSubmitEdit">保存</view>
+      </view>
+    </view>
+  </view>
+</view>
+

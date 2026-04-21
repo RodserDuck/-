@@ -22,4 +22,12 @@ public interface ClubService {
     void approveApplication(Long memberId);
 
     void rejectApplication(Long memberId);
+
+    Club adminSave(Club club);
+
+    Club adminUpdate(Club club);
+
+    List<ClubMember> adminMemberList(Long clubId, String keyword);
+
+    List<ClubMember> leaderMemberList(Long clubId, Long userId, String keyword);
 }
