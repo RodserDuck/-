@@ -192,10 +192,6 @@ Page({
     this.applyActivityFilter();
   },
 
-  onNotifyTap() {
-    wx.showToast({ title: '暂无新通知', icon: 'none', duration: 1500 });
-  },
-
   onOpenSearch() {
     wx.navigateTo({ url: '/pages/search/search?scope=club' });
   },

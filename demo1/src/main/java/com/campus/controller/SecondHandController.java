@@ -63,6 +63,31 @@ public class SecondHandController {
         }
     }
 
+    /** 更新商品（仅本人可改） */
+    @PutMapping("/{id}")
+    public Result<SecondHand> update(@PathVariable Long id, @RequestBody SecondHand patch) {
+        Long userId = ServletUtils.getUserId();
+        if (userId == null) return Result.fail("请先登录");
+        try {
+            return Result.ok(secondHandService.updateMyGoods(id, userId, patch));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 上/下架（status: 0 下架, 1 上架） */
+    @PutMapping("/{id}/status")
+    public Result<?> updateStatus(@PathVariable Long id, @RequestParam Integer status) {
+        Long userId = ServletUtils.getUserId();
+        if (userId == null) return Result.fail("请先登录");
+        try {
+            secondHandService.updateMyGoodsStatus(id, userId, status);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
     /** 我的发布 */
     @GetMapping("/my")
     public Result<List<SecondHand>> my() {

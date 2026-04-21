@@ -51,7 +51,6 @@ Page({
       {
         title: '其他',
         items: [
-          { id: 6, icon: '🔔', name: '消息通知', count: 0, iconBg: 'rgba(248, 113, 113, 0.12)', sub: '评论、点赞通知' },
           { id: 7, icon: '⚙️', name: '设置', count: 0, iconBg: 'rgba(156, 163, 175, 0.12)', sub: '账号与隐私设置' }
         ]
       }
@@ -174,10 +173,9 @@ Page({
     } else {
       var pageMap = {
         1: '/pages/my-posts/my-posts',
-        3: '/pages/market/market?tab=mine',
+        3: '/pages/my-goods/my-goods',
         4: '/pages/my-clubs/my-clubs',
         5: '/pages/my-activities/my-activities',
-        6: '/pages/notifications/notifications',
         7: '/pages/settings/settings'
       };
       var url = pageMap[id];

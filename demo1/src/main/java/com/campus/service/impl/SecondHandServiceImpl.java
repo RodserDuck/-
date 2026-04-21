@@ -154,4 +154,37 @@ public class SecondHandServiceImpl implements SecondHandService {
         }
         return list;
     }
+
+    @Override
+    public SecondHand updateMyGoods(Long itemId, Long userId, SecondHand patch) {
+        SecondHand g = secondHandMapper.selectById(itemId);
+        if (g == null) throw new RuntimeException("商品不存在");
+        if (!g.getUserId().equals(userId)) throw new RuntimeException("无权修改");
+        if (g.getStatus() != null && g.getStatus() == 2) throw new RuntimeException("已售商品不可编辑");
+
+        // 只允许更新部分字段（避免覆盖 userId/统计字段等）
+        if (patch.getTitle() != null) g.setTitle(patch.getTitle().trim());
+        if (patch.getDescription() != null) g.setDescription(patch.getDescription());
+        if (patch.getImages() != null) g.setImages(patch.getImages());
+        if (patch.getCategoryId() != null) g.setCategoryId(patch.getCategoryId());
+        if (patch.getOriginalPrice() != null) g.setOriginalPrice(patch.getOriginalPrice());
+        if (patch.getPrice() != null) g.setPrice(patch.getPrice());
+        if (patch.getConditionLevel() != null) g.setConditionLevel(patch.getConditionLevel());
+        if (patch.getTradeLocation() != null) g.setTradeLocation(patch.getTradeLocation());
+        if (patch.getContact() != null) g.setContact(patch.getContact());
+
+        secondHandMapper.updateById(g);
+        return getById(g.getItemId());
+    }
+
+    @Override
+    public void updateMyGoodsStatus(Long itemId, Long userId, Integer status) {
+        SecondHand g = secondHandMapper.selectById(itemId);
+        if (g == null) throw new RuntimeException("商品不存在");
+        if (!g.getUserId().equals(userId)) throw new RuntimeException("无权操作");
+        if (g.getStatus() != null && g.getStatus() == 2) throw new RuntimeException("已售商品不可上/下架");
+        if (status == null || (status != 0 && status != 1)) throw new RuntimeException("状态不合法");
+        g.setStatus(status);
+        secondHandMapper.updateById(g);
+    }
 }

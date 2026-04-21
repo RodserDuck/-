@@ -13,6 +13,8 @@ public interface SecondHandService {
     SecondHand save(SecondHand goods, Long userId);
     void delete(Long itemId, Long userId);
     List<SecondHand> getMyGoods(Long userId);
+    SecondHand updateMyGoods(Long itemId, Long userId, SecondHand patch);
+    void updateMyGoodsStatus(Long itemId, Long userId, Integer status);
 
     IPage<SecondHand> adminPage(int pageNum, int pageSize, Long categoryId, String keyword, String userKeyword);
 

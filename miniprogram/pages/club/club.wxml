@@ -5,12 +5,6 @@
   <view class="top-area">
     <view class="top-bar">
       <view class="page-title">社团广场</view>
-      <view class="top-actions">
-        <view class="action-icon-btn" bindtap="onNotifyTap">
-          <text class="icon-text">🔔</text>
-          <view class="red-dot" wx:if="{{hasNotify}}"></view>
-        </view>
-      </view>
     </view>
     <view class="search-row">
       <view class="capsule-search capsule-search--fake" bindtap="onOpenSearch">

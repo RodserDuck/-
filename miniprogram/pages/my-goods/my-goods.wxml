@@ -1,0 +1,123 @@
+<!-- pages/my-goods/my-goods.wxml -->
+<view class="page">
+  <view class="header">
+    <view class="title-row">
+      <text class="title">我的闲置</text>
+      <view class="publish-btn" bindtap="onPublishTap" hover-class="tap-hover">
+        <text class="publish-text">+ 发布</text>
+      </view>
+    </view>
+    <view class="sub">管理自己发布的二手商品：上/下架、编辑、删除</view>
+  </view>
+
+  <view class="list" wx:if="{{goodsList.length > 0}}">
+    <view class="card" wx:for="{{goodsList}}" wx:key="id">
+      <navigator class="top" url="/pages/goods-detail/goods-detail?id={{item.id}}" hover-class="tap-hover">
+        <image class="img" src="{{item.image}}" mode="aspectFill" />
+        <view class="main">
+          <text class="name">{{item.title}}</text>
+          <view class="meta">
+            <text class="price">¥{{item.price}}</text>
+            <view class="status {{item.statusCode === 1 ? 'onsale' : item.statusCode === 2 ? 'sold' : 'off'}}">
+              <text class="status-text">{{item.status}}</text>
+            </view>
+          </view>
+          <view class="desc" wx:if="{{item.description}}">{{item.description}}</view>
+          <view class="more">
+            <text class="more-item">👁 {{item.views || 0}}</text>
+            <text class="more-item" wx:if="{{item.updateTime}}">🕒 {{item.updateTime}}</text>
+          </view>
+        </view>
+      </navigator>
+
+      <view class="actions">
+        <view class="btn" bindtap="onToggleStatus" data-id="{{item.id}}" data-status="{{item.statusCode}}" hover-class="tap-hover">
+          <text class="btn-text">{{item.statusCode === 1 ? '下架' : '上架'}}</text>
+        </view>
+        <view class="btn" bindtap="onEditTap" data-id="{{item.id}}" hover-class="tap-hover">
+          <text class="btn-text">编辑</text>
+        </view>
+        <view class="btn danger" bindtap="onDeleteTap" data-id="{{item.id}}" data-title="{{item.title}}" hover-class="tap-hover">
+          <text class="btn-text">删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <text class="empty-emoji">📦</text>
+    <text class="empty-title">暂无闲置</text>
+    <text class="empty-sub">发布你的第一件二手商品吧</text>
+    <view class="empty-btn" bindtap="onPublishTap" hover-class="tap-hover">
+      <text class="empty-btn-text">立即发布</text>
+    </view>
+  </view>
+
+  <!-- 编辑弹窗 -->
+  <view class="mask" wx:if="{{editVisible}}" bindtap="onEditCancel">
+    <view class="sheet" catchtap="stop">
+      <view class="sheet-header">
+        <text class="sheet-title">编辑商品</text>
+        <view class="close" bindtap="onEditCancel">×</view>
+      </view>
+      <view class="form">
+        <view class="field">
+          <text class="label">图片</text>
+          <view class="img-grid">
+            <view class="img-item" wx:for="{{editImagesDisplay}}" wx:key="*this">
+              <image class="img-thumb" src="{{item}}" mode="aspectFill" />
+              <view class="img-del" bindtap="onEditDeleteImage" data-index="{{index}}">×</view>
+            </view>
+            <view class="img-add" wx:if="{{edit.images.length < 9}}" bindtap="onEditChooseImage" hover-class="tap-hover">
+              <text class="img-add-plus">+</text>
+              <text class="img-add-text">{{edit.images.length}}/9</text>
+            </view>
+          </view>
+        </view>
+        <view class="field">
+          <text class="label">标题</text>
+          <input class="input" value="{{edit.title}}" bindinput="onEditTitle" maxlength="40" placeholder="请输入标题" />
+        </view>
+        <view class="field">
+          <text class="label">价格</text>
+          <input class="input" value="{{edit.price}}" bindinput="onEditPrice" type="digit" placeholder="请输入价格" />
+        </view>
+        <view class="field">
+          <text class="label">原价</text>
+          <input class="input" value="{{edit.originalPrice}}" bindinput="onEditOriginalPrice" type="digit" placeholder="原价（选填）" />
+        </view>
+        <view class="field" bindtap="onEditCategoryTap" hover-class="tap-hover">
+          <text class="label">分类</text>
+          <view class="picker">
+            <text class="picker-text">{{edit.categoryName}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </view>
+        <view class="field" bindtap="onEditConditionTap" hover-class="tap-hover">
+          <text class="label">成色</text>
+          <view class="picker">
+            <text class="picker-text">{{edit.conditionName}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </view>
+        <view class="field">
+          <text class="label">描述</text>
+          <textarea class="textarea" value="{{edit.description}}" bindinput="onEditDesc" maxlength="500" placeholder="补充商品描述（选填）"></textarea>
+        </view>
+        <view class="field">
+          <text class="label">地点</text>
+          <input class="input" value="{{edit.tradeLocation}}" bindinput="onEditLoc" maxlength="40" placeholder="交易地点（选填）" />
+        </view>
+        <view class="field">
+          <text class="label">联系</text>
+          <input class="input" value="{{edit.contact}}" bindinput="onEditContact" maxlength="60" placeholder="联系方式（选填）" />
+        </view>
+      </view>
+      <view class="sheet-actions">
+        <view class="sheet-btn ghost" bindtap="onEditCancel" hover-class="tap-hover"><text>取消</text></view>
+        <view class="sheet-btn primary" bindtap="onEditSave" hover-class="tap-hover"><text>保存</text></view>
+      </view>
+    </view>
+  </view>
+</view>
+

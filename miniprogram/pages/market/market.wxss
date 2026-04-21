@@ -20,7 +20,7 @@
 }
 
 .top-search {
-  background: linear-gradient(160deg, #fb923c 0%, #fdba74 50%, #fed7aa 100%);
+  background: linear-gradient(160deg, #5b9cf6 0%, #7dd3fc 60%, #bae6fd 100%);
   padding: 20rpx 28rpx 28rpx;
   position: sticky;
   top: 0;
@@ -37,7 +37,7 @@
 
 .publish-text {
   font-size: 26rpx;
-  color: #ea580c;
+  color: #5b9cf6;
   font-weight: 700;
 }
 
@@ -46,7 +46,7 @@
   display: flex;
   background: #fff;
   border-radius: 0 0 24rpx 24rpx;
-  box-shadow: 0 4rpx 16rpx rgba(251, 146, 60, 0.08);
+  box-shadow: 0 4rpx 16rpx rgba(91, 156, 246, 0.08);
   position: sticky;
   top: 128rpx;
   z-index: 199;
@@ -69,7 +69,7 @@
 }
 
 .tab-item.active .tab-text {
-  color: #ea580c;
+  color: #5b9cf6;
   font-weight: 700;
 }
 
@@ -81,7 +81,7 @@
   transform: translateX(-50%);
   width: 60rpx;
   height: 6rpx;
-  background: linear-gradient(90deg, #fb923c, #fdba74);
+  background: linear-gradient(90deg, #5b9cf6, #38bdf8);
   border-radius: 3rpx;
 }
 
@@ -115,9 +115,9 @@
 }
 
 .category-chip.active {
-  background: linear-gradient(135deg, #fb923c, #fdba74);
-  border-color: #fb923c;
-  box-shadow: 0 4rpx 12rpx rgba(251, 146, 60, 0.25);
+  background: linear-gradient(135deg, #5b9cf6, #74aef8);
+  border-color: #5b9cf6;
+  box-shadow: 0 4rpx 12rpx rgba(91, 156, 246, 0.25);
 }
 
 .chip-icon {
@@ -223,7 +223,7 @@
 
 .goods-price {
   font-size: 34rpx;
-  color: #ea580c;
+  color: #5b9cf6;
   font-weight: 800;
 }
 
@@ -345,7 +345,7 @@
 
 .my-goods-price {
   font-size: 36rpx;
-  color: #ea580c;
+  color: #5b9cf6;
   font-weight: 800;
 }
 
@@ -356,7 +356,7 @@
 
 .my-goods-status.onsale {
   background: #fff7ed;
-  border: 1rpx solid #fed7aa;
+  border: 1rpx solid #dbeafe;
 }
 
 .my-goods-status.sold {
@@ -370,7 +370,7 @@
 }
 
 .my-goods-status.onsale .my-status-text {
-  color: #ea580c;
+  color: #2563eb;
 }
 
 .my-goods-status.sold .my-status-text {
@@ -414,7 +414,7 @@
 
 .action-chip.danger {
   background: #fff7ed;
-  border-color: #fed7aa;
+  border-color: #dbeafe;
 }
 
 .chip-icon-text {
@@ -428,7 +428,7 @@
 }
 
 .action-chip.danger .chip-btn-text {
-  color: #ea580c;
+  color: #2563eb;
 }
 
 /* 空状态 */
@@ -458,10 +458,10 @@
 }
 
 .empty-btn {
-  background: linear-gradient(135deg, #fb923c, #ea580c);
+  background: linear-gradient(135deg, #5b9cf6, #3b82f6);
   border-radius: 100rpx;
   padding: 20rpx 48rpx;
-  box-shadow: 0 8rpx 24rpx rgba(251, 146, 60, 0.3);
+  box-shadow: 0 8rpx 24rpx rgba(91, 156, 246, 0.3);
   margin-top: 8rpx;
 }
 

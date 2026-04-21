@@ -5,7 +5,6 @@ Page({
   data: {
     userInfo: null,
     editNickname: '',
-    editPhone: '',
     showEditModal: false
   },
 
@@ -25,7 +24,6 @@ Page({
         self.setData({
           userInfo: user,
           editNickname: user.username || user.nickname || '',
-          editPhone: user.phone || ''
         });
       })
       .catch(function() {});
@@ -64,27 +62,26 @@ Page({
     this.setData({ showEditModal: true });
   },
 
-  onNicknameInput(e) {
-    this.setData({ editNickname: e.detail.value });
+  onChangePassword() {
+    wx.navigateTo({ url: '/pages/change-password/change-password' });
   },
 
-  onPhoneInput(e) {
-    this.setData({ editPhone: e.detail.value });
+  onNicknameInput(e) {
+    this.setData({ editNickname: e.detail.value });
   },
 
   onSaveProfile() {
     var self = this;
     var nickname = self.data.editNickname.trim();
-    var phone = self.data.editPhone.trim();
     if (!nickname) { wx.showToast({ title: '请输入昵称', icon: 'none' }); return; }
-    updateUser({ username: nickname, phone: phone })
-      .then(function() {
+    updateUser({ username: nickname })
+      .then(function(user) {
         wx.showToast({ title: '保存成功', icon: 'success' });
         self.setData({ showEditModal: false });
         self.loadUserInfo();
         var cached = wx.getStorageSync('userInfo') || {};
         cached.username = nickname;
-        cached.phone = phone;
+        if (user && user.username) cached.username = user.username;
         wx.setStorageSync('userInfo', cached);
       })
       .catch(function() {

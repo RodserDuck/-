@@ -30,31 +30,6 @@
   min-width: 0;
 }
 
-.notice-bell {
-  position: relative;
-  width: 72rpx;
-  height: 72rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.bell-icon {
-  font-size: 40rpx;
-}
-
-.bell-dot {
-  position: absolute;
-  top: 12rpx;
-  right: 16rpx;
-  width: 14rpx;
-  height: 14rpx;
-  background: #f87171;
-  border-radius: 50%;
-  border: 3rpx solid #fff;
-}
-
 /* ===================== 轮播图区域 ===================== */
 .banner-section {
   padding: 28rpx 28rpx 0;

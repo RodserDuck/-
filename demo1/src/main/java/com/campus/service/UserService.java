@@ -11,6 +11,7 @@ public interface UserService {
     User getUserById(Long userId);
     User getByOpenid(String openid);
     User updateUser(User user);
+    void changePassword(Long userId, String oldPassword, String newPassword);
 
     IPage<User> adminPage(int pageNum, int pageSize, String keyword);
 

@@ -5,6 +5,7 @@ import com.campus.entity.User;
 import com.campus.service.UserService;
 import com.campus.utils.JwtUtils;
 import com.campus.utils.ServletUtils;
+import com.campus.vo.ChangePasswordRequest;
 import com.campus.vo.LoginVO;
 import com.campus.vo.UserRegisterRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -115,6 +116,17 @@ public class UserController {
         if (userId == null) return Result.fail("请先登录");
         user.setUserId(userId);
         return Result.ok(userService.updateUser(user));
+    }
+
+    /**
+     * 修改密码（需要登录，校验旧密码）
+     */
+    @PutMapping("/password")
+    public Result<Void> changePassword(@RequestBody ChangePasswordRequest req) {
+        Long userId = ServletUtils.getUserId();
+        if (userId == null) return Result.fail("请先登录");
+        userService.changePassword(userId, req.getOldPassword(), req.getNewPassword());
+        return Result.ok(null);
     }
 
     private LoginVO buildLoginVO(User user) {

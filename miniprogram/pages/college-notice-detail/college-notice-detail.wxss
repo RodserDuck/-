@@ -6,9 +6,10 @@ page { background: #f0f6ff; }
 .nav-bar {
   display: flex; justify-content: space-between; align-items: center;
   background: linear-gradient(135deg, #667eea, #764ba2);
-  padding: 20rpx 30rpx;
-  padding-top: calc(20rpx + env(safe-area-inset-top));
+  padding-left: 30rpx;
+  padding-right: 30rpx;
   position: sticky; top: 0; z-index: 100;
+  box-sizing: content-box;
 }
 .nav-back { width: 60rpx; height: 60rpx; display: flex; align-items: center; justify-content: center; }
 .back-icon { font-size: 52rpx; color: #fff; font-weight: bold; line-height: 1; }
@@ -50,7 +51,7 @@ page { background: #f0f6ff; }
   margin-bottom: 20rpx;
   box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.08);
 }
-.notice-text { font-size: 32rpx; color: #374151; line-height: 1.9; display: block; }
+.notice-text { display: block; width: 100%; }
 
 /* 图片 */
 .notice-images {

@@ -99,6 +99,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) {
+        User u = userMapper.selectById(userId);
+        if (u == null) throw new RuntimeException("用户不存在");
+        if (oldPassword == null || oldPassword.trim().isEmpty()) throw new RuntimeException("请输入旧密码");
+        if (newPassword == null || newPassword.trim().isEmpty()) throw new RuntimeException("请输入新密码");
+        if (newPassword.trim().length() < 6) throw new RuntimeException("新密码至少 6 位");
+        if (u.getPassword() == null || u.getPassword().isEmpty()) throw new RuntimeException("账号未设置密码，请联系管理员");
+        if (!passwordEncoder.matches(oldPassword, u.getPassword())) throw new RuntimeException("旧密码错误");
+        if (passwordEncoder.matches(newPassword, u.getPassword())) throw new RuntimeException("新密码不能与旧密码相同");
+        u.setPassword(passwordEncoder.encode(newPassword));
+        userMapper.updateById(u);
+    }
+
+    @Override
     public IPage<User> adminPage(int pageNum, int pageSize, String keyword) {
         Page<User> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();

@@ -26,8 +26,10 @@
     "pages/my-posts/my-posts",
     "pages/my-clubs/my-clubs",
     "pages/my-activities/my-activities",
+    "pages/my-goods/my-goods",
     "pages/notifications/notifications",
-    "pages/settings/settings"
+    "pages/settings/settings",
+    "pages/change-password/change-password"
   ],
   "window": {
     "navigationBarTextStyle": "white",

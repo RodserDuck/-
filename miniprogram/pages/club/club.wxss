@@ -20,7 +20,7 @@ page {
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-bottom: 20rpx;
 }
 
@@ -32,43 +32,6 @@ page {
   text-shadow: 0 2rpx 8rpx rgba(30, 58, 95, 0.15);
 }
 
-.top-actions {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.action-icon-btn {
-  position: relative;
-  width: 72rpx;
-  height: 72rpx;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(8rpx);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-
-.action-icon-btn:active {
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.icon-text {
-  font-size: 32rpx;
-}
-
-.red-dot {
-  position: absolute;
-  top: 14rpx;
-  right: 16rpx;
-  width: 14rpx;
-  height: 14rpx;
-  background: #f87171;
-  border-radius: 50%;
-  border: 3rpx solid #fff;
-}
 
 .search-row {
   padding: 0 28rpx 6rpx;

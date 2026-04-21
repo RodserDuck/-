@@ -165,11 +165,6 @@ Page({
     wx.switchTab({ url: '/pages/lostfound/lostfound' });
   },
 
-  // 通知铃铛
-  onNoticeTap() {
-    this.onSchoolNoticeTap();
-  },
-
   // 轮播图点击 - 跳转到公告详情
   onBannerTap(e) {
     var index = e.currentTarget.dataset.index;

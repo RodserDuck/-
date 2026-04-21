@@ -9,10 +9,6 @@
           <icon type="search" size="18" color="#ffffff" />
         </view>
       </view>
-      <view class="notice-bell" bindtap="onNoticeTap">
-        <text class="bell-icon">🔔</text>
-        <view class="bell-dot"></view>
-      </view>
     </view>
   </view>
 

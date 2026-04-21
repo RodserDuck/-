@@ -184,6 +184,10 @@ const getUserInfo = () =>
 const updateUser = (data) =>
   request('/user/update', data, 'PUT', true);
 
+// 修改密码
+const changePassword = (oldPassword, newPassword) =>
+  request('/user/password', { oldPassword, newPassword }, 'PUT', true);
+
 // 通知公告
 const getNoticeList = (pageNum = 1, pageSize = 10) =>
   request(`/notice/list?pageNum=${pageNum}&pageSize=${pageSize}`, {}, 'GET', false);
@@ -308,6 +312,14 @@ const deleteGoods = (id) =>
 const getMyGoods = () =>
   request('/second-hand/my', {}, 'GET', false);
 
+// 我的闲置 - 更新（仅本人可改）
+const updateMyGoods = (id, data) =>
+  request(`/second-hand/${id}`, data, 'PUT', true);
+
+// 我的闲置 - 上/下架（仅本人可改）
+const updateMyGoodsStatus = (id, status) =>
+  request(`/second-hand/${id}/status?status=${status}`, {}, 'PUT', true);
+
 // 失物招领
 const getLostFoundList = (pageNum = 1, pageSize = 10, type = '', status = '', keyword = '') => {
   let url = `/lost-found/list?pageNum=${pageNum}&pageSize=${pageSize}`;
@@ -375,6 +387,7 @@ module.exports = {
   getCollegeList,
   getUserInfo,
   updateUser,
+  changePassword,
   getNoticeList,
   getNoticeTop,
   getNoticeDetail,
@@ -408,6 +421,8 @@ module.exports = {
   publishGoods,
   deleteGoods,
   getMyGoods,
+  updateMyGoods,
+  updateMyGoodsStatus,
   getLostFoundList,
   getLostFoundDetail,
   saveLostFound,
