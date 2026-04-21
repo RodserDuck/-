@@ -30,6 +30,11 @@
         <el-table-column prop="createTime" label="创建" width="170">
           <template #default="{ row }">{{ formatTime(row.createTime) }}</template>
         </el-table-column>
+        <el-table-column label="详情" width="80" align="center">
+          <template #default="{ row }">
+            <el-button type="primary" link @click="onDetail(row)">查看</el-button>
+          </template>
+        </el-table-column>
       </el-table>
 
       <div class="pager">
@@ -43,12 +48,27 @@
         />
       </div>
     </el-card>
+
+    <el-drawer v-model="detailVisible" title="活动详情" size="560px">
+      <el-descriptions v-if="detail" :column="1" border>
+        <el-descriptions-item label="ID">{{ detail.activityId }}</el-descriptions-item>
+        <el-descriptions-item label="标题">{{ detail.title || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="社团ID">{{ detail.clubId ?? '—' }}</el-descriptions-item>
+        <el-descriptions-item label="地点">{{ detail.location || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="开始时间">{{ formatTime(detail.startTime) }}</el-descriptions-item>
+        <el-descriptions-item label="结束时间">{{ formatTime(detail.endTime) }}</el-descriptions-item>
+        <el-descriptions-item label="报名人数">{{ detail.currentParticipants ?? 0 }}/{{ detail.maxParticipants ?? 0 }}</el-descriptions-item>
+        <el-descriptions-item label="联系人">{{ detail.contact || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="主办方">{{ detail.organizer || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="描述">{{ detail.description || '—' }}</el-descriptions-item>
+      </el-descriptions>
+    </el-drawer>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onActivated } from 'vue'
-import { fetchActivityList } from '@/api/activity'
+import { fetchActivityList, fetchActivityDetail } from '@/api/activity'
 
 const loading = ref(false)
 const rows = ref([])
@@ -56,6 +76,8 @@ const total = ref(0)
 const pageNum = ref(1)
 const pageSize = ref(10)
 const keyword = ref('')
+const detailVisible = ref(false)
+const detail = ref(null)
 
 function formatTime(t) {
   if (!t) return '—'
@@ -86,6 +108,11 @@ function onPage(p) {
 function onSearch() {
   pageNum.value = 1
   load()
+}
+
+async function onDetail(row) {
+  detail.value = await fetchActivityDetail(row.activityId)
+  detailVisible.value = true
 }
 
 onMounted(load)

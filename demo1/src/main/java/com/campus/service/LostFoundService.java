@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.campus.entity.LostFound;
 
 public interface LostFoundService {
-    IPage<LostFound> page(int pageNum, int pageSize, Integer type, String keyword);
+    IPage<LostFound> page(int pageNum, int pageSize, Integer type, Integer status, String keyword);
     LostFound getById(Long id);
     void incrementView(Long id);
     LostFound save(LostFound lostFound, Long userId);

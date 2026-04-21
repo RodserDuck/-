@@ -1,175 +1,45 @@
-<!-- pages/lostfound/lostfound.wxml -->
-<view class="lostfound-page">
-  <!-- 顶部标题栏 -->
-  <view class="top-bar">
-    <view class="top-bar-bg"></view>
-    <view class="top-content">
-      <text class="top-title">失物招领</text>
-      <text class="top-sub">让遗失物品更快回到主人身边</text>
-    </view>
+<view class="page">
+  <view class="hero">
+    <text class="hero-title">失物招领</text>
+    <text class="hero-sub">按流程提交、认领、审核，状态全程可见</text>
   </view>
 
-  <!-- 搜索栏：进入搜索详情页 -->
-  <view class="search-section">
-    <view class="lostfound-search-row">
-      <view class="capsule-search capsule-search--fake" bindtap="onOpenSearch">
-        <text class="capsule-search__placeholder">搜索标题或物品说明...</text>
-        <view class="capsule-search__btn" catchtap="onOpenSearch">
-          <icon type="search" size="18" color="#ffffff" />
-        </view>
-      </view>
-      <view class="filter-btn" bindtap="onFilterTap">
-        <text class="filter-icon">🔽</text>
-      </view>
-    </view>
+  <view class="publish-row">
+    <view class="publish-btn lost" bindtap="onPublishLost">发布寻物</view>
+    <view class="publish-btn found" bindtap="onPublishFound">发布招领</view>
   </view>
 
-  <!-- 快速发布按钮 -->
-  <view class="quick-publish">
-    <view class="publish-btn lost-publish" bindtap="onPublishLost">
-      <view class="publish-icon-wrap">
-        <text class="publish-icon">🔍</text>
-      </view>
-      <view class="publish-text-wrap">
-        <text class="publish-title">发布寻物</text>
-        <text class="publish-sub">我丢失了物品</text>
-      </view>
-      <text class="publish-arrow">›</text>
-    </view>
-    <view class="publish-btn found-publish" bindtap="onPublishFound">
-      <view class="publish-icon-wrap" style="background: rgba(52, 211, 153, 0.15)">
-        <text class="publish-icon">📦</text>
-      </view>
-      <view class="publish-text-wrap">
-        <text class="publish-title">发布招领</text>
-        <text class="publish-sub">我捡到了物品</text>
-      </view>
-      <text class="publish-arrow">›</text>
-    </view>
+  <view class="tab-row">
+    <view class="tab {{currentTab===0?'active':''}}" data-index="0" bindtap="onTabChange">寻物</view>
+    <view class="tab {{currentTab===1?'active':''}}" data-index="1" bindtap="onTabChange">招领</view>
   </view>
 
-  <!-- Tab标签 -->
-  <view class="tab-bar">
-    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-index="0">
-      <view class="tab-icon-wrap">
-        <text class="tab-icon">🔍</text>
-      </view>
-      <text class="tab-text">寻物启事</text>
-      <view class="tab-count">{{lostItems.length}}</view>
-    </view>
-    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="1">
-      <view class="tab-icon-wrap" style="background: rgba(52, 211, 153, 0.12)">
-        <text class="tab-icon" style="font-size: 28rpx">📦</text>
-      </view>
-      <text class="tab-text">失物招领</text>
-      <view class="tab-count" style="background: rgba(52, 211, 153, 0.15); color: #059669">{{foundItems.length}}</view>
-    </view>
+  <view class="search-row">
+    <input class="search-input" placeholder="搜索标题/物品/描述" value="{{keyword}}" bindinput="onKeywordInput" confirm-type="search" bindconfirm="onSearch" />
+    <view class="search-btn" bindtap="onSearch">查询</view>
   </view>
 
-  <!-- ==================== 寻物启事列表 ==================== -->
-  <view class="tab-content" wx:if="{{currentTab === 0}}">
-    <view class="item-list">
-      <view
-        class="item-card lost-card {{item.status === '已找回' ? 'resolved' : ''}}"
-        wx:for="{{lostItems}}"
-        wx:key="id"
-        bindtap="onItemTap"
-        data-id="{{item.id}}"
-        data-type="lost"
-      >
-        <view class="item-image-wrap" wx:if="{{item.image}}">
-          <image class="item-image" src="{{item.image}}" mode="aspectFill"/>
-          <view class="item-type-corner lost-corner">
-            <text class="corner-text">寻物</text>
-          </view>
-        </view>
-        <view class="item-image-wrap no-image" wx:else>
-          <text class="no-image-icon">{{item.type === 'lost' ? '🔍' : '📦'}}</text>
-          <view class="item-type-corner {{item.type === 'lost' ? 'lost-corner' : 'found-corner'}}">
-            <text class="corner-text">{{item.type === 'lost' ? '寻物' : '招领'}}</text>
-          </view>
-        </view>
-        <view class="item-info">
-          <view class="item-header">
-            <text class="item-title">{{item.title}}</text>
-            <view class="item-status-badge {{item.status === '已找回' ? 'resolved' : 'searching'}}">
-              <text class="status-text">{{item.status}}</text>
-            </view>
-          </view>
-          <text class="item-desc">{{item.description}}</text>
-          <view class="item-meta">
-            <view class="meta-row">
-              <text class="meta-icon">📍</text>
-              <text class="meta-text">{{item.location}}</text>
-            </view>
-            <view class="meta-row">
-              <text class="meta-icon">🕐</text>
-              <text class="meta-text">{{item.time}}</text>
-            </view>
-          </view>
-          <view class="item-footer">
-            <text class="contact-text">联系方式: {{item.contact}}</text>
-            <view class="contact-btn" bindtap="onContactTap" data-contact="{{item.contact}}">
-              <text class="contact-btn-text">联系</text>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
+  <view class="filter-row">
+    <view class="chip {{statusFilter===''?'on':''}}" data-status="" bindtap="onStatusFilterChange">全部</view>
+    <view class="chip {{statusFilter===0?'on':''}}" data-status="{{0}}" bindtap="onStatusFilterChange">待处理</view>
+    <view class="chip {{statusFilter===1?'on':''}}" data-status="{{1}}" bindtap="onStatusFilterChange">进行中</view>
+    <view class="chip {{statusFilter===2?'on':''}}" data-status="{{2}}" bindtap="onStatusFilterChange">已找到</view>
   </view>
 
-  <!-- ==================== 失物招领列表 ==================== -->
-  <view class="tab-content" wx:if="{{currentTab === 1}}">
-    <view class="item-list">
-      <view
-        class="item-card found-card {{item.status === '已归还' ? 'resolved' : ''}}"
-        wx:for="{{foundItems}}"
-        wx:key="id"
-        bindtap="onItemTap"
-        data-id="{{item.id}}"
-        data-type="found"
-      >
-        <view class="item-image-wrap" wx:if="{{item.image}}">
-          <image class="item-image" src="{{item.image}}" mode="aspectFill"/>
-          <view class="item-type-corner found-corner">
-            <text class="corner-text">招领</text>
-          </view>
+  <view class="list">
+    <view class="card" wx:for="{{items}}" wx:key="id" bindtap="onItemTap" data-id="{{item.id}}">
+      <image wx:if="{{item.image}}" class="thumb" src="{{item.image}}" mode="aspectFill"></image>
+      <view wx:else class="thumb empty">暂无图片</view>
+      <view class="body">
+        <view class="line1">
+          <text class="title">{{item.title}}</text>
+          <text class="status {{item.statusClass}}">{{item.statusText}}</text>
         </view>
-        <view class="item-image-wrap no-image found-no-image" wx:else>
-          <text class="no-image-icon">📦</text>
-          <view class="item-type-corner found-corner">
-            <text class="corner-text">招领</text>
-          </view>
-        </view>
-        <view class="item-info">
-          <view class="item-header">
-            <text class="item-title">{{item.title}}</text>
-            <view class="item-status-badge {{item.status === '已归还' ? 'resolved-found' : 'waiting'}}">
-              <text class="status-text">{{item.status}}</text>
-            </view>
-          </view>
-          <text class="item-desc">{{item.description}}</text>
-          <view class="item-meta">
-            <view class="meta-row">
-              <text class="meta-icon">📍</text>
-              <text class="meta-text">{{item.location}}</text>
-            </view>
-            <view class="meta-row">
-              <text class="meta-icon">🕐</text>
-              <text class="meta-text">{{item.time}}</text>
-            </view>
-          </view>
-          <view class="item-footer">
-            <text class="contact-text">联系方式: {{item.contact}}</text>
-            <view class="contact-btn found-btn" bindtap="onContactTap" data-contact="{{item.contact}}">
-              <text class="contact-btn-text">认领</text>
-            </view>
-          </view>
-        </view>
+        <text class="meta">{{item.itemName || '未填写物品'}} · {{item.time}}</text>
+        <text class="desc">{{item.description}}</text>
+        <text class="meta">地点：{{item.location}}</text>
       </view>
     </view>
+    <view wx:if="{{!loading && items.length===0}}" class="empty-text">暂无数据</view>
   </view>
-
-  <!-- 底部占位 -->
-  <view class="bottom-space"></view>
 </view>

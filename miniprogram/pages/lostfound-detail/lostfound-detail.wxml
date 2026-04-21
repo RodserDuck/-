@@ -1,41 +1,35 @@
-<!-- pages/lostfound-detail/lostfound-detail.wxml -->
-<view class="container">
-  <view class="type-badge {{item.type}}">{{item.type === 'lost' ? '寻物启事' : '招领启事'}}</view>
-  
-  <view class="title-section">
-    <text class="item-title">{{item.title}}</text>
-    <text class="item-status {{item.status === '寻找中' || item.status === '待认领' ? 'active' : 'resolved'}}">{{item.status}}</text>
+<view class="container" wx:if="{{item}}">
+  <view class="head">
+    <text class="type">{{item.type === 'lost' ? '寻物信息' : '招领信息'}}</text>
+    <text class="status">{{item.status}}</text>
   </view>
 
-  <image wx:if="{{item.image}}" class="item-image" src="{{item.image}}" mode="aspectFill"/>
+  <text class="title">{{item.title}}</text>
+  <image wx:if="{{item.image}}" class="cover" src="{{item.image}}" mode="aspectFill" />
 
-  <view class="info-section">
-    <view class="info-item">
-      <text class="label">{{item.type === 'lost' ? '丢失地点' : '拾获地点'}}</text>
-      <text class="value">{{item.location}}</text>
+  <view class="block">
+    <view class="row">
+      <text class="k">{{item.type === 'lost' ? '丢失地点' : '拾获地点'}}</text>
+      <text class="v">{{item.location}}</text>
     </view>
-    <view class="info-item">
-      <text class="label">{{item.type === 'lost' ? '丢失时间' : '拾获时间'}}</text>
-      <text class="value">{{item.time}}</text>
+    <view class="row">
+      <text class="k">{{item.type === 'lost' ? '丢失时间' : '拾获时间'}}</text>
+      <text class="v">{{item.time}}</text>
+    </view>
+    <view class="row">
+      <text class="k">描述</text>
+      <text class="v">{{item.description}}</text>
     </view>
   </view>
 
-  <view class="description-section">
-    <text class="section-title">详细描述</text>
-    <text class="description">{{item.description}}</text>
-  </view>
-
-  <view class="publisher-section">
-    <text class="section-title">发布者</text>
-    <view class="publisher-info">
-      <image class="publisher-avatar" src="{{item.publisher.avatar}}" mode="aspectFill"/>
-      <text class="publisher-name">{{item.publisher.nickname}}</text>
-    </view>
+  <view class="block" wx:if="{{item.type === 'found' && item.statusCode !== 2}}">
+    <text class="claim-title">发起认领</text>
+    <textarea class="claim-input" placeholder="填写可证明身份的信息（可选）" maxlength="200" value="{{claimRemark}}" bindinput="onClaimRemarkInput"></textarea>
+    <view class="claim-btn" bindtap="onClaimSubmit">{{claiming ? '提交中...' : '提交认领申请'}}</view>
+    <text class="claim-tip">提交后进入待审核，管理员处理后会自动更新状态</text>
   </view>
 
   <view class="bottom-bar">
-    <view class="contact-btn" bindtap="onContactTap">
-      <text>联系发布者</text>
-    </view>
+    <view class="contact-btn" bindtap="onContactTap">复制联系方式</view>
   </view>
 </view>

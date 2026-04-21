@@ -401,6 +401,30 @@ INSERT INTO `t_lost_found` VALUES (5, 2, 2, '招领：iPhone 14 黑色', '手机
 -- ------------------------------
 -- 15. 收藏表（帖子/商品/活动通用收藏）
 -- ------------------------------
+DROP TABLE IF EXISTS `t_lost_found_claim_record`;
+CREATE TABLE `t_lost_found_claim_record` (
+  `claim_id`       BIGINT NOT NULL AUTO_INCREMENT COMMENT '认领记录ID',
+  `lost_found_id`  BIGINT NOT NULL COMMENT '失物招领记录ID',
+  `publisher_id`   BIGINT NOT NULL COMMENT '发布者ID',
+  `claimant_id`    BIGINT NOT NULL COMMENT '认领者ID',
+  `type`           TINYINT NOT NULL COMMENT '类型：1-寻物 2-招领',
+  `status`         TINYINT DEFAULT 0 COMMENT '状态：0-待处理 1-已匹配 2-已驳回',
+  `remark`         VARCHAR(255) DEFAULT NULL COMMENT '备注',
+  `claim_time`     DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '认领时间',
+  `create_time`    DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `update_time`    DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted`        TINYINT DEFAULT 0,
+  PRIMARY KEY (`claim_id`),
+  KEY `idx_claim_lf`(`lost_found_id`),
+  KEY `idx_claim_pub`(`publisher_id`),
+  KEY `idx_claimant`(`claimant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='失物招领认领记录表';
+INSERT INTO `t_lost_found_claim_record` VALUES (1, 3, 3, 1, 2, 0, '疑似本人雨伞，等待核验', NOW(), NOW(), NOW(), 0);
+INSERT INTO `t_lost_found_claim_record` VALUES (2, 5, 2, 3, 2, 1, '已当面核验并归还', NOW(), NOW(), NOW(), 0);
+
+-- ------------------------------
+-- 15. 收藏表（帖子/商品/活动通用收藏）
+-- ------------------------------
 DROP TABLE IF EXISTS `t_favorite`;
 CREATE TABLE `t_favorite` (
   `favorite_id`  BIGINT NOT NULL AUTO_INCREMENT COMMENT '收藏ID',

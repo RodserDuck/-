@@ -17,3 +17,7 @@ export async function fetchLostFoundList(pageNum = 1, pageSize = 10, type, statu
 export function updateLostFoundStatus(id, status) {
   return http.put(`/admin/lost-found/${id}/status`, null, { params: { status } })
 }
+
+export function fetchLostFoundDetail(id) {
+  return http.get(`/admin/lost-found/detail/${id}`)
+}

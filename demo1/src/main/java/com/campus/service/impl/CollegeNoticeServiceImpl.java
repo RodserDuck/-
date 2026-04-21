@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.CollegeNotice;
 import com.campus.mapper.CollegeNoticeMapper;
 import com.campus.service.CollegeNoticeService;
+import com.campus.utils.UploadPathUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,9 @@ public class CollegeNoticeServiceImpl implements CollegeNoticeService {
 
     @Override
     public CollegeNotice save(CollegeNotice notice, Long adminId) {
+        if (notice.getImages() != null) {
+            notice.setImages(UploadPathUtils.normalizeImagesJson(notice.getImages()));
+        }
         if (notice.getNoticeId() != null) {
             collegeNoticeMapper.updateById(notice);
             return collegeNoticeMapper.selectById(notice.getNoticeId());

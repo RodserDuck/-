@@ -2,6 +2,7 @@ package com.campus.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.campus.entity.Club;
+import com.campus.entity.ClubMember;
 
 import java.util.List;
 
@@ -15,4 +16,10 @@ public interface ClubService {
     List<Club> getMyClubs(Long userId);
 
     IPage<Club> adminPage(int pageNum, int pageSize, String category, String keyword);
+
+    IPage<ClubMember> adminApplicationPage(int pageNum, int pageSize, Long clubId, String keyword);
+
+    void approveApplication(Long memberId);
+
+    void rejectApplication(Long memberId);
 }

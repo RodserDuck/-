@@ -22,9 +22,11 @@ public class AdminNoticeController {
     @GetMapping("/list")
     public Result<IPage<Notice>> list(
             @RequestParam(defaultValue = "1") int pageNum,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String keyword) {
         adminAuthHelper.requireAdminId();
-        return Result.ok(noticeService.adminPage(pageNum, pageSize));
+        return Result.ok(noticeService.adminPage(pageNum, pageSize, type, keyword));
     }
 
     @GetMapping("/detail/{id}")

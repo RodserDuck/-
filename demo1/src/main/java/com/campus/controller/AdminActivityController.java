@@ -27,4 +27,12 @@ public class AdminActivityController {
         adminAuthHelper.requireAdminId();
         return Result.ok(activityService.adminPage(pageNum, pageSize, keyword));
     }
+
+    @GetMapping("/detail/{id}")
+    public Result<Activity> detail(@PathVariable Long id) {
+        adminAuthHelper.requireAdminId();
+        Activity a = activityService.getById(id);
+        if (a == null) return Result.fail("活动不存在");
+        return Result.ok(a);
+    }
 }

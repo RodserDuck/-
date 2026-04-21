@@ -7,3 +7,7 @@ export async function fetchActivityList(pageNum = 1, pageSize = 10, keyword) {
   })
   return normalizePage(raw)
 }
+
+export function fetchActivityDetail(id) {
+  return http.get(`/admin/activity/detail/${id}`)
+}

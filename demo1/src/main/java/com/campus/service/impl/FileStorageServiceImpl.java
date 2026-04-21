@@ -16,7 +16,7 @@ import java.util.UUID;
 public class FileStorageServiceImpl implements FileStorageService {
 
     private static final Set<String> ALLOWED_DIRS = Set.of(
-            "user", "goods", "post", "lostfound", "club", "activity", "notice"
+            "user", "goods", "post", "lostfound", "club", "activity", "notice", "college"
     );
 
     private static final Set<String> ALLOWED_EXT = Set.of(
@@ -52,7 +52,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         Files.createDirectories(targetDir);
         Path target = targetDir.resolve(filename);
         file.transferTo(target);
-
+        // 仅存 /uploads/<分类>/文件名，不含 context-path；各端拼接 BASE_URL 或 /api 前缀访问
         return "/uploads/" + dir + "/" + filename;
     }
 

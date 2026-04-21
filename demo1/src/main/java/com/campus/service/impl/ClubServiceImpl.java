@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.Club;
 import com.campus.entity.ClubMember;
+import com.campus.entity.User;
 import com.campus.mapper.ClubMapper;
 import com.campus.mapper.ClubMemberMapper;
+import com.campus.mapper.UserMapper;
 import com.campus.service.ClubService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +21,12 @@ public class ClubServiceImpl implements ClubService {
 
     private final ClubMapper clubMapper;
     private final ClubMemberMapper clubMemberMapper;
+    private final UserMapper userMapper;
 
-    public ClubServiceImpl(ClubMapper clubMapper, ClubMemberMapper clubMemberMapper) {
+    public ClubServiceImpl(ClubMapper clubMapper, ClubMemberMapper clubMemberMapper, UserMapper userMapper) {
         this.clubMapper = clubMapper;
         this.clubMemberMapper = clubMemberMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -131,5 +135,68 @@ public class ClubServiceImpl implements ClubService {
                 .in(Club::getClubId, clubIds)
                 .eq(Club::getStatus, 1)
         );
+    }
+
+    @Override
+    public IPage<ClubMember> adminApplicationPage(int pageNum, int pageSize, Long clubId, String keyword) {
+        Page<ClubMember> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<ClubMember> q = new LambdaQueryWrapper<>();
+        q.eq(ClubMember::getStatus, 0);
+        if (clubId != null) {
+            q.eq(ClubMember::getClubId, clubId);
+        }
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getUserId)
+                .and(w -> w.like(User::getUsername, k)
+                    .or().like(User::getStudentNo, k)
+                    .or().like(User::getPhone, k)));
+            if (users.isEmpty()) {
+                q.eq(ClubMember::getMemberId, -1L);
+            } else {
+                q.in(ClubMember::getUserId, users.stream().map(User::getUserId).toList());
+            }
+        }
+        q.orderByDesc(ClubMember::getJoinTime);
+        IPage<ClubMember> result = clubMemberMapper.selectPage(page, q);
+        fillApplicantInfo(result.getRecords());
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void approveApplication(Long memberId) {
+        ClubMember m = clubMemberMapper.selectById(memberId);
+        if (m == null) throw new RuntimeException("申请记录不存在");
+        if (m.getStatus() != null && m.getStatus() == 1) return;
+        m.setStatus(1);
+        clubMemberMapper.updateById(m);
+        Club club = clubMapper.selectById(m.getClubId());
+        if (club != null) {
+            int cnt = club.getMemberCount() == null ? 0 : club.getMemberCount();
+            club.setMemberCount(cnt + 1);
+            clubMapper.updateById(club);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void rejectApplication(Long memberId) {
+        ClubMember m = clubMemberMapper.selectById(memberId);
+        if (m == null) throw new RuntimeException("申请记录不存在");
+        clubMemberMapper.deleteById(memberId);
+    }
+
+    private void fillApplicantInfo(List<ClubMember> members) {
+        if (members == null || members.isEmpty()) return;
+        for (ClubMember m : members) {
+            User u = userMapper.selectById(m.getUserId());
+            if (u != null) {
+                m.setUsername(u.getUsername());
+                m.setStudentNo(u.getStudentNo());
+                m.setPhone(u.getPhone());
+            }
+        }
     }
 }

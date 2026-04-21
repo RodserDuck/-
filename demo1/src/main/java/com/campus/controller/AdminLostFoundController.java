@@ -30,6 +30,14 @@ public class AdminLostFoundController {
         return Result.ok(lostFoundService.adminPage(pageNum, pageSize, type, status, keyword));
     }
 
+    @GetMapping("/detail/{id}")
+    public Result<LostFound> detail(@PathVariable Long id) {
+        adminAuthHelper.requireAdminId();
+        LostFound l = lostFoundService.getById(id);
+        if (l == null) return Result.fail("记录不存在");
+        return Result.ok(l);
+    }
+
     @PutMapping("/{id}/status")
     public Result<Void> updateStatus(@PathVariable Long id, @RequestParam Integer status) {
         adminAuthHelper.requireAdminId();

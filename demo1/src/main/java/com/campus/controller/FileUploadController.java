@@ -19,7 +19,7 @@ public class FileUploadController {
     }
 
     /**
-     * 单文件上传。表单字段：file、category（user/goods/post/lostfound/club/activity/notice）
+     * 单文件上传。表单字段：file、category（user/goods/post/lostfound/club/activity/notice/college）
      */
     @PostMapping
     public Result<Map<String, String>> upload(

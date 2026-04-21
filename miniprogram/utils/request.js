@@ -4,20 +4,47 @@
  * 线上请将 baseUrl 改为实际域名
  */
 
-// 开发环境：本地电脑用 localhost，真机调试用电脑IP（如 192.168.x.x）
-const BASE_URL = 'http://localhost:8080/api';
+// 站点根（真机请改为电脑局域网 IP，并在微信公众平台配置 downloadFile 合法域名）
+const API_ORIGIN = 'http://localhost:8080';
+const BASE_URL = API_ORIGIN + '/api';
 
 /**
- * 将后端返回的相对路径转为可访问的完整 URL（/uploads/...）
- * 已是 http(s) 的保持不变，兼容旧外链
+ * 将库中路径转为带 http(s) 的完整 URL。
+ * 微信 <image> 若 src 为 /uploads/... 会当作包内本地路径，必须用 http(s):// 完整地址。
  */
 function resolveMediaUrl(path) {
   if (path === null || path === undefined) return '';
   const p = String(path).trim();
   if (!p) return '';
   if (p.startsWith('http://') || p.startsWith('https://')) return p;
-  const rel = p.startsWith('/') ? p : `/${p}`;
-  return BASE_URL + rel;
+  let rel = p.startsWith('/') ? p : `/${p}`;
+  while (rel.startsWith('/api')) {
+    rel = rel.substring(4);
+    if (!rel.startsWith('/')) rel = `/${rel}`;
+  }
+  return API_ORIGIN + '/api' + rel;
+}
+
+/**
+ * 公告 images 字段：JSON 数组字符串、已是数组、或单路径字符串 → 转为完整网络图 URL 列表
+ */
+function parseNoticeImages(raw) {
+  if (raw === null || raw === undefined) return [];
+  if (Array.isArray(raw)) {
+    return raw.map(String).map(resolveMediaUrl).filter(Boolean);
+  }
+  if (typeof raw === 'string') {
+    const s = raw.trim();
+    if (!s) return [];
+    try {
+      const v = JSON.parse(s);
+      if (Array.isArray(v)) return v.map(String).map(resolveMediaUrl).filter(Boolean);
+      if (v) return [resolveMediaUrl(String(v))];
+    } catch (e) {
+      return [resolveMediaUrl(s)];
+    }
+  }
+  return [];
 }
 
 /**
@@ -282,9 +309,10 @@ const getMyGoods = () =>
   request('/second-hand/my', {}, 'GET', false);
 
 // 失物招领
-const getLostFoundList = (pageNum = 1, pageSize = 10, type = '', keyword = '') => {
+const getLostFoundList = (pageNum = 1, pageSize = 10, type = '', status = '', keyword = '') => {
   let url = `/lost-found/list?pageNum=${pageNum}&pageSize=${pageSize}`;
   if (type) url += `&type=${type}`;
+  if (status !== '' && status !== null && status !== undefined) url += `&status=${status}`;
   if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
   return request(url, {}, 'GET', false);
 };
@@ -297,6 +325,9 @@ const saveLostFound = (data) =>
 
 const updateLostFoundStatus = (id, status) =>
   request(`/lost-found/status/${id}?status=${status}`, {}, 'PUT', true);
+
+const submitLostFoundClaim = (id, remark = '') =>
+  request(`/lost-found/claim/${id}?remark=${encodeURIComponent(remark || '')}`, {}, 'POST', true);
 
 // 分类
 const getCategoryList = (type = 'goods') =>
@@ -331,8 +362,10 @@ const getMyActivities = () =>
 
 // 微信小程序环境普遍使用 require，需导出 CommonJS（仅用 export 时 require 得到空对象）
 module.exports = {
+  API_ORIGIN,
   BASE_URL,
   resolveMediaUrl,
+  parseNoticeImages,
   uploadImageFile,
   uploadImageFiles,
   request,
@@ -379,6 +412,7 @@ module.exports = {
   getLostFoundDetail,
   saveLostFound,
   updateLostFoundStatus,
+  submitLostFoundClaim,
   getCategoryList,
   createTrade,
   confirmTrade,

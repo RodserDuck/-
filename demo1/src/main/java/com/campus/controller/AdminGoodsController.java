@@ -24,9 +24,18 @@ public class AdminGoodsController {
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String userKeyword) {
         adminAuthHelper.requireAdminId();
-        return Result.ok(secondHandService.adminPage(pageNum, pageSize, categoryId, keyword));
+        return Result.ok(secondHandService.adminPage(pageNum, pageSize, categoryId, keyword, userKeyword));
+    }
+
+    @GetMapping("/detail/{id}")
+    public Result<SecondHand> detail(@PathVariable Long id) {
+        adminAuthHelper.requireAdminId();
+        SecondHand g = secondHandService.getById(id);
+        if (g == null) return Result.fail("商品不存在");
+        return Result.ok(g);
     }
 
     @DeleteMapping("/{id}")

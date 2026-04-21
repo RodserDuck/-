@@ -5,10 +5,19 @@
         <h1 class="title">校园公告</h1>
         <p class="sub">数据表 <code>t_notice</code> · 前台首页轮播与通知栏同步展示</p>
       </div>
-      <el-button type="primary" @click="goNew">
-        <el-icon class="el-icon--left"><Plus /></el-icon>
-        新建公告
-      </el-button>
+      <div class="toolbar-row">
+        <el-select v-model="type" clearable placeholder="类型" style="width: 140px" @change="onSearch">
+          <el-option label="系统通知" value="SYSTEM" />
+          <el-option label="全校通知" value="ALL" />
+          <el-option label="学院通知" value="COLLEGE" />
+        </el-select>
+        <el-input v-model="keyword" clearable placeholder="标题/正文" style="width: 200px" @keyup.enter="onSearch" />
+        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="goNew">
+          <el-icon class="el-icon--left"><Plus /></el-icon>
+          新建公告
+        </el-button>
+      </div>
     </div>
 
     <el-card shadow="never" class="table-card">
@@ -74,6 +83,8 @@ const rows = ref([])
 const total = ref(0)
 const pageNum = ref(1)
 const pageSize = ref(10)
+const type = ref('')
+const keyword = ref('')
 
 function typeLabel(t) {
   const m = { SYSTEM: '系统', ALL: '全校', COLLEGE: '学院' }
@@ -88,7 +99,12 @@ function formatTime(t) {
 async function load() {
   loading.value = true
   try {
-    const page = await fetchNoticeList(pageNum.value, pageSize.value)
+    const page = await fetchNoticeList(
+      pageNum.value,
+      pageSize.value,
+      type.value?.trim() || undefined,
+      keyword.value?.trim() || undefined
+    )
     rows.value = page.records || []
     total.value = page.total || 0
   } finally {
@@ -98,6 +114,11 @@ async function load() {
 
 function onPage(p) {
   pageNum.value = p
+  load()
+}
+
+function onSearch() {
+  pageNum.value = 1
   load()
 }
 
@@ -137,6 +158,14 @@ onActivated(load)
   align-items: flex-start;
   gap: 16px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.toolbar-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .title {

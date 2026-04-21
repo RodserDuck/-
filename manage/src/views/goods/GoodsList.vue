@@ -7,6 +7,13 @@
       </div>
       <div class="toolbar-row">
         <el-input v-model="keyword" placeholder="标题/描述" clearable style="width: 220px" @keyup.enter="onSearch" />
+        <el-input
+          v-model="userKeyword"
+          placeholder="卖家昵称/学号/手机号"
+          clearable
+          style="width: 200px"
+          @keyup.enter="onSearch"
+        />
         <el-button type="primary" @click="onSearch">查询</el-button>
       </div>
     </div>
@@ -32,8 +39,9 @@
         <el-table-column prop="createTime" label="发布时间" width="170">
           <template #default="{ row }">{{ formatTime(row.createTime) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="88" fixed="right">
+        <el-table-column label="操作" width="132" fixed="right">
           <template #default="{ row }">
+            <el-button type="primary" link @click="onDetail(row)">详情</el-button>
             <el-button type="danger" link :disabled="row.status !== 1" @click="onDelete(row)">下架</el-button>
           </template>
         </el-table-column>
@@ -50,13 +58,27 @@
         />
       </div>
     </el-card>
+
+    <el-drawer v-model="detailVisible" title="商品详情" size="560px">
+      <el-descriptions v-if="detail" :column="1" border>
+        <el-descriptions-item label="ID">{{ detail.itemId }}</el-descriptions-item>
+        <el-descriptions-item label="标题">{{ detail.title || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="卖家">{{ detail.sellerName || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="价格">{{ detail.price != null ? `¥${detail.price}` : '—' }}</el-descriptions-item>
+        <el-descriptions-item label="分类ID">{{ detail.categoryId ?? '—' }}</el-descriptions-item>
+        <el-descriptions-item label="状态">{{ detail.status === 1 ? '在售' : detail.status === 2 ? '已售出' : '下架' }}</el-descriptions-item>
+        <el-descriptions-item label="地点">{{ detail.tradeLocation || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="联系方式">{{ detail.contact || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="描述">{{ detail.description || '—' }}</el-descriptions-item>
+      </el-descriptions>
+    </el-drawer>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onActivated } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { fetchGoodsList, deleteGoods } from '@/api/goods'
+import { fetchGoodsList, deleteGoods, fetchGoodsDetail } from '@/api/goods'
 
 const loading = ref(false)
 const rows = ref([])
@@ -64,6 +86,9 @@ const total = ref(0)
 const pageNum = ref(1)
 const pageSize = ref(10)
 const keyword = ref('')
+const userKeyword = ref('')
+const detailVisible = ref(false)
+const detail = ref(null)
 
 function formatTime(t) {
   if (!t) return '—'
@@ -73,7 +98,13 @@ function formatTime(t) {
 async function load() {
   loading.value = true
   try {
-    const page = await fetchGoodsList(pageNum.value, pageSize.value, undefined, keyword.value?.trim() || undefined)
+    const page = await fetchGoodsList(
+      pageNum.value,
+      pageSize.value,
+      undefined,
+      keyword.value?.trim() || undefined,
+      userKeyword.value?.trim() || undefined
+    )
     rows.value = page.records || []
     total.value = page.total || 0
   } finally {
@@ -102,6 +133,11 @@ function onDelete(row) {
       load()
     })
     .catch(() => {})
+}
+
+async function onDetail(row) {
+  detail.value = await fetchGoodsDetail(row.itemId)
+  detailVisible.value = true
 }
 
 onMounted(load)

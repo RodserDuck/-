@@ -1,8 +1,10 @@
 import http from './http'
 import { normalizePage } from './utils'
 
-export async function fetchNoticeList(pageNum = 1, pageSize = 10) {
-  const raw = await http.get('/admin/notice/list', { params: { pageNum, pageSize } })
+export async function fetchNoticeList(pageNum = 1, pageSize = 10, type, keyword) {
+  const raw = await http.get('/admin/notice/list', {
+    params: { pageNum, pageSize, type: type || undefined, keyword: keyword || undefined }
+  })
   return normalizePage(raw)
 }
 

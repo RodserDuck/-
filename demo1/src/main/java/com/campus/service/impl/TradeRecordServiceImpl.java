@@ -1,6 +1,8 @@
 package com.campus.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.SecondHand;
 import com.campus.entity.TradeRecord;
 import com.campus.entity.User;
@@ -127,6 +129,58 @@ public class TradeRecordServiceImpl implements TradeRecordService {
         List<TradeRecord> records = tradeRecordMapper.selectList(q);
         fillUserInfo(records);
         return records;
+    }
+
+    @Override
+    public IPage<TradeRecord> adminPage(int pageNum, int pageSize, Integer status, String keyword, String userKeyword) {
+        Page<TradeRecord> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<TradeRecord> q = new LambdaQueryWrapper<>();
+        if (status != null) {
+            q.eq(TradeRecord::getStatus, status);
+        }
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.like(TradeRecord::getItemTitle, k);
+        }
+        if (userKeyword != null && !userKeyword.trim().isEmpty()) {
+            String k = userKeyword.trim();
+            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getUserId)
+                .and(w -> w.like(User::getUsername, k)
+                    .or().like(User::getStudentNo, k)
+                    .or().like(User::getPhone, k)));
+            if (users.isEmpty()) {
+                q.eq(TradeRecord::getRecordId, -1L);
+            } else {
+                List<Long> ids = users.stream().map(User::getUserId).toList();
+                q.and(w -> w.in(TradeRecord::getBuyerId, ids).or().in(TradeRecord::getSellerId, ids));
+            }
+        }
+        q.orderByDesc(TradeRecord::getRecordId);
+        IPage<TradeRecord> result = tradeRecordMapper.selectPage(page, q);
+        fillUserInfo(result.getRecords());
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void adminUpdateStatus(Long recordId, Integer status) {
+        TradeRecord record = tradeRecordMapper.selectById(recordId);
+        if (record == null) throw new RuntimeException("交易记录不存在");
+        if (status == null || (status != 0 && status != 1 && status != 2)) {
+            throw new RuntimeException("状态不合法");
+        }
+        record.setStatus(status);
+        record.setUpdateTime(LocalDateTime.now());
+        tradeRecordMapper.updateById(record);
+
+        if (status == 1) {
+            SecondHand goods = secondHandMapper.selectById(record.getItemId());
+            if (goods != null) {
+                goods.setStatus(2);
+                secondHandMapper.updateById(goods);
+            }
+        }
     }
 
     private Long getCurrentUserId() {

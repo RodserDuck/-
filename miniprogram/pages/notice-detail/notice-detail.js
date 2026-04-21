@@ -1,5 +1,5 @@
 // pages/notice-detail/notice-detail.js
-var { getNoticeDetail, resolveMediaUrl } = require('../../utils/request.js');
+var { getNoticeDetail, parseNoticeImages } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -30,9 +30,7 @@ Page({
             typeName: self.getTypeName(notice.type),
             viewCount: notice.viewCount || 0,
             createTime: notice.createTime ? notice.createTime.substring(0, 16).replace('T', ' ') : '',
-            images: self.parseImages(notice.images).map(function(u) {
-              return resolveMediaUrl(u);
-            })
+            images: parseNoticeImages(notice.images)
           },
           loading: false
         });
@@ -46,11 +44,6 @@ Page({
   getTypeName(type) {
     var map = { 'SYSTEM': '系统通知', 'ALL': '全校通知', 'COLLEGE': '学院通知' };
     return map[type] || '通知';
-  },
-
-  parseImages(images) {
-    if (!images) return [];
-    try { return JSON.parse(images); } catch(e) { return []; }
   },
 
   onBack() { wx.navigateBack(); },

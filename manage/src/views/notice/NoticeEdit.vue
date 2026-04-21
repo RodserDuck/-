@@ -38,8 +38,8 @@
         <el-form-item label="正文" prop="content">
           <el-input v-model="form.content" type="textarea" :rows="12" placeholder="公告正文" />
         </el-form-item>
-        <el-form-item label="配图 JSON（可选）">
-          <el-input v-model="form.images" type="textarea" :rows="2" placeholder='例如 ["https://..."] 或留空' />
+        <el-form-item label="配图（可选）">
+          <ImagePickList v-model="imageUrls" category="notice" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="saving" @click="submit">保存</el-button>
@@ -55,6 +55,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { fetchNoticeDetail, saveNotice } from '@/api/notice'
+import { parseImagesField, normalizeImagePathsForDb } from '@/api/utils'
+import ImagePickList from '@/components/ImagePickList.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -64,12 +66,13 @@ const saving = ref(false)
 
 const isNew = computed(() => !route.params.id)
 
+const imageUrls = ref([])
+
 const form = reactive({
   noticeId: null,
   title: '',
   content: '',
   type: 'ALL',
-  images: '',
   isTop: 0,
   status: 1
 })
@@ -90,7 +93,7 @@ onMounted(async () => {
     form.title = n.title || ''
     form.content = n.content || ''
     form.type = n.type || 'ALL'
-    form.images = n.images || ''
+    imageUrls.value = parseImagesField(n.images)
     form.isTop = n.isTop ?? 0
     form.status = n.status ?? 1
   } catch {
@@ -114,8 +117,8 @@ async function submit() {
       isTop: form.isTop,
       status: form.status
     }
-    if (form.images && form.images.trim()) {
-      payload.images = form.images.trim()
+    if (imageUrls.value.length) {
+      payload.images = JSON.stringify(normalizeImagePathsForDb(imageUrls.value))
     }
     await saveNotice(payload)
     ElMessage.success('已保存')

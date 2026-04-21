@@ -72,7 +72,7 @@ Page({
     } else if (scope === 'goods') {
       req = R.getGoodsPage(1, 50, '', kw);
     } else {
-      req = R.getLostFoundList(1, 50, '', kw);
+      req = R.getLostFoundList(1, 50, '', '', kw);
     }
 
     req

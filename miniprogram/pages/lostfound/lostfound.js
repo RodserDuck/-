@@ -1,4 +1,3 @@
-// pages/lostfound/lostfound.js
 var { getLostFoundList, resolveMediaUrl } = require('../../utils/request.js');
 
 function lostFoundThumb(raw) {
@@ -14,88 +13,124 @@ function lostFoundThumb(raw) {
   return resolveMediaUrl(s);
 }
 
+function formatStatus(status) {
+  if (status === 0) return { text: '待处理', className: 'pending' };
+  if (status === 1) return { text: '进行中', className: 'active' };
+  return { text: '已找到', className: 'done' };
+}
+
 Page({
   data: {
     currentTab: 0,
-    lostItems: [],
-    foundItems: []
+    statusFilter: '',
+    keyword: '',
+    items: [],
+    loading: false,
+    pageNum: 1,
+    pageSize: 20,
+    hasMore: true
   },
 
   onLoad() {
-    this.loadData();
+    this.loadData(true);
   },
 
-  loadData() {
+  onShow() {
+    this.loadData(true);
+  },
+
+  loadData(reset) {
     var self = this;
-    getLostFoundList(1, 50, '', '')
+    var tabType = this.data.currentTab === 0 ? 1 : 2;
+    var nextPage = reset ? 1 : this.data.pageNum;
+    if (!reset && !this.data.hasMore) return;
+    this.setData({ loading: true });
+    getLostFoundList(nextPage, this.data.pageSize, tabType, this.data.statusFilter, this.data.keyword)
       .then(function(page) {
         var records = page.records || [];
-        var lost = [];
-        var found = [];
-        records.forEach(function(item) {
-          var obj = {
+        var mapped = records.map(function(item) {
+          var status = formatStatus(item.status);
+          return {
             id: item.lostFoundId,
-            title: item.title,
-            itemName: item.itemName,
-            type: item.type === 1 ? 'lost' : 'found',
+            title: item.title || '未命名',
+            itemName: item.itemName || '',
             image: lostFoundThumb(item.itemImage),
-            location: item.location || '',
-            time: item.lostTime ? item.lostTime.replace('T', ' ').substring(0, 16) : '',
-            contact: item.contact || '',
-            description: item.description || '',
-            status: item.status === 1 ? (item.type === 1 ? '寻找中' : '待认领')
-                       : item.status === 2 ? '已找到' : '已关闭'
+            location: item.location || '未填写地点',
+            time: item.lostTime ? String(item.lostTime).replace('T', ' ').substring(0, 16) : '时间未知',
+            description: item.description || '暂无描述',
+            statusText: status.text,
+            statusClass: status.className
           };
-          if (item.type === 1) lost.push(obj);
-          else found.push(obj);
         });
-        self.setData({ lostItems: lost, foundItems: found });
+        self.setData({
+          items: reset ? mapped : self.data.items.concat(mapped),
+          pageNum: nextPage + 1,
+          hasMore: mapped.length >= self.data.pageSize
+        });
       })
-      .catch(function() {});
+      .catch(function() {})
+      .finally(function() {
+        self.setData({ loading: false });
+      });
+  },
+
+  onReachBottom() {
+    this.loadData(false);
+  },
+
+  onPullDownRefresh() {
+    this.loadData(true);
+    wx.stopPullDownRefresh();
   },
 
   onTabChange(e) {
-    this.setData({ currentTab: parseInt(e.currentTarget.dataset.index) });
+    this.setData({
+      currentTab: parseInt(e.currentTarget.dataset.index, 10),
+      pageNum: 1,
+      hasMore: true
+    });
+    this.loadData(true);
+  },
+
+  onStatusFilterChange(e) {
+    var raw = e.currentTarget.dataset.status;
+    var status = raw === '' || raw === undefined || raw === null ? '' : Number(raw);
+    this.setData({
+      statusFilter: status,
+      pageNum: 1,
+      hasMore: true
+    });
+    this.loadData(true);
+  },
+
+  onKeywordInput(e) {
+    this.setData({ keyword: e.detail.value });
+  },
+
+  onSearch() {
+    this.setData({ pageNum: 1, hasMore: true });
+    this.loadData(true);
   },
 
   onPublishLost() {
     var isLoggedIn = wx.getStorageSync('isLoggedIn');
-    if (!isLoggedIn) { wx.navigateTo({ url: '/pages/login/login' }); return; }
+    if (!isLoggedIn) {
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
     wx.navigateTo({ url: '/pages/publish-lostfound/publish-lostfound?type=lost' });
   },
 
   onPublishFound() {
     var isLoggedIn = wx.getStorageSync('isLoggedIn');
-    if (!isLoggedIn) { wx.navigateTo({ url: '/pages/login/login' }); return; }
+    if (!isLoggedIn) {
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
     wx.navigateTo({ url: '/pages/publish-lostfound/publish-lostfound?type=found' });
   },
 
   onItemTap(e) {
     wx.navigateTo({ url: '/pages/lostfound-detail/lostfound-detail?id=' + e.currentTarget.dataset.id });
-  },
-
-  onContactTap(e) {
-    var contact = e.currentTarget.dataset.contact;
-    wx.showModal({
-      title: '联系方式',
-      content: contact,
-      confirmText: '复制',
-      success: function(res) {
-        if (res.confirm) {
-          wx.setClipboardData({ data: contact, success: function() { wx.showToast({ title: '已复制', icon: 'success' }); } });
-        }
-      }
-    });
-  },
-
-  onOpenSearch() {
-    wx.navigateTo({ url: '/pages/search/search?scope=lost' });
-  },
-
-  onFilterTap() {
-    wx.showActionSheet({
-      itemList: ['全部', '寻找中/待认领', '已找到/已归还'],
-      success: function(res) { wx.showToast({ title: '筛选功能开发中', icon: 'none' }); }
-    });
   }
 });

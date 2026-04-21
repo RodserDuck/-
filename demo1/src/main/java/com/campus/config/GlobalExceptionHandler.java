@@ -10,8 +10,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 /**
  * 统一 JSON 错误体；401/403 等与 Result 一致，便于管理端解析 code/msg。
+ * 仅作用于 controller 包，避免拦截静态资源 /uploads/** 等请求链上的异常导致返回 JSON 而非文件流。
  */
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.campus.controller")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler {
 

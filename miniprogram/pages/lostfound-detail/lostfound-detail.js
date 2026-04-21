@@ -1,14 +1,17 @@
-// pages/lostfound-detail/lostfound-detail.js
-var { getLostFoundDetail, resolveMediaUrl } = require('../../utils/request.js');
+var { getLostFoundDetail, submitLostFoundClaim, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
-    item: null
+    item: null,
+    id: null,
+    claimRemark: '',
+    claiming: false
   },
 
   onLoad(options) {
     var id = options.id;
     if (!id) return;
+    this.setData({ id: Number(id) });
     this.loadItem(id);
   },
 
@@ -25,11 +28,11 @@ Page({
             imgs = [resolveMediaUrl(s)];
           }
         }
-        var statusText = raw.status === 1
-          ? (raw.type === 1 ? '寻找中' : '待认领')
-          : raw.status === 2 ? (raw.type === 1 ? '已找到' : '已归还') : '已关闭';
+        var statusText = raw.status === 0 ? '待处理' : raw.status === 1 ? '进行中' : '已找到';
         self.setData({
           item: {
+            id: raw.lostFoundId,
+            userId: raw.userId,
             title: raw.title,
             type: raw.type === 1 ? 'lost' : 'found',
             image: imgs[0] || '',
@@ -39,6 +42,7 @@ Page({
             description: raw.description || '',
             contact: raw.contact || '',
             status: statusText,
+            statusCode: raw.status,
             publisher: {
               avatar: '',
               nickname: ''
@@ -62,5 +66,32 @@ Page({
         }
       }
     });
+  },
+
+  onClaimRemarkInput(e) {
+    this.setData({ claimRemark: e.detail.value || '' });
+  },
+
+  onClaimSubmit() {
+    var item = this.data.item;
+    if (!item || item.type !== 'found') return;
+    var isLoggedIn = wx.getStorageSync('isLoggedIn');
+    if (!isLoggedIn) {
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
+    if (this.data.claiming) return;
+    var self = this;
+    this.setData({ claiming: true });
+    submitLostFoundClaim(item.id, this.data.claimRemark || '')
+      .then(function() {
+        wx.showToast({ title: '已提交认领，等待审核', icon: 'none' });
+        self.setData({ claimRemark: '' });
+        self.loadItem(item.id);
+      })
+      .catch(function() {})
+      .finally(function() {
+        self.setData({ claiming: false });
+      });
   }
 });

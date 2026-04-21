@@ -27,9 +27,10 @@
         <el-button type="primary" @click="$router.push('/notice')">校园公告</el-button>
         <el-button @click="$router.push('/users')">用户</el-button>
         <el-button @click="$router.push('/posts')">帖子</el-button>
-        <el-button @click="$router.push('/goods')">闲置</el-button>
+        <el-button @click="$router.push('/trade')">二手交易</el-button>
         <el-button @click="$router.push('/lost-found')">失物招领</el-button>
         <el-button @click="$router.push('/college-notice')">学院公告</el-button>
+        <el-button @click="$router.push('/club-manage')">社团管理</el-button>
         <el-button @click="openApiDoc">API 根路径</el-button>
       </div>
     </el-card>

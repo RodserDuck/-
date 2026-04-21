@@ -24,9 +24,10 @@ public class AdminPostController {
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String userKeyword) {
         adminAuthHelper.requireAdminId();
-        return Result.ok(postService.adminPage(pageNum, pageSize, category, keyword));
+        return Result.ok(postService.adminPage(pageNum, pageSize, category, keyword, userKeyword));
     }
 
     @DeleteMapping("/{id}")
@@ -38,5 +39,11 @@ public class AdminPostController {
         } catch (Exception e) {
             return Result.fail(e.getMessage());
         }
+    }
+
+    @GetMapping("/detail/{id}")
+    public Result<Post> detail(@PathVariable Long id) {
+        adminAuthHelper.requireAdminId();
+        return Result.ok(postService.adminDetail(id));
     }
 }

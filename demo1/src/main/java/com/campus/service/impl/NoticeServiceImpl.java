@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.Notice;
 import com.campus.mapper.NoticeMapper;
 import com.campus.service.NoticeService;
+import com.campus.utils.UploadPathUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,9 +41,16 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public IPage<Notice> adminPage(int pageNum, int pageSize) {
+    public IPage<Notice> adminPage(int pageNum, int pageSize, String type, String keyword) {
         Page<Notice> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Notice> q = new LambdaQueryWrapper<>();
+        if (type != null && !type.trim().isEmpty()) {
+            q.eq(Notice::getType, type.trim());
+        }
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(Notice::getTitle, k).or().like(Notice::getContent, k));
+        }
         q.orderByDesc(Notice::getIsTop).orderByDesc(Notice::getCreateTime);
         return noticeMapper.selectPage(page, q);
     }
@@ -79,7 +87,7 @@ public class NoticeServiceImpl implements NoticeService {
                 old.setType(notice.getType());
             }
             if (notice.getImages() != null) {
-                old.setImages(notice.getImages());
+                old.setImages(UploadPathUtils.normalizeImagesJson(notice.getImages()));
             }
             if (notice.getIsTop() != null) {
                 old.setIsTop(notice.getIsTop());
@@ -95,6 +103,9 @@ public class NoticeServiceImpl implements NoticeService {
         }
         if (notice.getViewCount() == null) {
             notice.setViewCount(0);
+        }
+        if (notice.getImages() != null) {
+            notice.setImages(UploadPathUtils.normalizeImagesJson(notice.getImages()));
         }
         notice.setCreateTime(LocalDateTime.now());
         noticeMapper.insert(notice);

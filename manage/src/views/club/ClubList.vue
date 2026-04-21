@@ -6,7 +6,12 @@
         <p class="sub">社团列表（只读，便于运营查看 <code>t_club</code>）</p>
       </div>
       <div class="toolbar-row">
-        <el-input v-model="category" placeholder="分类" clearable style="width: 120px" @keyup.enter="onSearch" />
+        <el-select v-model="category" clearable placeholder="分类" style="width: 140px" @change="onSearch">
+          <el-option label="学习学术" value="study" />
+          <el-option label="文艺兴趣" value="art" />
+          <el-option label="体育运动" value="sports" />
+          <el-option label="公益实践" value="public" />
+        </el-select>
         <el-input v-model="keyword" placeholder="名称/简介" clearable style="width: 200px" @keyup.enter="onSearch" />
         <el-button type="primary" @click="onSearch">查询</el-button>
       </div>
@@ -30,6 +35,11 @@
         <el-table-column prop="createTime" label="创建时间" width="170">
           <template #default="{ row }">{{ formatTime(row.createTime) }}</template>
         </el-table-column>
+        <el-table-column label="详情" width="80" align="center">
+          <template #default="{ row }">
+            <el-button type="primary" link @click="onDetail(row)">查看</el-button>
+          </template>
+        </el-table-column>
       </el-table>
 
       <div class="pager">
@@ -43,12 +53,25 @@
         />
       </div>
     </el-card>
+
+    <el-drawer v-model="detailVisible" title="社团详情" size="560px">
+      <el-descriptions v-if="detail" :column="1" border>
+        <el-descriptions-item label="ID">{{ detail.clubId }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ detail.name || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="分类">{{ detail.category || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="成员数">{{ detail.memberCount ?? 0 }}</el-descriptions-item>
+        <el-descriptions-item label="活动数">{{ detail.activityCount ?? 0 }}</el-descriptions-item>
+        <el-descriptions-item label="地点">{{ detail.location || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="联系方式">{{ detail.contact || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="简介">{{ detail.description || '—' }}</el-descriptions-item>
+      </el-descriptions>
+    </el-drawer>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onActivated } from 'vue'
-import { fetchClubList } from '@/api/club'
+import { fetchClubList, fetchClubDetail } from '@/api/club'
 
 const loading = ref(false)
 const rows = ref([])
@@ -57,6 +80,8 @@ const pageNum = ref(1)
 const pageSize = ref(10)
 const category = ref('')
 const keyword = ref('')
+const detailVisible = ref(false)
+const detail = ref(null)
 
 function formatTime(t) {
   if (!t) return '—'
@@ -87,6 +112,11 @@ function onPage(p) {
 function onSearch() {
   pageNum.value = 1
   load()
+}
+
+async function onDetail(row) {
+  detail.value = await fetchClubDetail(row.clubId)
+  detailVisible.value = true
 }
 
 onMounted(load)

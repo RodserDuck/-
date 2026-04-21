@@ -36,21 +36,17 @@
           <el-icon><ChatLineRound /></el-icon>
           <span>帖子管理</span>
         </el-menu-item>
-        <el-menu-item index="/goods">
+        <el-menu-item index="/trade">
           <el-icon><Goods /></el-icon>
-          <span>闲置商品</span>
+          <span>二手交易</span>
         </el-menu-item>
         <el-menu-item index="/lost-found">
           <el-icon><Search /></el-icon>
           <span>失物招领</span>
         </el-menu-item>
-        <el-menu-item index="/clubs">
+        <el-menu-item index="/club-manage">
           <el-icon><OfficeBuilding /></el-icon>
-          <span>社团</span>
-        </el-menu-item>
-        <el-menu-item index="/activities">
-          <el-icon><Calendar /></el-icon>
-          <span>活动</span>
+          <span>社团管理</span>
         </el-menu-item>
       </el-menu>
       <div class="sidebar-foot">
@@ -92,8 +88,7 @@ import {
   ChatLineRound,
   Goods,
   Search,
-  OfficeBuilding,
-  Calendar
+  OfficeBuilding
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -104,6 +99,7 @@ const active = computed(() => {
   const p = route.path
   if (p.startsWith('/notice')) return '/notice'
   if (p.startsWith('/college-notice')) return '/college-notice'
+  if (p.startsWith('/club-manage') || p.startsWith('/activities')) return '/club-manage'
   return p
 })
 

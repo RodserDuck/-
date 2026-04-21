@@ -118,7 +118,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public IPage<Post> adminPage(int pageNum, int pageSize, String category, String keyword) {
+    public IPage<Post> adminPage(int pageNum, int pageSize, String category, String keyword, String userKeyword) {
         Page<Post> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Post> q = new LambdaQueryWrapper<>();
         if (category != null && !category.isEmpty()) q.eq(Post::getCategory, category);
@@ -126,10 +126,31 @@ public class PostServiceImpl implements PostService {
             String k = keyword.trim();
             q.and(w -> w.like(Post::getTitle, k).or().like(Post::getContent, k));
         }
-        q.orderByDesc(Post::getIsTop).orderByDesc(Post::getCreateTime);
+        if (userKeyword != null && !userKeyword.trim().isEmpty()) {
+            String k = userKeyword.trim();
+            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getUserId)
+                .and(w -> w.like(User::getUsername, k)
+                    .or().like(User::getStudentNo, k)
+                    .or().like(User::getPhone, k)));
+            if (users.isEmpty()) {
+                q.eq(Post::getPostId, -1L);
+            } else {
+                q.in(Post::getUserId, users.stream().map(User::getUserId).toList());
+            }
+        }
+        q.orderByDesc(Post::getPostId);
         IPage<Post> result = postMapper.selectPage(page, q);
         fillUserInfo(result.getRecords());
         return result;
+    }
+
+    @Override
+    public Post adminDetail(Long postId) {
+        Post p = postMapper.selectById(postId);
+        if (p == null) throw new RuntimeException("帖子不存在");
+        fillUserInfo(java.util.List.of(p));
+        return p;
     }
 
     @Override

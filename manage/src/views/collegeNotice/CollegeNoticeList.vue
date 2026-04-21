@@ -13,7 +13,16 @@
 
     <el-card shadow="never" class="table-card">
       <div class="filter-row">
-        <el-input v-model="college" placeholder="学院筛选" clearable style="width: 180px" @keyup.enter="onSearch" />
+        <el-select
+          v-model="college"
+          clearable
+          filterable
+          placeholder="学院筛选"
+          style="width: 180px"
+          @change="onSearch"
+        >
+          <el-option v-for="c in collegeOptions" :key="c" :label="c" :value="c" />
+        </el-select>
         <el-input v-model="keyword" placeholder="标题/正文" clearable style="width: 220px" @keyup.enter="onSearch" />
         <el-button type="primary" @click="onSearch">查询</el-button>
       </div>
@@ -61,6 +70,7 @@ import { useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { fetchCollegeNoticeList, deleteCollegeNotice } from '@/api/collegeNotice'
+import { fetchCollegeOptions } from '@/api/college'
 
 const router = useRouter()
 const loading = ref(false)
@@ -70,6 +80,7 @@ const pageNum = ref(1)
 const pageSize = ref(10)
 const college = ref('')
 const keyword = ref('')
+const collegeOptions = ref([])
 
 function formatTime(t) {
   if (!t) return '—'
@@ -125,6 +136,17 @@ function onDelete(row) {
 
 onMounted(load)
 onActivated(load)
+
+onMounted(async () => {
+  try {
+    const list = await fetchCollegeOptions()
+    collegeOptions.value = (list || [])
+      .filter((it) => it && it.status === 1 && it.name)
+      .map((it) => it.name)
+  } catch {
+    collegeOptions.value = []
+  }
+})
 </script>
 
 <style scoped lang="scss">

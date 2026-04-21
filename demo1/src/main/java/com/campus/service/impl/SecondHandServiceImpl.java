@@ -91,7 +91,7 @@ public class SecondHandServiceImpl implements SecondHandService {
     }
 
     @Override
-    public IPage<SecondHand> adminPage(int pageNum, int pageSize, Long categoryId, String keyword) {
+    public IPage<SecondHand> adminPage(int pageNum, int pageSize, Long categoryId, String keyword, String userKeyword) {
         Page<SecondHand> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<SecondHand> q = new LambdaQueryWrapper<>();
         if (categoryId != null) q.eq(SecondHand::getCategoryId, categoryId);
@@ -99,7 +99,20 @@ public class SecondHandServiceImpl implements SecondHandService {
             String k = keyword.trim();
             q.and(w -> w.like(SecondHand::getTitle, k).or().like(SecondHand::getDescription, k));
         }
-        q.orderByDesc(SecondHand::getCreateTime);
+        if (userKeyword != null && !userKeyword.trim().isEmpty()) {
+            String k = userKeyword.trim();
+            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getUserId)
+                .and(w -> w.like(User::getUsername, k)
+                    .or().like(User::getStudentNo, k)
+                    .or().like(User::getPhone, k)));
+            if (users.isEmpty()) {
+                q.eq(SecondHand::getItemId, -1L);
+            } else {
+                q.in(SecondHand::getUserId, users.stream().map(User::getUserId).toList());
+            }
+        }
+        q.orderByDesc(SecondHand::getItemId);
         IPage<SecondHand> result = secondHandMapper.selectPage(page, q);
         fillSellerForList(result.getRecords());
         return result;

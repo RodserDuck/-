@@ -50,16 +50,20 @@ const routes = [
         meta: { title: '帖子管理' }
       },
       {
+        path: 'trade',
+        name: 'trade-manage',
+        component: () => import('@/views/trade/TradeManage.vue'),
+        meta: { title: '二手交易' }
+      },
+      {
         path: 'goods',
-        name: 'goods-list',
-        component: () => import('@/views/goods/GoodsList.vue'),
-        meta: { title: '闲置商品' }
+        redirect: '/trade'
       },
       {
         path: 'lost-found',
         name: 'lost-found-list',
-        component: () => import('@/views/lostFound/LostFoundList.vue'),
-        meta: { title: '失物招领' }
+        component: () => import('@/views/lostFound/LostFoundManage.vue'),
+        meta: { title: '失物招领管理' }
       },
       {
         path: 'college-notice',
@@ -80,10 +84,10 @@ const routes = [
         meta: { title: '编辑学院公告' }
       },
       {
-        path: 'clubs',
-        name: 'club-list',
-        component: () => import('@/views/club/ClubList.vue'),
-        meta: { title: '社团' }
+        path: 'club-manage',
+        name: 'club-manage',
+        component: () => import('@/views/club/ClubManage.vue'),
+        meta: { title: '社团管理' }
       },
       {
         path: 'activities',

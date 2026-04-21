@@ -3,7 +3,7 @@
     <div class="toolbar">
       <div>
         <h1 class="title">失物招领</h1>
-        <p class="sub">类型 1 寻物 / 2 招领；状态 0 关闭 / 1 进行中 / 2 已找到（<code>t_lost_found</code>）</p>
+        <p class="sub">类型 1 寻物 / 2 招领；状态 0 待处理 / 1 进行中 / 2 已找到（<code>t_lost_found</code>）</p>
       </div>
       <div class="toolbar-row">
         <el-select v-model="filterType" placeholder="类型" clearable style="width: 120px" @change="onSearch">
@@ -11,7 +11,7 @@
           <el-option label="招领" :value="2" />
         </el-select>
         <el-select v-model="filterStatus" placeholder="状态" clearable style="width: 130px" @change="onSearch">
-          <el-option label="关闭" :value="0" />
+          <el-option label="待处理" :value="0" />
           <el-option label="进行中" :value="1" />
           <el-option label="已找到" :value="2" />
         </el-select>
@@ -33,20 +33,18 @@
         <el-table-column prop="viewCount" label="浏览" width="72" align="right" />
         <el-table-column prop="status" label="状态" width="120" align="center">
           <template #default="{ row }">
-            <el-select
-              :model-value="row.status"
-              size="small"
-              style="width: 110px"
-              @change="(v) => onStatusChange(row, v)"
-            >
-              <el-option :value="0" label="关闭" />
-              <el-option :value="1" label="进行中" />
-              <el-option :value="2" label="已找到" />
-            </el-select>
+            <el-tag :type="row.status === 2 ? 'success' : row.status === 1 ? 'warning' : 'info'" size="small">
+              {{ row.status === 0 ? '待处理' : row.status === 1 ? '进行中' : '已找到' }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="时间" width="170">
           <template #default="{ row }">{{ formatTime(row.createTime) }}</template>
+        </el-table-column>
+        <el-table-column label="详情" width="80" align="center">
+          <template #default="{ row }">
+            <el-button type="primary" link @click="onDetail(row)">查看</el-button>
+          </template>
         </el-table-column>
       </el-table>
 
@@ -61,13 +59,27 @@
         />
       </div>
     </el-card>
+
+    <el-drawer v-model="detailVisible" title="记录详情" size="560px">
+      <el-descriptions v-if="detail" :column="1" border>
+        <el-descriptions-item label="ID">{{ detail.lostFoundId }}</el-descriptions-item>
+        <el-descriptions-item label="类型">{{ detail.type === 2 ? '招领' : '寻物' }}</el-descriptions-item>
+        <el-descriptions-item label="标题">{{ detail.title || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="物品">{{ detail.itemName || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="地点">{{ detail.location || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="联系方式">{{ detail.contact || '—' }}</el-descriptions-item>
+        <el-descriptions-item label="状态">
+          {{ detail.status === 0 ? '待处理' : detail.status === 1 ? '进行中' : '已找到' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="描述">{{ detail.description || '—' }}</el-descriptions-item>
+      </el-descriptions>
+    </el-drawer>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onActivated } from 'vue'
-import { ElMessage } from 'element-plus'
-import { fetchLostFoundList, updateLostFoundStatus } from '@/api/lostFound'
+import { fetchLostFoundList, fetchLostFoundDetail } from '@/api/lostFound'
 
 const loading = ref(false)
 const rows = ref([])
@@ -77,6 +89,8 @@ const pageSize = ref(10)
 const keyword = ref('')
 const filterType = ref(null)
 const filterStatus = ref(null)
+const detailVisible = ref(false)
+const detail = ref(null)
 
 function formatTime(t) {
   if (!t) return '—'
@@ -110,14 +124,9 @@ function onSearch() {
   load()
 }
 
-async function onStatusChange(row, status) {
-  try {
-    await updateLostFoundStatus(row.lostFoundId, status)
-    row.status = status
-    ElMessage.success('状态已更新')
-  } catch {
-    load()
-  }
+async function onDetail(row) {
+  detail.value = await fetchLostFoundDetail(row.lostFoundId)
+  detailVisible.value = true
 }
 
 onMounted(load)

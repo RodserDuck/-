@@ -17,4 +17,12 @@ public class ClubMember {
     private Integer status;  // 0-申请中 1-已加入
     @TableLogic
     private Integer deleted;
+
+    /** 以下为关联查询字段（非数据库字段） */
+    @TableField(exist = false)
+    private String username;
+    @TableField(exist = false)
+    private String studentNo;
+    @TableField(exist = false)
+    private String phone;
 }

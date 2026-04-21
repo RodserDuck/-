@@ -13,7 +13,8 @@ public interface PostService {
     Post save(Post post, Long userId);
     void delete(Long postId, Long userId);
 
-    IPage<Post> adminPage(int pageNum, int pageSize, String category, String keyword);
+    IPage<Post> adminPage(int pageNum, int pageSize, String category, String keyword, String userKeyword);
+    Post adminDetail(Long postId);
 
     void adminDelete(Long postId);
     void like(Long postId, Long userId);

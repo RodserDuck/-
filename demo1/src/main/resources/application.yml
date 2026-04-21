@@ -27,7 +27,8 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
-# 本地图片存储：项目运行目录下 uploads/，下设 user、goods、post、lostfound、club、activity、notice
+# 本地图片存储：项目运行目录下 uploads/（如 demo1\uploads\notice）
+# 数据库中存 /uploads/分类/文件名；HTTP 访问为 /api/uploads/...（context-path + 相对路径）
 campus:
   upload:
     root: uploads
