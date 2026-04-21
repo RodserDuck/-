@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="hint-bar">
+    <text class="hint-text">学校发布的通知公告，点击条目查看全文</text>
+  </view>
+
+  <view class="list">
+    <view
+      class="notice-row"
+      wx:for="{{notices}}"
+      wx:key="id"
+      catchtap="onItemTap"
+      data-id="{{item.id}}"
+    >
+      <view class="row-main">
+        <view class="row-title-line">
+          <text class="hot-tag" wx:if="{{item.hot}}">置顶</text>
+          <text class="row-title">{{item.title}}</text>
+        </view>
+        <view class="row-meta">
+          <text class="type-pill">{{item.typeName}}</text>
+          <text class="row-time">{{item.time}}</text>
+        </view>
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="load-tip" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+  <view class="load-tip muted" wx:if="{{!loading && !hasMore && notices.length > 0}}">
+    <text>没有更多了</text>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && notices.length === 0}}">
+    <text class="empty-icon">📋</text>
+    <text class="empty-text">暂无校园公告</text>
+  </view>
+</view>

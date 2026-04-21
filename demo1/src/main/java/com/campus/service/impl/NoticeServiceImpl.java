@@ -40,6 +40,14 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    public IPage<Notice> adminPage(int pageNum, int pageSize) {
+        Page<Notice> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Notice> q = new LambdaQueryWrapper<>();
+        q.orderByDesc(Notice::getIsTop).orderByDesc(Notice::getCreateTime);
+        return noticeMapper.selectPage(page, q);
+    }
+
+    @Override
     public Notice getById(Long id) {
         return noticeMapper.selectById(id);
     }
@@ -56,9 +64,41 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public Notice saveNotice(Notice notice, Long adminId) {
         notice.setAdminId(adminId);
+        if (notice.getNoticeId() != null) {
+            Notice old = noticeMapper.selectById(notice.getNoticeId());
+            if (old == null) {
+                throw new RuntimeException("公告不存在");
+            }
+            if (notice.getTitle() != null) {
+                old.setTitle(notice.getTitle());
+            }
+            if (notice.getContent() != null) {
+                old.setContent(notice.getContent());
+            }
+            if (notice.getType() != null) {
+                old.setType(notice.getType());
+            }
+            if (notice.getImages() != null) {
+                old.setImages(notice.getImages());
+            }
+            if (notice.getIsTop() != null) {
+                old.setIsTop(notice.getIsTop());
+            }
+            if (notice.getStatus() != null) {
+                old.setStatus(notice.getStatus());
+            }
+            noticeMapper.updateById(old);
+            return noticeMapper.selectById(notice.getNoticeId());
+        }
+        if (notice.getStatus() == null) {
+            notice.setStatus(1);
+        }
+        if (notice.getViewCount() == null) {
+            notice.setViewCount(0);
+        }
         notice.setCreateTime(LocalDateTime.now());
         noticeMapper.insert(notice);
-        return notice;
+        return noticeMapper.selectById(notice.getNoticeId());
     }
 
     @Override

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "校园公告",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f0f6ff",
+  "navigationBarBackgroundColor": "#5b9cf6",
+  "navigationBarTextStyle": "white"
+}

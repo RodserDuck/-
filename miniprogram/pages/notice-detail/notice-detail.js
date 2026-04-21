@@ -1,5 +1,5 @@
 // pages/notice-detail/notice-detail.js
-var { getNoticeDetail } = require('../../utils/request.js');
+var { getNoticeDetail, resolveMediaUrl } = require('../../utils/request.js');
 
 Page({
   data: {
@@ -30,7 +30,9 @@ Page({
             typeName: self.getTypeName(notice.type),
             viewCount: notice.viewCount || 0,
             createTime: notice.createTime ? notice.createTime.substring(0, 16).replace('T', ' ') : '',
-            images: self.parseImages(notice.images)
+            images: self.parseImages(notice.images).map(function(u) {
+              return resolveMediaUrl(u);
+            })
           },
           loading: false
         });

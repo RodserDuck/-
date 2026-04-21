@@ -12,6 +12,10 @@ public interface PostService {
     void incrementView(Long id);
     Post save(Post post, Long userId);
     void delete(Long postId, Long userId);
+
+    IPage<Post> adminPage(int pageNum, int pageSize, String category, String keyword);
+
+    void adminDelete(Long postId);
     void like(Long postId, Long userId);
     void unlike(Long postId, Long userId);
     List<Post> getMyPosts(Long userId);

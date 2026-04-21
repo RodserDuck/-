@@ -6,7 +6,7 @@
     </header>
 
     <el-row :gutter="20" v-loading="loading">
-      <el-col :xs="24" :sm="12" :lg="8" v-for="card in cards" :key="card.key">
+      <el-col :xs="24" :sm="12" :lg="6" v-for="card in cards" :key="card.key">
         <div class="stat-card">
           <div class="stat-icon" :style="{ background: card.tint }">
             <el-icon :size="26"><component :is="card.icon" /></el-icon>
@@ -24,7 +24,12 @@
         <span class="hint-title">快捷操作</span>
       </template>
       <div class="actions">
-        <el-button type="primary" @click="$router.push('/notice')">管理校园公告</el-button>
+        <el-button type="primary" @click="$router.push('/notice')">校园公告</el-button>
+        <el-button @click="$router.push('/users')">用户</el-button>
+        <el-button @click="$router.push('/posts')">帖子</el-button>
+        <el-button @click="$router.push('/goods')">闲置</el-button>
+        <el-button @click="$router.push('/lost-found')">失物招领</el-button>
+        <el-button @click="$router.push('/college-notice')">学院公告</el-button>
         <el-button @click="openApiDoc">API 根路径</el-button>
       </div>
     </el-card>
@@ -33,7 +38,16 @@
 
 <script setup>
 import { ref, onMounted, markRaw } from 'vue'
-import { User, Document, ChatLineRound, Goods, Search } from '@element-plus/icons-vue'
+import {
+  User,
+  Document,
+  ChatLineRound,
+  Goods,
+  Search,
+  Reading,
+  OfficeBuilding,
+  Calendar
+} from '@element-plus/icons-vue'
 import { fetchStats } from '@/api/dashboard'
 import { ElMessage } from 'element-plus'
 
@@ -44,8 +58,26 @@ const cards = [
   { key: 'users', label: '注册用户', icon: markRaw(User), tint: 'linear-gradient(135deg, #dbeafe, #bfdbfe)' },
   { key: 'posts', label: '帖子', icon: markRaw(ChatLineRound), tint: 'linear-gradient(135deg, #e0f2fe, #bae6fd)' },
   { key: 'notices', label: '校园公告', icon: markRaw(Document), tint: 'linear-gradient(135deg, #cffafe, #a5f3fc)' },
+  {
+    key: 'collegeNotices',
+    label: '学院公告',
+    icon: markRaw(Reading),
+    tint: 'linear-gradient(135deg, #ede9fe, #ddd6fe)'
+  },
   { key: 'goods', label: '闲置商品', icon: markRaw(Goods), tint: 'linear-gradient(135deg, #ecfdf5, #a7f3d0)' },
-  { key: 'lostFound', label: '失物招领', icon: markRaw(Search), tint: 'linear-gradient(135deg, #fef3c7, #fde68a)' }
+  { key: 'lostFound', label: '失物招领', icon: markRaw(Search), tint: 'linear-gradient(135deg, #fef3c7, #fde68a)' },
+  {
+    key: 'clubs',
+    label: '社团',
+    icon: markRaw(OfficeBuilding),
+    tint: 'linear-gradient(135deg, #fce7f3, #fbcfe8)'
+  },
+  {
+    key: 'activities',
+    label: '活动',
+    icon: markRaw(Calendar),
+    tint: 'linear-gradient(135deg, #e0e7ff, #c7d2fe)'
+  }
 ]
 
 onMounted(async () => {

@@ -13,4 +13,8 @@ public interface SecondHandService {
     SecondHand save(SecondHand goods, Long userId);
     void delete(Long itemId, Long userId);
     List<SecondHand> getMyGoods(Long userId);
+
+    IPage<SecondHand> adminPage(int pageNum, int pageSize, Long categoryId, String keyword);
+
+    void adminDelete(Long itemId);
 }

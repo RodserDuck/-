@@ -13,4 +13,6 @@ public interface ClubService {
     Club joinClub(Long userId, Long clubId);
     void leaveClub(Long userId, Long clubId);
     List<Club> getMyClubs(Long userId);
+
+    IPage<Club> adminPage(int pageNum, int pageSize, String category, String keyword);
 }

@@ -91,6 +91,41 @@ public class SecondHandServiceImpl implements SecondHandService {
     }
 
     @Override
+    public IPage<SecondHand> adminPage(int pageNum, int pageSize, Long categoryId, String keyword) {
+        Page<SecondHand> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<SecondHand> q = new LambdaQueryWrapper<>();
+        if (categoryId != null) q.eq(SecondHand::getCategoryId, categoryId);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(SecondHand::getTitle, k).or().like(SecondHand::getDescription, k));
+        }
+        q.orderByDesc(SecondHand::getCreateTime);
+        IPage<SecondHand> result = secondHandMapper.selectPage(page, q);
+        fillSellerForList(result.getRecords());
+        return result;
+    }
+
+    @Override
+    public void adminDelete(Long itemId) {
+        SecondHand g = secondHandMapper.selectById(itemId);
+        if (g == null) throw new RuntimeException("商品不存在");
+        g.setStatus(0);
+        secondHandMapper.updateById(g);
+    }
+
+    private void fillSellerForList(List<SecondHand> list) {
+        if (list == null || list.isEmpty()) return;
+        for (SecondHand g : list) {
+            User seller = userMapper.selectById(g.getUserId());
+            if (seller != null) {
+                g.setSellerName(seller.getUsername());
+                g.setSellerAvatar(seller.getAvatar());
+                g.setSellerCollege(seller.getCollege());
+            }
+        }
+    }
+
+    @Override
     public List<SecondHand> getMyGoods(Long userId) {
         List<SecondHand> list = secondHandMapper.selectList(
             new LambdaQueryWrapper<SecondHand>()

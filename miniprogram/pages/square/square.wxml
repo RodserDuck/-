@@ -74,18 +74,18 @@
     </view>
   </view>
 
-  <!-- 通知滚动栏（仅保留校园通知） -->
-  <view class="notice-scroll-bar" bindtap="onSchoolNoticeTap">
-    <view class="notice-label">
+  <!-- 通知滚动栏：单条 catch 进详情，避免冒泡到外层变成进列表；「更多」进列表 -->
+  <view class="notice-scroll-bar">
+    <view class="notice-label" catchtap="onSchoolNoticeTap">
       <text class="notice-label-icon">🔔</text>
       <text class="notice-label-text">校园通知</text>
     </view>
     <swiper class="notice-swiper" vertical autoplay circular interval="3000" display-multiple-items="1">
-      <swiper-item wx:for="{{schoolNotices}}" wx:key="id" bindtap="onSchoolNoticeItemTap" data-id="{{item.id}}">
+      <swiper-item wx:for="{{schoolNotices}}" wx:key="id" catchtap="onSchoolNoticeItemTap" data-id="{{item.id}}">
         <view class="notice-swipe-item">{{item.title}}</view>
       </swiper-item>
     </swiper>
-    <text class="notice-more">更多 ></text>
+    <text class="notice-more" catchtap="onSchoolNoticeTap">更多 ></text>
   </view>
 
   <!-- 热门动态标题 -->

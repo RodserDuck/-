@@ -62,6 +62,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public IPage<Activity> adminPage(int pageNum, int pageSize, String keyword) {
+        Page<Activity> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Activity> q = new LambdaQueryWrapper<>();
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(Activity::getTitle, k).or().like(Activity::getDescription, k));
+        }
+        q.orderByDesc(Activity::getCreateTime);
+        return activityMapper.selectPage(page, q);
+    }
+
+    @Override
     public void incrementView(Long id) {
         Activity a = activityMapper.selectById(id);
         if (a != null) {

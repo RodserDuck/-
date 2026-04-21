@@ -20,9 +20,37 @@
           <el-icon><Odometer /></el-icon>
           <span>数据概览</span>
         </el-menu-item>
+        <el-menu-item index="/users">
+          <el-icon><User /></el-icon>
+          <span>用户管理</span>
+        </el-menu-item>
         <el-menu-item index="/notice">
           <el-icon><Document /></el-icon>
           <span>校园公告</span>
+        </el-menu-item>
+        <el-menu-item index="/college-notice">
+          <el-icon><Reading /></el-icon>
+          <span>学院公告</span>
+        </el-menu-item>
+        <el-menu-item index="/posts">
+          <el-icon><ChatLineRound /></el-icon>
+          <span>帖子管理</span>
+        </el-menu-item>
+        <el-menu-item index="/goods">
+          <el-icon><Goods /></el-icon>
+          <span>闲置商品</span>
+        </el-menu-item>
+        <el-menu-item index="/lost-found">
+          <el-icon><Search /></el-icon>
+          <span>失物招领</span>
+        </el-menu-item>
+        <el-menu-item index="/clubs">
+          <el-icon><OfficeBuilding /></el-icon>
+          <span>社团</span>
+        </el-menu-item>
+        <el-menu-item index="/activities">
+          <el-icon><Calendar /></el-icon>
+          <span>活动</span>
         </el-menu-item>
       </el-menu>
       <div class="sidebar-foot">
@@ -56,15 +84,27 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Odometer, Document } from '@element-plus/icons-vue'
+import {
+  Odometer,
+  Document,
+  User,
+  Reading,
+  ChatLineRound,
+  Goods,
+  Search,
+  OfficeBuilding,
+  Calendar
+} from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 
 const active = computed(() => {
-  if (route.path.startsWith('/notice')) return '/notice'
-  return route.path
+  const p = route.path
+  if (p.startsWith('/notice')) return '/notice'
+  if (p.startsWith('/college-notice')) return '/college-notice'
+  return p
 })
 
 const title = computed(() => route.meta.title || '概览')

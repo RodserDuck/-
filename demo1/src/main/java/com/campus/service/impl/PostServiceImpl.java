@@ -118,6 +118,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public IPage<Post> adminPage(int pageNum, int pageSize, String category, String keyword) {
+        Page<Post> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Post> q = new LambdaQueryWrapper<>();
+        if (category != null && !category.isEmpty()) q.eq(Post::getCategory, category);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(Post::getTitle, k).or().like(Post::getContent, k));
+        }
+        q.orderByDesc(Post::getIsTop).orderByDesc(Post::getCreateTime);
+        IPage<Post> result = postMapper.selectPage(page, q);
+        fillUserInfo(result.getRecords());
+        return result;
+    }
+
+    @Override
+    public void adminDelete(Long postId) {
+        Post p = postMapper.selectById(postId);
+        if (p == null) throw new RuntimeException("帖子不存在");
+        p.setStatus(0);
+        postMapper.updateById(p);
+    }
+
+    @Override
     @Transactional
     public void like(Long postId, Long userId) {
         LambdaQueryWrapper<PostLike> q = new LambdaQueryWrapper<>();

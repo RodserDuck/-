@@ -137,12 +137,12 @@ Page({
     wx.navigateTo({ url: '/pages/search/search?scope=post' });
   },
 
-  // 校园公告 - 跳转到通知列表
+  // 校园公告：t_notice 列表页（非学院公告）
   onSchoolNoticeTap() {
-    wx.navigateTo({ url: '/pages/college/college?tab=notice' });
+    wx.navigateTo({ url: '/pages/campus-notice/campus-notice' });
   },
 
-  // 通知滚动栏中的公告项 - 跳转到详情
+  /** 滚动条单条 → 校园公告详情（与轮播同源） */
   onSchoolNoticeItemTap(e) {
     var id = e.currentTarget.dataset.id;
     if (id) {

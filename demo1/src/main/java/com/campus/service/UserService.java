@@ -1,5 +1,6 @@
 package com.campus.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.campus.entity.User;
 import com.campus.vo.UserRegisterRequest;
 
@@ -10,4 +11,8 @@ public interface UserService {
     User getUserById(Long userId);
     User getByOpenid(String openid);
     User updateUser(User user);
+
+    IPage<User> adminPage(int pageNum, int pageSize, String keyword);
+
+    void updateStatus(Long userId, Integer status);
 }

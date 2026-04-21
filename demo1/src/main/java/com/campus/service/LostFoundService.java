@@ -9,4 +9,6 @@ public interface LostFoundService {
     void incrementView(Long id);
     LostFound save(LostFound lostFound, Long userId);
     void updateStatus(Long id, Integer status);
+
+    IPage<LostFound> adminPage(int pageNum, int pageSize, Integer type, Integer status, String keyword);
 }

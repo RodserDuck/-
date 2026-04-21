@@ -1,6 +1,8 @@
 package com.campus.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.entity.User;
 import com.campus.mapper.UserMapper;
 import com.campus.service.UserService;
@@ -94,5 +96,30 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User user) {
         userMapper.updateById(user);
         return userMapper.selectById(user.getUserId());
+    }
+
+    @Override
+    public IPage<User> adminPage(int pageNum, int pageSize, String keyword) {
+        Page<User> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            q.and(w -> w.like(User::getUsername, k)
+                .or().like(User::getStudentNo, k)
+                .or().like(User::getCollege, k)
+                .or().like(User::getPhone, k));
+        }
+        q.orderByDesc(User::getCreateTime);
+        return userMapper.selectPage(page, q);
+    }
+
+    @Override
+    public void updateStatus(Long userId, Integer status) {
+        User u = userMapper.selectById(userId);
+        if (u == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        u.setStatus(status);
+        userMapper.updateById(u);
     }
 }

@@ -15,4 +15,6 @@ public interface ActivityService {
     void register(Long activityId, Long userId);
     void cancelRegister(Long activityId, Long userId);
     List<Activity> getMyActivities(Long userId);
+
+    IPage<Activity> adminPage(int pageNum, int pageSize, String keyword);
 }
