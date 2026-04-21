@@ -223,7 +223,7 @@
 
 .goods-price {
   font-size: 34rpx;
-  color: #5b9cf6;
+  color: #ea580c;
   font-weight: 800;
 }
 
@@ -345,7 +345,7 @@
 
 .my-goods-price {
   font-size: 36rpx;
-  color: #5b9cf6;
+  color: #ea580c;
   font-weight: 800;
 }
 
