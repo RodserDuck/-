@@ -1,0 +1,40 @@
+:root {
+  --cm-bg: #f0f6ff;
+  --cm-surface: #ffffff;
+  --cm-ink: #0f172a;
+  --cm-ink-muted: #64748b;
+  --cm-accent: #0ea5e9;
+  --cm-accent-deep: #0284c7;
+  --cm-sidebar: #0c1e36;
+  --cm-sidebar-hover: #152a47;
+  --cm-border: rgba(14, 165, 233, 0.18);
+  --cm-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
+  --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Instrument Serif', Georgia, serif;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--cm-bg);
+  color: var(--cm-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Element Plus 蓝白主题微调 */
+.el-button--primary {
+  --el-button-bg-color: var(--cm-accent);
+  --el-button-border-color: var(--cm-accent);
+  --el-button-hover-bg-color: var(--cm-accent-deep);
+  --el-button-hover-border-color: var(--cm-accent-deep);
+}
+
+.el-menu--vertical.el-menu {
+  border-right: none;
+}
