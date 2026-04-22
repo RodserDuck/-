@@ -22,8 +22,17 @@ public class JwtAuthFilter implements HandlerInterceptor {
         if (token != null) {
             try {
                 if (jwtUtils.isTokenValid(token)) {
-                    Long userId = jwtUtils.getUserIdFromToken(token);
-                    request.setAttribute("userId", userId);
+                    // 正式登录 token：subject 为 userId
+                    try {
+                        Long userId = jwtUtils.getUserIdFromToken(token);
+                        request.setAttribute("userId", userId);
+                    } catch (Exception ignored) {
+                        // 微信首次登录临时 token：subject 为 wx:openid
+                        String wxOpenid = jwtUtils.getWxOpenidFromToken(token);
+                        if (wxOpenid != null && !wxOpenid.isBlank()) {
+                            request.setAttribute("wxOpenid", wxOpenid);
+                        }
+                    }
                 }
             } catch (Exception ignored) {}
         }

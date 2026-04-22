@@ -6,12 +6,11 @@
         <p class="sub">审核与下架违规帖子（管理员删除为下架，<code>status=0</code>）</p>
       </div>
       <div class="toolbar-row">
-        <el-select v-model="category" clearable placeholder="分类" style="width: 140px" @change="onSearch">
-          <el-option label="校园动态" value="campus" />
-          <el-option label="学习交流" value="study" />
-          <el-option label="生活分享" value="life" />
-          <el-option label="活动资讯" value="activity" />
-          <el-option label="失物招领" value="lostfound" />
+        <el-select v-model="category" clearable placeholder="分类" style="width: 160px" @change="onSearch">
+          <el-option label="校园生活" value="校园生活" />
+          <el-option label="日常分享" value="日常分享" />
+          <el-option label="学习交流" value="学习交流" />
+          <el-option label="活动招募" value="活动招募" />
         </el-select>
         <el-input v-model="keyword" placeholder="标题/正文关键词" clearable style="width: 200px" @keyup.enter="onSearch" />
         <el-input
@@ -29,7 +28,7 @@
       <el-table v-loading="loading" :data="rows" stripe style="width: 100%">
         <el-table-column prop="postId" label="ID" width="72" />
         <el-table-column prop="title" label="标题" min-width="180" show-overflow-tooltip />
-        <el-table-column prop="category" label="分类" width="100" />
+        <el-table-column prop="category" label="分类" width="120" />
         <el-table-column prop="nickname" label="作者" width="110" show-overflow-tooltip />
         <el-table-column prop="viewCount" label="浏览" width="80" align="right" />
         <el-table-column prop="status" label="状态" width="88" align="center">

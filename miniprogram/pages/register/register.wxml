@@ -73,16 +73,18 @@
       </view>
       <view class="input-group">
         <!-- 学院：点击弹出选择器 -->
-        <view class="input-item" bindtap="onCollegeTap">
-          <view class="input-icon"><text>🏛️</text></view>
-          <view class="input-field">
-            <text class="input-label">学院</text>
-            <view class="picker-value {{selectedCollege ? '' : 'placeholder'}}">
-              <text>{{selectedCollege || '请选择学院（必选）'}}</text>
+        <picker mode="selector" range="{{collegeList}}" range-key="name" value="{{collegeIndex}}" bindchange="onCollegeChange">
+          <view class="input-item">
+            <view class="input-icon"><text>🏛️</text></view>
+            <view class="input-field">
+              <text class="input-label">学院</text>
+              <view class="picker-value {{selectedCollege ? '' : 'placeholder'}}">
+                <text>{{selectedCollege || '请选择学院（必选）'}}</text>
+              </view>
             </view>
+            <view class="arrow-icon">›</view>
           </view>
-          <view class="arrow-icon">›</view>
-        </view>
+        </picker>
         <view class="input-divider"></view>
         <view class="input-item">
           <view class="input-icon"><text>📖</text></view>

@@ -4,6 +4,9 @@ var {
   leaderUpdateActivity,
   leaderDeleteActivity,
   leaderGetClubMembers,
+  leaderGetApplications,
+  leaderApproveApplication,
+  leaderRejectApplication,
   resolveMediaUrl
 } = require('../../utils/request.js');
 
@@ -21,6 +24,10 @@ Page({
     memberLoading: false,
     members: [],
     keyword: '',
+
+    applyLoading: false,
+    applications: [],
+    applyKeyword: '',
 
     editVisible: false,
     edit: {},
@@ -48,6 +55,7 @@ Page({
     this.setData({ tab: t });
     if (t === 'activity') this.loadActivities();
     if (t === 'member') this.loadMembers();
+    if (t === 'apply') this.loadApplications();
   },
 
   // ========== 活动 ==========
@@ -229,6 +237,52 @@ Page({
       .catch(function(err) {
         self.setData({ memberLoading: false });
         wx.showToast({ title: (err && err.msg) || '加载失败', icon: 'none' });
+      });
+  },
+
+  // ========== 入团申请 ==========
+  onApplyKeyword(e) {
+    this.setData({ applyKeyword: e.detail.value });
+  },
+
+  loadApplications() {
+    var self = this;
+    self.setData({ applyLoading: true });
+    leaderGetApplications(1, 50, self.data.clubId, (self.data.applyKeyword || '').trim())
+      .then(function(page) {
+        var list = (page && page.records) ? page.records : [];
+        self.setData({ applications: list, applyLoading: false });
+      })
+      .catch(function(err) {
+        self.setData({ applyLoading: false });
+        wx.showToast({ title: (err && err.msg) || '加载失败', icon: 'none' });
+      });
+  },
+
+  onApprove(e) {
+    var self = this;
+    var id = e.currentTarget.dataset.id;
+    leaderApproveApplication(id)
+      .then(function() {
+        wx.showToast({ title: '已通过', icon: 'success' });
+        self.loadApplications();
+        self.loadMembers();
+      })
+      .catch(function(err) {
+        wx.showToast({ title: (err && err.msg) || '操作失败', icon: 'none' });
+      });
+  },
+
+  onReject(e) {
+    var self = this;
+    var id = e.currentTarget.dataset.id;
+    leaderRejectApplication(id)
+      .then(function() {
+        wx.showToast({ title: '已拒绝', icon: 'success' });
+        self.loadApplications();
+      })
+      .catch(function(err) {
+        wx.showToast({ title: (err && err.msg) || '操作失败', icon: 'none' });
       });
   },
 

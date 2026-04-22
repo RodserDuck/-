@@ -1,5 +1,5 @@
 // pages/square/square.js
-var { getNoticeTop, getPostList, getNoticeList, resolveMediaUrl } = require('../../utils/request.js');
+var { getNoticeTop, getPostList, getNoticeList, resolveMediaUrl, parseNoticeImages } = require('../../utils/request.js');
 
 /** 列表摘要：有标题时正文去掉与标题重复的前缀，避免 SQL 回填后与正文重复两行 */
 function buildPostCard(p) {
@@ -27,12 +27,10 @@ Page({
     currentFilter: '',
     filterOptions: [
       { label: '全部', value: '' },
+      { label: '🏫 校园生活', value: '校园生活' },
       { label: '🌈 日常分享', value: '日常分享' },
       { label: '📚 学习交流', value: '学习交流' },
-      { label: '🎉 活动招募', value: '活动招募' },
-      { label: '🤝 互助问答', value: '互助问答' },
-      { label: '💡 校园吐槽', value: '校园吐槽' },
-      { label: '🎵 兴趣爱好', value: '兴趣爱好' }
+      { label: '🎉 活动招募', value: '活动招募' }
     ]
   },
 
@@ -55,9 +53,11 @@ Page({
     return getNoticeTop()
       .then(function(notices) {
         var banners = notices.map(function(n, i) {
+          var imgs = parseNoticeImages(n.images);
+          var img = imgs && imgs.length ? imgs[0] : '';
           return {
             id: n.noticeId,
-            image: 'https://picsum.photos/800/400?random=' + (i + 10),
+            image: img || 'https://picsum.photos/800/400?random=' + (i + 10),
             title: n.title,
             tag: n.type === 'SYSTEM' ? '系统通知' : n.type === 'ALL' ? '全校通知' : '学院通知'
           };

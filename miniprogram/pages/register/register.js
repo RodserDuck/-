@@ -11,6 +11,7 @@ Page({
     collegeList: [],
     selectedCollege: '',
     selectedCollegeName: '',
+    collegeIndex: 0,
     major: '',
     className: '',
     isLoading: false,
@@ -37,20 +38,14 @@ Page({
   onMajorInput(e) { this.setData({ major: e.detail.value }); },
   onClassInput(e) { this.setData({ className: e.detail.value }); },
 
-  onCollegeTap() {
-    if (!this.data.collegeList.length) {
-      wx.showToast({ title: '学院列表加载中', icon: 'none' });
-      return;
-    }
-    wx.showActionSheet({
-      itemList: this.data.collegeList.map(c => c.name),
-      success: res => {
-        var college = this.data.collegeList[res.tapIndex];
-        this.setData({
-          selectedCollege: college.name,
-          selectedCollegeName: college.name
-        });
-      }
+  onCollegeChange(e) {
+    var idx = parseInt(e.detail.value, 10) || 0;
+    var list = this.data.collegeList || [];
+    var college = list[idx];
+    this.setData({
+      collegeIndex: idx,
+      selectedCollege: college ? college.name : '',
+      selectedCollegeName: college ? college.name : ''
     });
   },
 

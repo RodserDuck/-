@@ -10,13 +10,10 @@ Page({
     isSubmitting: false,
     currentCategory: '校园生活',
     categories: [
-      { label: '🌈 校园生活', value: '校园生活' },
+      { label: '🏫 校园生活', value: '校园生活' },
+      { label: '🌈 日常分享', value: '日常分享' },
       { label: '📚 学习交流', value: '学习交流' },
-      { label: '🎉 活动招募', value: '活动招募' },
-      { label: '🤝 互助问答', value: '互助问答' },
-      { label: '💡 校园吐槽', value: '校园吐槽' },
-      { label: '🎵 兴趣爱好', value: '兴趣爱好' },
-      { label: '🤝 二手交易', value: '二手交易' }
+      { label: '🎉 活动招募', value: '活动招募' }
     ]
   },
 

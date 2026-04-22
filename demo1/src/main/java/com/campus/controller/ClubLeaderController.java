@@ -3,6 +3,7 @@ package com.campus.controller;
 import com.campus.common.Result;
 import com.campus.entity.Activity;
 import com.campus.entity.ClubMember;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.campus.service.ActivityService;
 import com.campus.service.ClubService;
 import com.campus.utils.ServletUtils;
@@ -78,6 +79,45 @@ public class ClubLeaderController {
         Long userId = ServletUtils.getUserId();
         try {
             return Result.ok(clubService.leaderMemberList(clubId, userId, keyword));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 团长查看入团申请（待审核） */
+    @GetMapping("/applications")
+    public Result<IPage<ClubMember>> applications(
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam Long clubId,
+            @RequestParam(required = false) String keyword) {
+        Long userId = ServletUtils.getUserId();
+        try {
+            return Result.ok(clubService.leaderApplicationPage(pageNum, pageSize, clubId, userId, keyword));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 团长通过申请 */
+    @PutMapping("/application/{memberId}/approve")
+    public Result<Void> approve(@PathVariable Long memberId) {
+        Long userId = ServletUtils.getUserId();
+        try {
+            clubService.leaderApproveApplication(memberId, userId);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    /** 团长拒绝申请 */
+    @PutMapping("/application/{memberId}/reject")
+    public Result<Void> reject(@PathVariable Long memberId) {
+        Long userId = ServletUtils.getUserId();
+        try {
+            clubService.leaderRejectApplication(memberId, userId);
+            return Result.ok();
         } catch (Exception e) {
             return Result.fail(e.getMessage());
         }

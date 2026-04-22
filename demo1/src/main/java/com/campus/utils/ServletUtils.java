@@ -18,6 +18,13 @@ public class ServletUtils {
         return userId != null ? Long.parseLong(userId.toString()) : null;
     }
 
+    public static String getWxOpenid() {
+        HttpServletRequest req = getRequest();
+        if (req == null) return null;
+        Object v = req.getAttribute("wxOpenid");
+        return v != null ? String.valueOf(v) : null;
+    }
+
     public static String getToken() {
         HttpServletRequest req = getRequest();
         if (req == null) return null;

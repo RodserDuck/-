@@ -234,6 +234,57 @@ public class ClubServiceImpl implements ClubService {
         return memberListInternal(clubId, keyword);
     }
 
+    @Override
+    public IPage<ClubMember> leaderApplicationPage(int pageNum, int pageSize, Long clubId, Long leaderUserId, String keyword) {
+        if (clubId == null) throw new RuntimeException("clubId 不能为空");
+        if (leaderUserId == null) throw new RuntimeException("请先登录");
+        requireLeader(clubId, leaderUserId);
+
+        Page<ClubMember> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<ClubMember> q = new LambdaQueryWrapper<>();
+        q.eq(ClubMember::getClubId, clubId)
+         .eq(ClubMember::getStatus, 0)
+         .orderByDesc(ClubMember::getJoinTime);
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String k = keyword.trim();
+            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getUserId)
+                .and(w -> w.like(User::getUsername, k)
+                    .or().like(User::getStudentNo, k)
+                    .or().like(User::getPhone, k)));
+            if (users.isEmpty()) {
+                q.eq(ClubMember::getMemberId, -1L);
+            } else {
+                q.in(ClubMember::getUserId, users.stream().map(User::getUserId).toList());
+            }
+        }
+
+        IPage<ClubMember> result = clubMemberMapper.selectPage(page, q);
+        fillApplicantInfo(result.getRecords());
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void leaderApproveApplication(Long memberId, Long leaderUserId) {
+        if (leaderUserId == null) throw new RuntimeException("请先登录");
+        ClubMember m = clubMemberMapper.selectById(memberId);
+        if (m == null) throw new RuntimeException("申请记录不存在");
+        requireLeader(m.getClubId(), leaderUserId);
+        approveApplication(memberId);
+    }
+
+    @Override
+    @Transactional
+    public void leaderRejectApplication(Long memberId, Long leaderUserId) {
+        if (leaderUserId == null) throw new RuntimeException("请先登录");
+        ClubMember m = clubMemberMapper.selectById(memberId);
+        if (m == null) throw new RuntimeException("申请记录不存在");
+        requireLeader(m.getClubId(), leaderUserId);
+        rejectApplication(memberId);
+    }
+
     private void fillApplicantInfo(List<ClubMember> members) {
         if (members == null || members.isEmpty()) return;
         for (ClubMember m : members) {

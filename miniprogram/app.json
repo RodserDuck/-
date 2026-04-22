@@ -2,6 +2,7 @@
   "pages": [
     "pages/login/login",
     "pages/register/register",
+    "pages/complete-profile/complete-profile",
     "pages/logs/logs",
     "pages/square/square",
     "pages/search/search",

@@ -140,10 +140,60 @@ function request(url, data = {}, method = 'POST', showLoading = true) {
           wx.removeStorageSync('token');
           wx.removeStorageSync('userInfo');
           wx.removeStorageSync('isLoggedIn');
+          wx.removeStorageSync('preToken');
           wx.showToast({ title: '登录已过期，请重新登录', icon: 'none', duration: 2000 });
           setTimeout(() => {
             wx.reLaunch({ url: '/pages/login/login' });
           }, 2000);
+          reject(res);
+        } else {
+          wx.showToast({ title: '网络错误', icon: 'none' });
+          reject(res);
+        }
+      },
+      fail(err) {
+        if (showLoading) wx.hideLoading();
+        wx.showToast({ title: '网络请求失败', icon: 'none' });
+        reject(err);
+      }
+    });
+  });
+}
+
+/**
+ * 使用指定 token 发起请求（不写入 storage；用于微信首次登录的 preToken）
+ */
+function requestWithToken(url, data = {}, method = 'POST', token, showLoading = true) {
+  return new Promise((resolve, reject) => {
+    if (showLoading) {
+      wx.showLoading({ title: '加载中...', mask: true });
+    }
+
+    const header = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      header['Authorization'] = 'Bearer ' + token;
+    }
+
+    wx.request({
+      url: BASE_URL + url,
+      data,
+      method,
+      header,
+      success(res) {
+        if (showLoading) wx.hideLoading();
+
+        if (res.statusCode === 200) {
+          const result = res.data;
+          if (result.code === 200) {
+            resolve(result.data);
+          } else {
+            wx.showToast({ title: result.msg || '请求失败', icon: 'none', duration: 2000 });
+            reject(result);
+          }
+        } else if (res.statusCode === 401) {
+          wx.showToast({ title: '登录已过期，请重新登录', icon: 'none', duration: 2000 });
           reject(res);
         } else {
           wx.showToast({ title: '网络错误', icon: 'none' });
@@ -170,9 +220,19 @@ const userLogin = (studentNo, password) =>
 const userWxLogin = (openid, username) =>
   request('/user/wx-login', { openid, username }, 'POST', true);
 
+// 微信一键登录（推荐：传 code，后端换取 openid/unionid）
+const userWxCodeLogin = (code, nickname = '', avatar = '') =>
+  request('/user/wx-code-login', { code, nickname, avatar }, 'POST', true);
+
 // 用户注册
 const userRegister = (data) =>
   request('/user/register', data, 'POST', true);
+
+// 首次登录补全资料（无密码）
+const completeProfile = (data, tokenOverride) =>
+  tokenOverride
+    ? requestWithToken('/user/complete-profile', data, 'PUT', tokenOverride, true)
+    : request('/user/complete-profile', data, 'PUT', true);
 
 // 获取学院列表
 const getCollegeList = () =>
@@ -302,6 +362,18 @@ const leaderGetClubMembers = (clubId, keyword = '') => {
   return request(url, {}, 'GET', false);
 };
 
+const leaderGetApplications = (pageNum = 1, pageSize = 20, clubId, keyword = '') => {
+  let url = `/club/leader/applications?pageNum=${pageNum}&pageSize=${pageSize}&clubId=${clubId}`;
+  if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+  return request(url, {}, 'GET', false);
+};
+
+const leaderApproveApplication = (memberId) =>
+  request(`/club/leader/application/${memberId}/approve`, {}, 'PUT', true);
+
+const leaderRejectApplication = (memberId) =>
+  request(`/club/leader/application/${memberId}/reject`, {}, 'PUT', true);
+
 const registerActivity = (id) =>
   request(`/activity/register/${id}`, {}, 'POST', true);
 
@@ -400,9 +472,12 @@ module.exports = {
   uploadImageFile,
   uploadImageFiles,
   request,
+  requestWithToken,
   userLogin,
   userWxLogin,
+  userWxCodeLogin,
   userRegister,
+  completeProfile,
   getCollegeList,
   getUserInfo,
   updateUser,
@@ -437,6 +512,9 @@ module.exports = {
   leaderUpdateActivity,
   leaderDeleteActivity,
   leaderGetClubMembers,
+  leaderGetApplications,
+  leaderApproveApplication,
+  leaderRejectApplication,
   registerActivity,
   cancelActivity,
   getGoodsList,

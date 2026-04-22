@@ -17,8 +17,7 @@ Page({
     quickActions: [
       { id: 1, iconSrc: '/images/icon_square.png', name: '发布帖子', bgColor: 'rgba(91, 156, 246, 0.12)' },
       { id: 2, iconSrc: '/images/icon_market.png', name: '发布闲置', bgColor: 'rgba(251, 146, 60, 0.12)' },
-      { id: 3, iconSrc: '/images/icon_lost.png', name: '寻物启事', bgColor: 'rgba(52, 211, 153, 0.12)' },
-      { id: 4, iconSrc: '/images/icon_comment.png', name: '联系客服', bgColor: 'rgba(167, 139, 250, 0.12)' }
+      { id: 3, iconSrc: '/images/icon_lost.png', name: '寻物启事', bgColor: 'rgba(52, 211, 153, 0.12)' }
     ],
     tradeTab: 'buy',
     buyList: [],
@@ -160,7 +159,6 @@ Page({
       case 1: wx.navigateTo({ url: '/pages/publish-post/publish-post' }); break;
       case 2: wx.navigateTo({ url: '/pages/publish-goods/publish-goods' }); break;
       case 3: wx.navigateTo({ url: '/pages/publish-lostfound/publish-lostfound' }); break;
-      case 4: wx.showToast({ title: '联系客服功能开发中', icon: 'none' }); break;
     }
   },
 

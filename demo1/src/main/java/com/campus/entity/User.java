@@ -11,6 +11,10 @@ public class User {
     @TableId(type = IdType.AUTO)
     private Long userId;
     private String openid;
+    /** 微信小程序用户 openid（code2Session 获取） */
+    private String wxOpenid;
+    /** 微信 unionid（若已绑定开放平台才会返回） */
+    private String wxUnionid;
     private String username;
     private String studentNo;
     @JsonIgnore

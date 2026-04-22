@@ -89,6 +89,10 @@
         </view>
       </button>
 
+      <button class="login-btn wx-btn" bindtap="onWxLogin" disabled="{{isLoading}}">
+        <text class="btn-text-main">微信一键登录</text>
+      </button>
+
       <view class="register-row">
         <text class="register-tip">还没有账号？</text>
         <text class="register-link" bindtap="onGoRegister">立即注册</text>

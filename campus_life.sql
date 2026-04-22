@@ -419,14 +419,22 @@ CREATE TABLE `t_post`  (
 -- ----------------------------
 -- Records of t_post
 -- ----------------------------
-INSERT INTO `t_post` VALUES (1, 1, '夕阳下的图书馆太美了', '今天天气超级好，傍晚在校园里随手拍了几张！夕阳下的图书馆真的太美了，有没有人一起去拍照呀~', '[\"/uploads/post/post_1.jpg\",\"/uploads/post/post_2.jpg\"]', '校园生活', 328, 56, 526, 1, 1, '2026-04-19 14:36:14', '2026-04-21 19:12:35', 0);
-INSERT INTO `t_post` VALUES (2, 2, '期末复习资料分享', '分享一份期末复习资料，涵盖高数、线代、概率论全套笔记，整理了两个月，亲测有效！', '[\"/uploads/post/post_3.jpg\"]', '学习交流', 512, 91, 773, 0, 1, '2026-04-19 14:36:14', '2026-04-21 19:12:35', 0);
-INSERT INTO `t_post` VALUES (3, 1, '食堂三楼麻辣烫推荐', '强烈推荐食堂三楼新开的麻辣烫！味道一绝，价格也很实惠，人均20元吃到撑，周末约起来~', '[\"/uploads/post/post_3.jpg\",\"/uploads/post/post_4.png\"]', '校园生活', 256, 43, 325, 0, 1, '2026-04-19 14:36:14', '2026-04-21 20:38:20', 0);
-INSERT INTO `t_post` VALUES (4, 3, '校园十大歌手大赛复赛预告', '校园十大歌手大赛初赛圆满结束！恭喜晋级的30位选手，复赛将于4月20日在大学生活动中心举行，敬请期待！', '[\"/uploads/post/post_1.png\"]', '活动招募', 189, 34, 448, 0, 1, '2026-04-19 14:36:14', '2026-04-21 11:04:37', 0);
-INSERT INTO `t_post` VALUES (5, 4, '吉他社招新｜零基础也欢迎', '每周两次练习+月度小演出，欢迎来体验！', '[\"/uploads/post/post_4.jpeg\"]', '活动招募', 66, 9, 123, 0, 1, '2026-04-21 19:12:35', '2026-04-21 21:06:20', 0);
-INSERT INTO `t_post` VALUES (6, 6, '二手交易避坑指南（新生必看）', '交易建议走线下当面验货，贵重物品最好录开箱视频。', '[\"/uploads/post/post_5.jpg\",\"/uploads/post/post_6.jpg\"]', '校园生活', 88, 12, 211, 0, 1, '2026-04-21 19:12:35', '2026-04-21 21:06:17', 0);
-INSERT INTO `t_post` VALUES (7, 7, '操场夜跑搭子来一个', '每天晚上 8 点操场，配速 6~7，想找一起坚持的同学。', NULL, '日常分享', 54, 6, 90, 0, 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0);
+INSERT INTO `t_post` VALUES (1, 1, '夕阳下的图书馆太美了', '今天天气超级好，傍晚在校园里随手拍了几张！夕阳下的图书馆真的太美了，有没有人一起去拍照呀~', '[\"/uploads/post/post_1.jpg\",\"/uploads/post/post_2.jpg\"]', '校园生活', 36, 0, 128, 1, 1, '2026-04-19 14:36:14', '2026-04-21 19:12:35', 0);
+INSERT INTO `t_post` VALUES (2, 2, '期末复习资料分享', '分享一份期末复习资料，涵盖高数、线代、概率论全套笔记，整理了两个月，亲测有效！', '[\"/uploads/post/post_3.jpg\"]', '学习交流', 58, 0, 210, 0, 1, '2026-04-19 14:36:14', '2026-04-21 19:12:35', 0);
+INSERT INTO `t_post` VALUES (3, 1, '食堂三楼麻辣烫推荐', '强烈推荐食堂三楼新开的麻辣烫！味道一绝，价格也很实惠，人均20元吃到撑，周末约起来~', '[\"/uploads/post/post_3.jpg\",\"/uploads/post/post_4.png\"]', '校园生活', 22, 0, 96, 0, 1, '2026-04-19 14:36:14', '2026-04-21 20:38:20', 0);
+INSERT INTO `t_post` VALUES (4, 3, '校园十大歌手大赛复赛预告', '校园十大歌手大赛初赛圆满结束！恭喜晋级的30位选手，复赛将于4月20日在大学生活动中心举行，敬请期待！', '[\"/uploads/post/post_1.png\"]', '活动招募', 18, 0, 140, 0, 1, '2026-04-19 14:36:14', '2026-04-21 11:04:37', 0);
+INSERT INTO `t_post` VALUES (5, 4, '吉他社招新｜零基础也欢迎', '每周两次练习+月度小演出，欢迎来体验！', '[\"/uploads/post/post_4.jpeg\"]', '活动招募', 12, 0, 86, 0, 1, '2026-04-21 19:12:35', '2026-04-21 21:06:20', 0);
+INSERT INTO `t_post` VALUES (6, 6, '二手交易避坑指南（新生必看）', '交易建议走线下当面验货，贵重物品最好录开箱视频。', '[\"/uploads/post/post_5.jpg\",\"/uploads/post/post_6.jpg\"]', '校园生活', 15, 0, 102, 0, 1, '2026-04-21 19:12:35', '2026-04-21 21:06:17', 0);
+INSERT INTO `t_post` VALUES (7, 7, '操场夜跑搭子来一个', '每天晚上 8 点操场，配速 6~7，想找一起坚持的同学。', NULL, '日常分享', 9, 0, 54, 0, 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0);
 INSERT INTO `t_post` VALUES (8, 2, '学校的花开了', '今天路过偶然发现，并拍了下来', '[\"/uploads/post/post_2_1776775364025_119aab98.png\"]', '校园生活', 0, 0, 0, 0, 1, '2026-04-21 20:42:44', NULL, 0);
+
+-- 回写帖子评论数（以 t_comment 实际条数为准）
+UPDATE `t_post` p
+SET p.`comment_count` = (
+  SELECT COUNT(1) FROM `t_comment` c
+  WHERE c.`post_id` = p.`post_id` AND c.`deleted` = 0
+)
+WHERE p.`deleted` = 0;
 
 -- ----------------------------
 -- Table structure for t_post_like
@@ -520,6 +528,8 @@ DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user`  (
   `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信openid',
+  `wx_openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信小程序openid（code2Session）',
+  `wx_unionid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信unionid（若已绑定开放平台）',
   `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户名/昵称',
   `student_no` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '学号',
   `avatar` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像URL',
@@ -535,50 +545,51 @@ CREATE TABLE `t_user`  (
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码（BCrypt加密）',
   PRIMARY KEY (`user_id`) USING BTREE,
   UNIQUE INDEX `uk_user_openid`(`openid`) USING BTREE,
+  UNIQUE INDEX `uk_user_wx_openid`(`wx_openid`) USING BTREE,
   UNIQUE INDEX `uk_user_student_no`(`student_no`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES (1, 'student_20220200649', '校园小达人', '20220200649', '/uploads/user/user_1.jpg', '13800001111', 'lbb@example.com', '计算机与大数据科学学院', '计算机科学与技术', 'A2212', 1, '2026-04-19 14:36:14', '2026-04-21 20:36:21', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (2, 'student_20220200650', '学霸君', '20220200650', '/uploads/user/user_2_1776775279111_f090ac9a.png', '13800002222', 'xueba@example.com', '计算机与大数据科学学院', '软件工程', 'A2212', 1, '2026-04-19 14:36:14', NULL, 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (3, 'student_20220200651', '运动达人', '20220200651', '/uploads/user/user_3.jpg', '13800003333', 'sport@example.com', '体育学院', '体育教育', 'B2211', 1, '2026-04-19 14:36:14', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (4, 'student_20220200652', '吉他少年', '20220200652', '/uploads/user/user_4.jpg', '13800004444', 'guitar@example.com', '文学院', '汉语言文学', 'C2210', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (5, 'student_20220200653', '志愿小队长', '20220200653', '/uploads/user/user_5.jpg', '13800005555', 'vol@example.com', '马克思主义学院', '思想政治教育', 'D2209', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (6, 'student_20220200654', '二手达人', '20220200654', '/uploads/user/user_6.jpg', '13800006666', 'trade@example.com', '经济管理学院', '市场营销', 'E2208', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (7, 'student_20220200655', '跑步打卡王', '20220200655', '/uploads/user/user_7.jpg', '13800007777', 'run@example.com', '体育学院', '体育教育', 'B2211', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (8, 'student_20220200656', '社团活动控', '20220200656', '/uploads/user/user_8.jpg', '13800008888', 'club@example.com', '人工智能学院', '人工智能', 'AI2210', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (1, 'student_20220200649', NULL, NULL, '校园小达人', '20220200649', '/uploads/user/user_1.jpg', '13800001111', 'lbb@example.com', '计算机与大数据科学学院', '计算机科学与技术', 'A2212', 1, '2026-04-19 14:36:14', '2026-04-21 20:36:21', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (2, 'student_20220200650', NULL, NULL, '学霸君', '20220200650', '/uploads/user/user_2_1776775279111_f090ac9a.png', '13800002222', 'xueba@example.com', '计算机与大数据科学学院', '软件工程', 'A2212', 1, '2026-04-19 14:36:14', NULL, 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (3, 'student_20220200651', NULL, NULL, '运动达人', '20220200651', '/uploads/user/user_3.jpg', '13800003333', 'sport@example.com', '体育学院', '体育教育', 'B2211', 1, '2026-04-19 14:36:14', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (4, 'student_20220200652', NULL, NULL, '吉他少年', '20220200652', '/uploads/user/user_4.jpg', '13800004444', 'guitar@example.com', '文学院', '汉语言文学', 'C2210', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (5, 'student_20220200653', NULL, NULL, '志愿小队长', '20220200653', '/uploads/user/user_5.jpg', '13800005555', 'vol@example.com', '马克思主义学院', '思想政治教育', 'D2209', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (6, 'student_20220200654', NULL, NULL, '二手达人', '20220200654', '/uploads/user/user_6.jpg', '13800006666', 'trade@example.com', '经济管理学院', '市场营销', 'E2208', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (7, 'student_20220200655', NULL, NULL, '跑步打卡王', '20220200655', '/uploads/user/user_7.jpg', '13800007777', 'run@example.com', '体育学院', '体育教育', 'B2211', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (8, 'student_20220200656', NULL, NULL, '社团活动控', '20220200656', '/uploads/user/user_8.jpg', '13800008888', 'club@example.com', '人工智能学院', '人工智能', 'AI2210', 1, '2026-04-21 19:12:35', '2026-04-21 19:12:35', 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
 
 -- ----------------------------
 -- Extra Records: 批量追加用户（默认头像 default.png，密码 123456）
 -- ----------------------------
 -- 默认头像文件：D:\ABISHE\demo1\uploads\user\default.png
 -- 入库路径约定：/uploads/user/default.png
-INSERT INTO `t_user` VALUES (9, 'student_20220200657', '林星辰', '20220200657', '/uploads/user/default.png', '13800010009', 'u09@example.com', '计算机与大数据科学学院', '计算机科学与技术', 'A2212', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (10, 'student_20220200658', '苏沐阳', '20220200658', '/uploads/user/default.png', '13800010010', 'u10@example.com', '软件学院', '软件工程', 'SE2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (11, 'student_20220200659', '陈念安', '20220200659', '/uploads/user/default.png', '13800010011', 'u11@example.com', '人工智能学院', '人工智能', 'AI2310', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (12, 'student_20220200660', '周予宁', '20220200660', '/uploads/user/default.png', '13800010012', 'u12@example.com', '经济管理学院', '市场营销', 'EM2208', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (13, 'student_20220200661', '许清歌', '20220200661', '/uploads/user/default.png', '13800010013', 'u13@example.com', '文学院', '汉语言文学', 'CL2210', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (14, 'student_20220200662', '赵景行', '20220200662', '/uploads/user/default.png', '13800010014', 'u14@example.com', '体育学院', '体育教育', 'PE2211', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (15, 'student_20220200663', '韩以深', '20220200663', '/uploads/user/default.png', '13800010015', 'u15@example.com', '信息与通信工程学院', '通信工程', 'ICT2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (16, 'student_20220200664', '吴知夏', '20220200664', '/uploads/user/default.png', '13800010016', 'u16@example.com', '理学院', '数学与应用数学', 'SC2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (17, 'student_20220200665', '李若棠', '20220200665', '/uploads/user/default.png', '13800010017', 'u17@example.com', '外国语学院', '英语', 'FL2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (18, 'student_20220200666', '冯子衿', '20220200666', '/uploads/user/default.png', '13800010018', 'u18@example.com', '法学院', '法学', 'LA2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (19, 'student_20220200667', '邓星野', '20220200667', '/uploads/user/default.png', '13800010019', 'u19@example.com', '自动化学院', '自动化', 'AU2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (20, 'student_20220200668', '曹雨衡', '20220200668', '/uploads/user/default.png', '13800010020', 'u20@example.com', '电子工程学院', '电子信息工程', 'EE2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (21, 'student_20220200669', '蒋闻舟', '20220200669', '/uploads/user/default.png', '13800010021', 'u21@example.com', '机械工程学院', '机械设计制造及其自动化', 'ME2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (22, 'student_20220200670', '沈亦可', '20220200670', '/uploads/user/default.png', '13800010022', 'u22@example.com', '土木与交通工程学院', '土木工程', 'CE2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (23, 'student_20220200671', '唐知远', '20220200671', '/uploads/user/default.png', '13800010023', 'u23@example.com', '计算机与大数据科学学院', '数据科学与大数据技术', 'CS2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (24, 'student_20220200672', '梁初雪', '20220200672', '/uploads/user/default.png', '13800010024', 'u24@example.com', '软件学院', '软件工程', 'SE2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (25, 'student_20220200673', '何望舒', '20220200673', '/uploads/user/default.png', '13800010025', 'u25@example.com', '人工智能学院', '智能科学与技术', 'AI2308', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (26, 'student_20220200674', '叶南栀', '20220200674', '/uploads/user/default.png', '13800010026', 'u26@example.com', '外国语学院', '日语', 'FL2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (27, 'student_20220200675', '顾临川', '20220200675', '/uploads/user/default.png', '13800010027', 'u27@example.com', '理学院', '物理学', 'SC2304', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (28, 'student_20220200676', '段星澜', '20220200676', '/uploads/user/default.png', '13800010028', 'u28@example.com', '经济管理学院', '会计学', 'EM2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (29, 'student_20220200677', '宋雨潇', '20220200677', '/uploads/user/default.png', '13800010029', 'u29@example.com', '文学院', '新闻学', 'CL2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (30, 'student_20220200678', '江澈然', '20220200678', '/uploads/user/default.png', '13800010030', 'u30@example.com', '法学院', '法学', 'LA2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (31, 'student_20220200679', '白予安', '20220200679', '/uploads/user/default.png', '13800010031', 'u31@example.com', '土木与交通工程学院', '交通工程', 'CE2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
-INSERT INTO `t_user` VALUES (32, 'student_20220200680', '秦望月', '20220200680', '/uploads/user/default.png', '13800010032', 'u32@example.com', '计算机与大数据科学学院', '网络工程', 'CS2304', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (9, 'student_20220200657', NULL, NULL, '林星辰', '20220200657', '/uploads/user/default.png', '13800010009', 'u09@example.com', '计算机与大数据科学学院', '计算机科学与技术', 'A2212', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (10, 'student_20220200658', NULL, NULL, '苏沐阳', '20220200658', '/uploads/user/default.png', '13800010010', 'u10@example.com', '软件学院', '软件工程', 'SE2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (11, 'student_20220200659', NULL, NULL, '陈念安', '20220200659', '/uploads/user/default.png', '13800010011', 'u11@example.com', '人工智能学院', '人工智能', 'AI2310', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (12, 'student_20220200660', NULL, NULL, '周予宁', '20220200660', '/uploads/user/default.png', '13800010012', 'u12@example.com', '经济管理学院', '市场营销', 'EM2208', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (13, 'student_20220200661', NULL, NULL, '许清歌', '20220200661', '/uploads/user/default.png', '13800010013', 'u13@example.com', '文学院', '汉语言文学', 'CL2210', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (14, 'student_20220200662', NULL, NULL, '赵景行', '20220200662', '/uploads/user/default.png', '13800010014', 'u14@example.com', '体育学院', '体育教育', 'PE2211', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (15, 'student_20220200663', NULL, NULL, '韩以深', '20220200663', '/uploads/user/default.png', '13800010015', 'u15@example.com', '信息与通信工程学院', '通信工程', 'ICT2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (16, 'student_20220200664', NULL, NULL, '吴知夏', '20220200664', '/uploads/user/default.png', '13800010016', 'u16@example.com', '理学院', '数学与应用数学', 'SC2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (17, 'student_20220200665', NULL, NULL, '李若棠', '20220200665', '/uploads/user/default.png', '13800010017', 'u17@example.com', '外国语学院', '英语', 'FL2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (18, 'student_20220200666', NULL, NULL, '冯子衿', '20220200666', '/uploads/user/default.png', '13800010018', 'u18@example.com', '法学院', '法学', 'LA2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (19, 'student_20220200667', NULL, NULL, '邓星野', '20220200667', '/uploads/user/default.png', '13800010019', 'u19@example.com', '自动化学院', '自动化', 'AU2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (20, 'student_20220200668', NULL, NULL, '曹雨衡', '20220200668', '/uploads/user/default.png', '13800010020', 'u20@example.com', '电子工程学院', '电子信息工程', 'EE2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (21, 'student_20220200669', NULL, NULL, '蒋闻舟', '20220200669', '/uploads/user/default.png', '13800010021', 'u21@example.com', '机械工程学院', '机械设计制造及其自动化', 'ME2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (22, 'student_20220200670', NULL, NULL, '沈亦可', '20220200670', '/uploads/user/default.png', '13800010022', 'u22@example.com', '土木与交通工程学院', '土木工程', 'CE2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (23, 'student_20220200671', NULL, NULL, '唐知远', '20220200671', '/uploads/user/default.png', '13800010023', 'u23@example.com', '计算机与大数据科学学院', '数据科学与大数据技术', 'CS2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (24, 'student_20220200672', NULL, NULL, '梁初雪', '20220200672', '/uploads/user/default.png', '13800010024', 'u24@example.com', '软件学院', '软件工程', 'SE2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (25, 'student_20220200673', NULL, NULL, '何望舒', '20220200673', '/uploads/user/default.png', '13800010025', 'u25@example.com', '人工智能学院', '智能科学与技术', 'AI2308', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (26, 'student_20220200674', NULL, NULL, '叶南栀', '20220200674', '/uploads/user/default.png', '13800010026', 'u26@example.com', '外国语学院', '日语', 'FL2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (27, 'student_20220200675', NULL, NULL, '顾临川', '20220200675', '/uploads/user/default.png', '13800010027', 'u27@example.com', '理学院', '物理学', 'SC2304', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (28, 'student_20220200676', NULL, NULL, '段星澜', '20220200676', '/uploads/user/default.png', '13800010028', 'u28@example.com', '经济管理学院', '会计学', 'EM2301', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (29, 'student_20220200677', NULL, NULL, '宋雨潇', '20220200677', '/uploads/user/default.png', '13800010029', 'u29@example.com', '文学院', '新闻学', 'CL2302', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (30, 'student_20220200678', NULL, NULL, '江澈然', '20220200678', '/uploads/user/default.png', '13800010030', 'u30@example.com', '法学院', '法学', 'LA2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (31, 'student_20220200679', NULL, NULL, '白予安', '20220200679', '/uploads/user/default.png', '13800010031', 'u31@example.com', '土木与交通工程学院', '交通工程', 'CE2303', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
+INSERT INTO `t_user` VALUES (32, 'student_20220200680', NULL, NULL, '秦望月', '20220200680', '/uploads/user/default.png', '13800010032', 'u32@example.com', '计算机与大数据科学学院', '网络工程', 'CS2304', 1, NOW(), NOW(), 0, '$2b$10$seA9RDUaWsaeuQrTvFZageiTsBcEIq.96iH0Uq.ZbDwq1dzYvgKE2');
 
 -- ----------------------------
 -- Rebuild Records: 清空并重建社团成员（按当前 t_club + 随机入团）

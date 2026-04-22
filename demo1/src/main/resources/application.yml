@@ -45,6 +45,12 @@ jwt:
   secret: CampusLifePlatform2026SecretKeyForJWTTokenGeneration
   expiration: 86400000
 
+# 微信小程序登录（需填写你的小程序 appid/secret）
+wechat:
+  mini:
+    appid: "wx7ba9c9ee446a4cf5"
+    secret: "3dc4cfafdbca27a18b9af39677bb5bfa"
+
 logging:
   level:
     com.campus: debug

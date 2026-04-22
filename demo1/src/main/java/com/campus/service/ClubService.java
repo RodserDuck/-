@@ -30,4 +30,10 @@ public interface ClubService {
     List<ClubMember> adminMemberList(Long clubId, String keyword);
 
     List<ClubMember> leaderMemberList(Long clubId, Long userId, String keyword);
+
+    IPage<ClubMember> leaderApplicationPage(int pageNum, int pageSize, Long clubId, Long leaderUserId, String keyword);
+
+    void leaderApproveApplication(Long memberId, Long leaderUserId);
+
+    void leaderRejectApplication(Long memberId, Long leaderUserId);
 }
